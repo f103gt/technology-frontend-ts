@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {useNavigate} from 'react-router-dom';
-import UserContext, {User, UserContextType} from './UserContext';
+import UserContext, {User, UserContextType} from '../context/UserContext';
 
 interface AuthenticateProps {
     navigate: (path: string) => void;

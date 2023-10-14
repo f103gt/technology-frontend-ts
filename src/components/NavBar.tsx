@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import UserContext from "./UserContext";
+import UserContext from "../context/UserContext";
 import {Link, useNavigate} from "react-router-dom";
 import {getCookies} from "../utilities/CookiesUtil";
+import "../css/NavBar.css";
 
 
 interface Category{
@@ -58,11 +59,10 @@ class NavBar extends Component<NavBarProps,NavBarState> {
                                 <ul className="dropdown-menu" aria-labelledby="sub-dropdown-menu">
                                     {category.childCategories.map(childCategory => (
                                         <li key={childCategory.categoryName}>
-                                            <Link className="dropdown-item"
-                                                  to={`/${childCategory.categoryName}`}
+                                            <span className="dropdown-item"
                                                   onClick={() => this.props.navigate(`/${childCategory.categoryName}`)}>
                                                 {childCategory.categoryName}
-                                            </Link>
+                                            </span>
                                         </li>
                                     ))}
                                 </ul>
@@ -71,10 +71,10 @@ class NavBar extends Component<NavBarProps,NavBarState> {
                     } else {
                         return (
                             <li key={category.categoryName}>
-                                <Link className="dropdown-item" to={`/${category.categoryName}`}
+                                <span className="dropdown-item"
                                       onClick={() => this.props.navigate(`/${category.categoryName}`)}>
                                     {category.categoryName}
-                                </Link>
+                                </span>
                             </li>
                         );
                     }
@@ -90,7 +90,7 @@ class NavBar extends Component<NavBarProps,NavBarState> {
             <div>
                 <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     <div className="container">
-                        <Link className="navbar-brand" to="/">Navbar</Link>
+                        <Link className="navbar-brand" to="/">TECHNOLOGY</Link>
                         <button
                             className="navbar-toggler"
                             type="button"

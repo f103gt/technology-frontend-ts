@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Link, Route, Routes, useParams} from "react-router-dom";
-import ProductDetail from "./ProductDetail";
+import {Link, useParams} from "react-router-dom";
 
 const Products = () => {
     let [products, setProducts] = useState([]);
@@ -68,13 +67,11 @@ const Products = () => {
                 <div className="container py-5">
                     <div className="row">
                         {renderProducts()}
+                    </div>
                 </div>
+            </section>
         </div>
-</section>
-</div>
-)
-    ;
-
+    );
 };
 
 export default Products;
