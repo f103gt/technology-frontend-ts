@@ -2,40 +2,50 @@ import React, {Component} from 'react';
 import UserContext from "./UserContext";
 import {Link, useNavigate} from "react-router-dom";
 import {getCookies} from "../utilities/CookiesUtil";
+import axios from "axios";
 
 
-interface Category{
+interface Category {
     categoryName: string;
     childCategories: Category[];
 }
 
-interface NavBarProps{
-    navigate: (path:string) => void;
+interface NavBarProps {
+    navigate: (path: string) => void;
 }
 
-interface NavBarState{
+interface NavBarState {
     categories: Category[];
 }
-class NavBar extends Component<NavBarProps,NavBarState> {
+
+class NavBar extends Component<NavBarProps, NavBarState> {
     constructor(props: NavBarProps) {
         super(props);
-        this.state={
+        this.state = {
             categories: [],
         };
     };
 
     componentDidMount() {
-        fetch("/api/v1/all-categories", {
-            method: "GET"
-        })
-            .then(res => res.json())
-            .then(result => {
-                console.log(result);
-                this.setState({categories:result});
-                console.log(this.state.categories);
-            });
-    }
+        axios.get("/csrf/api/v1")
+            .then(response => {
+                const csrfToken = response.data.headers;
+                fetch("/api/v1/all-categories", {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                })
+                    .then(res => res.json())
+                    .then(result => {
+                        console.log(result);
+                        this.setState({categories: result});
+                        console.log(this.state.categories);
+                    });
+            })
 
+    }
 
 
     //TODO implement formatting for /categoryName url
@@ -155,10 +165,10 @@ class NavBar extends Component<NavBarProps,NavBarState> {
 
 NavBar.contextType = UserContext;
 
-const withNavigation = (Component:any) => {
-    return (props:any) => {
+const withNavigation = (Component: any) => {
+    return (props: any) => {
         const navigate = useNavigate();
-        return <Component {...props} navigate={navigate} />;
+        return <Component {...props} navigate={navigate}/>;
     };
 }
 export default withNavigation(NavBar);

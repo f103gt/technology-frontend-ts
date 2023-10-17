@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Link, Route, Routes, useParams} from "react-router-dom";
-import ProductDetail from "./ProductDetail";
+import ProductDetail from "../components/ProductDetail";
 
 const Products = () => {
     let [products, setProducts] = useState([]);
