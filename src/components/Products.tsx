@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Link, useParams} from "react-router-dom";
 import axios from "axios";
 
@@ -9,27 +9,28 @@ interface Product {
 const Products = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const {categoryName} = useParams<string>();
-    useEffect(() => {
-        const fetchProductData = () => {
-            axios.get("/csrf/api/v1")
-                .then(response => {
-                    const csrfToken = response.data.headers;
-                    fetch(`/api/v1/category-products?categoryName=${categoryName}`, {
-                        method: "GET",
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken
-                        }
-                    })
-                        .then(result => result.json())
-                        .then(data => {
-                            setProducts(data);
-                        });
-                })
-        };
 
-        fetchProductData();
+    const fetchProductData = useCallback(() => {
+        axios.get("/csrf/api/v1")
+            .then(response => {
+                const csrfToken = response.data.headers;
+                fetch(`/api/v1/category-products?categoryName=${categoryName}`, {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                })
+                    .then(result => result.json())
+                    .then(data => {
+                        setProducts(data);
+                    });
+            })
     }, [categoryName]);
+
+    useEffect(() => {
+        fetchProductData();
+    }, [fetchProductData]);
 
     const renderProducts = () => {
         return (products.map(product => (
