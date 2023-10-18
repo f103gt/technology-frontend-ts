@@ -72,9 +72,7 @@ const Products = () => {
         </div>
 </section>
 </div>
-)
-    ;
-
+);
 };
 
 export default Products;

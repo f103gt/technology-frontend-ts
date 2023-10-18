@@ -15,22 +15,27 @@ const NavBar = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get("/csrf/api/v1")
-            .then(response => {
-                const csrfToken = response.data.headers;
-                fetch("/api/v1/all-categories", {
-                    method: "GET",
+        axios.get('/csrf/api/v1')
+            .then(csrfResponse => {
+                const csrfToken = csrfResponse.data.headers;
+                axios.get('/api/v1/all-categories', {
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': csrfToken
                     }
                 })
-                    .then(res => res.json())
-                    .then(result => {
-                        setCategories(result);
+                    .then(categoriesResponse => {
+                        setCategories(categoriesResponse.data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching categories:', error);
                     });
             })
+            .catch(error => {
+                console.error('Error fetching CSRF token:', error);
+            });
     }, []);
+
     const renderCategories = useMemo(() => {
         return (
             <ul>
@@ -38,18 +43,18 @@ const NavBar = () => {
                     if (category.childCategories.length > 0) {
                         return (
                             <li className="dropend" key={category.categoryName}>
-                                <span className="dropdown-item dropdown-toggle" role="button"
+                                <Link to={`/${category.categoryName}`} className="dropdown-item dropdown-toggle" role="button"
                                       data-bs-toggle="dropdown" id="sub-dropdown-menu"
                                       data-bs-auto-close="outside">
                                     {category.categoryName}
-                                </span>
+                                </Link>
                                 <ul className="dropdown-menu" aria-labelledby="sub-dropdown-menu">
                                     {category.childCategories.map(childCategory => (
                                         <li key={childCategory.categoryName}>
-                                            <span className="dropdown-item"
+                                            <Link className="dropdown-item" to={`/${childCategory.categoryName}`}
                                                   onClick={() => navigate(`/${childCategory.categoryName}`)}>
                                                 {childCategory.categoryName}
-                                            </span>
+                                            </Link>
                                         </li>
                                     ))}
                                 </ul>
@@ -58,10 +63,10 @@ const NavBar = () => {
                     } else {
                         return (
                             <li key={category.categoryName}>
-                                <span className="dropdown-item"
+                                <Link className="dropdown-item" to={`/${category.categoryName}`}
                                       onClick={() => navigate(`/${category.categoryName}`)}>
                                     {category.categoryName}
-                                </span>
+                                </Link>
                             </li>
                         );
                     }

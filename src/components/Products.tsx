@@ -1,66 +1,38 @@
-import React, {Component} from 'react';
-import {Link, useNavigate, useParams} from "react-router-dom";
+import React, {useEffect, useState} from 'react';
+import {Link, useParams} from "react-router-dom";
 import axios from "axios";
 
 interface Product {
     productName: string;
     productPrice: number;
 }
-
-interface ProductsState {
-    products: Product[];
-}
-
-interface PathValue extends Record<string, string | undefined> {
-    categoryName: string;
-}
-
-interface ProductsProps {
-    categoryName: string;
-    navigate: ReturnType<typeof useNavigate>;
-}
-
-class Products extends Component<ProductsProps, ProductsState> {
-    constructor(props: ProductsProps) {
-        super(props);
-        this.state = {
-            products: [],
-        };
-    }
-
-    componentDidMount() {
-        this.fetchProductData();
-    }
-
-    componentDidUpdate(prevProps: ProductsProps) {
-        // Only fetch product data if the categoryName has changed
-        if (this.props.categoryName !== prevProps.categoryName) {
-            this.fetchProductData();
-        }
-    }
-
-    fetchProductData = () => {
-        axios.get("/csrf/api/v1")
-            .then(response => {
-                const csrfToken = response.data.headers;
-                fetch(`/api/v1/category-products?categoryName=${this.props.categoryName}`, {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    }
+const Products = () => {
+    const [products, setProducts] = useState<Product[]>([]);
+    const {categoryName} = useParams<string>();
+    useEffect(() => {
+        const fetchProductData = () => {
+            axios.get("/csrf/api/v1")
+                .then(response => {
+                    const csrfToken = response.data.headers;
+                    fetch(`/api/v1/category-products?categoryName=${categoryName}`, {
+                        method: "GET",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        }
+                    })
+                        .then(result => result.json())
+                        .then(data => {
+                            setProducts(data);
+                        });
                 })
-                    .then(result => result.json())
-                    .then(data => {
-                        this.setState({products: data});
-                    });
-            })
+        };
 
-    }
+        fetchProductData();
+    }, [categoryName]);
 
-    renderProducts = () => {
-        const categoryName = this.props.categoryName;
-        return (this.state.products.map(product => (
+    const renderProducts = () => {
+        return (products.map(product => (
                 <div className="col-md-12 col-lg-4 mb-4" key={product.productName}>
                     <div className="card">
                         <div className="d-flex justify-content-between p-3">
@@ -103,29 +75,16 @@ class Products extends Component<ProductsProps, ProductsState> {
         ))
     }
 
-
-    render() {
-        return (
+    return (
             <div>
                 <section style={{backgroundColor: '#eee'}}>
                     <div className="container py-5">
                         <div className="row">
-                            {this.renderProducts()}
+                            {renderProducts()}
                         </div>
                     </div>
                 </section>
             </div>
         );
-    }
 }
-
-const withRouteParams = (Component: React.ComponentType<ProductsProps>) => (props: any) => {
-    const params = useParams<PathValue>();
-    const navigate = useNavigate();
-
-    return <Component {...props}
-                      categoryName={params.categoryName}
-                      navigate={navigate}/>
-}
-
-export default withRouteParams(Products);
+export default Products;
