@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Link, useParams} from "react-router-dom";
 import axios from "axios";
 
@@ -6,6 +6,7 @@ interface Product {
     productName: string;
     productPrice: number;
 }
+
 const Products = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const {categoryName} = useParams<string>();
@@ -14,16 +15,14 @@ const Products = () => {
         axios.get("/csrf/api/v1")
             .then(response => {
                 const csrfToken = response.data.headers;
-                fetch(`/api/v1/category-products?categoryName=${categoryName}`, {
-                    method: "GET",
+                axios.get(`/api/v1/category-products?categoryName=${categoryName}`, {
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': csrfToken
                     }
                 })
-                    .then(result => result.json())
-                    .then(data => {
-                        setProducts(data);
+                    .then(result => {
+                        setProducts(result.data);
                     });
             })
     }, [categoryName]);
@@ -77,15 +76,15 @@ const Products = () => {
     }
 
     return (
-            <div>
-                <section style={{backgroundColor: '#eee'}}>
-                    <div className="container py-5">
-                        <div className="row">
-                            {renderProducts()}
-                        </div>
+        <div>
+            <section style={{backgroundColor: '#eee'}}>
+                <div className="container py-5">
+                    <div className="row">
+                        {renderProducts()}
                     </div>
-                </section>
-            </div>
-        );
+                </div>
+            </section>
+        </div>
+    );
 }
 export default Products;

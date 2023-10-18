@@ -51,10 +51,10 @@ const NavBar = () => {
                                 <ul className="dropdown-menu" aria-labelledby="sub-dropdown-menu">
                                     {category.childCategories.map(childCategory => (
                                         <li key={childCategory.categoryName}>
-                                            <Link className="dropdown-item" to={`/${childCategory.categoryName}`}
+                                            <button className="dropdown-item"
                                                   onClick={() => navigate(`/${childCategory.categoryName}`)}>
                                                 {childCategory.categoryName}
-                                            </Link>
+                                            </button>
                                         </li>
                                     ))}
                                 </ul>
@@ -63,10 +63,10 @@ const NavBar = () => {
                     } else {
                         return (
                             <li key={category.categoryName}>
-                                <Link className="dropdown-item" to={`/${category.categoryName}`}
+                                <button className="dropdown-item"
                                       onClick={() => navigate(`/${category.categoryName}`)}>
                                     {category.categoryName}
-                                </Link>
+                                </button>
                             </li>
                         );
                     }
@@ -103,12 +103,12 @@ const NavBar = () => {
                                 <Link className="nav-link" to="/home">Home</Link>
                             </li>
                             <li className="nav-item dropdown">
-                                <span className="nav-link dropdown-toggle"
+                                <button className="nav-link dropdown-toggle"
                                       data-bs-auto-close="outside"
                                       id="navbarDropdown" role="button"
                                       data-bs-toggle="dropdown" aria-expanded="false">
                                     Products
-                                </span>
+                                </button>
                                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                     {renderCategories}
                                 </ul>
