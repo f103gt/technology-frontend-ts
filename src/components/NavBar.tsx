@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import UserContext from "./UserContext";
 import {Link, useNavigate} from "react-router-dom";
-import {getCookies} from "../utilities/CookiesUtil";
+import Cookies from 'js-cookie';
 import axios from "axios";
-
+import "../css/NavBar.css"
 
 interface Category {
     categoryName: string;
@@ -46,13 +45,6 @@ class NavBar extends Component<NavBarProps, NavBarState> {
             })
 
     }
-
-
-    //TODO implement formatting for /categoryName url
-    // if the url is represented with only one word- make all the letter lower case
-    // if the url has multiple parts make them look like represented below
-    // smartphone and mobile-phone
-
     renderCategories = (categories: Category[]) => {
         return (
             <ul>
@@ -95,7 +87,8 @@ class NavBar extends Component<NavBarProps, NavBarState> {
 
 
     render() {
-        const userRole = getCookies("userRole");
+        const email = Cookies.get("email")?.split("@")[0];
+        console.log(email);
         return (
             <div>
                 <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -141,9 +134,9 @@ class NavBar extends Component<NavBarProps, NavBarState> {
                             </form>
                             <div>
                                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                                    {userRole ?
+                                    {email ?
                                         (<li className="nav-item">
-                                            <Link className="nav-link" to="/logout">Logout</Link>
+                                            <Link className="nav-link" to="/logout">{email}</Link>
                                         </li>)
                                         :
                                         (<li className="nav-item">
@@ -162,8 +155,6 @@ class NavBar extends Component<NavBarProps, NavBarState> {
         );
     }
 }
-
-NavBar.contextType = UserContext;
 
 const withNavigation = (Component: any) => {
     return (props: any) => {

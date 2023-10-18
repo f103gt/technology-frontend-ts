@@ -12,8 +12,6 @@ class Authentication extends Component<AuthenticateProps> {
         password: '',
     };
 
-    //TODO consider whether the user email is needed to be placed in the context
-
     updateUsername = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({username: event.target.value});
     }
@@ -43,6 +41,11 @@ class Authentication extends Component<AuthenticateProps> {
                     },
                     withCredentials: true
                 })
+                    .then(response => {
+                        if (response.status === 200) {
+                            this.props.navigate("/home");
+                        }
+                    })
                     .catch(error => {
                         alert(error)
                     });
