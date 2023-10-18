@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import Cookies from 'js-cookie';
 import axios from "axios";
@@ -9,23 +9,12 @@ interface Category {
     childCategories: Category[];
 }
 
-interface NavBarProps {
-    navigate: (path: string) => void;
-}
+const NavBar = () => {
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [username, setUsername] = useState<string | undefined>("");
+    const navigate = useNavigate();
 
-interface NavBarState {
-    categories: Category[];
-}
-
-class NavBar extends Component<NavBarProps, NavBarState> {
-    constructor(props: NavBarProps) {
-        super(props);
-        this.state = {
-            categories: [],
-        };
-    };
-
-    componentDidMount() {
+    useEffect(() => {
         axios.get("/csrf/api/v1")
             .then(response => {
                 const csrfToken = response.data.headers;
@@ -38,14 +27,11 @@ class NavBar extends Component<NavBarProps, NavBarState> {
                 })
                     .then(res => res.json())
                     .then(result => {
-                        console.log(result);
-                        this.setState({categories: result});
-                        console.log(this.state.categories);
+                        setCategories(result);
                     });
             })
-
-    }
-    renderCategories = (categories: Category[]) => {
+    }, []);
+    const renderCategories = useMemo(() => {
         return (
             <ul>
                 {categories.map(category => {
@@ -60,11 +46,10 @@ class NavBar extends Component<NavBarProps, NavBarState> {
                                 <ul className="dropdown-menu" aria-labelledby="sub-dropdown-menu">
                                     {category.childCategories.map(childCategory => (
                                         <li key={childCategory.categoryName}>
-                                            <Link className="dropdown-item"
-                                                  to={`/${childCategory.categoryName}`}
-                                                  onClick={() => this.props.navigate(`/${childCategory.categoryName}`)}>
+                                            <span className="dropdown-item"
+                                                  onClick={() => navigate(`/${childCategory.categoryName}`)}>
                                                 {childCategory.categoryName}
-                                            </Link>
+                                            </span>
                                         </li>
                                     ))}
                                 </ul>
@@ -73,93 +58,87 @@ class NavBar extends Component<NavBarProps, NavBarState> {
                     } else {
                         return (
                             <li key={category.categoryName}>
-                                <Link className="dropdown-item" to={`/${category.categoryName}`}
-                                      onClick={() => this.props.navigate(`/${category.categoryName}`)}>
+                                <span className="dropdown-item"
+                                      onClick={() => navigate(`/${category.categoryName}`)}>
                                     {category.categoryName}
-                                </Link>
+                                </span>
                             </li>
                         );
                     }
                 })}
             </ul>
         );
-    };
+    }, [categories, navigate]);
 
+    useEffect(() => {
+        const email = Cookies.get('email');
+        if (email) {
+            setUsername(email.split('@')[0]);
+        }
+    }, []);
 
-    render() {
-        const email = Cookies.get("email")?.split("@")[0];
-        console.log(email);
-        return (
-            <div>
-                <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                    <div className="container">
-                        <Link className="navbar-brand" to="/">Navbar</Link>
-                        <button
-                            className="navbar-toggler"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#navbarSupportedContent"
-                            aria-controls="navbarSupportedContent"
-                            aria-expanded="false"
-                            aria-label="Toggle navigation">
-                            <span className="navbar-toggler-icon"></span>
-                        </button>
-                        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/home">Home</Link>
-                                </li>
-                                <li className="nav-item dropdown">
+    return (
+        <div>
+            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                <div className="container">
+                    <Link className="navbar-brand" to="/">Navbar</Link>
+                    <button
+                        className="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/home">Home</Link>
+                            </li>
+                            <li className="nav-item dropdown">
                                 <span className="nav-link dropdown-toggle"
                                       data-bs-auto-close="outside"
                                       id="navbarDropdown" role="button"
                                       data-bs-toggle="dropdown" aria-expanded="false">
                                     Products
                                 </span>
-                                    <ul className="dropdown-menu" aria-labelledby="navbarDropdown">{
-                                        this.renderCategories(this.state.categories)
-                                    }
-                                    </ul>
+                                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    {renderCategories}
+                                </ul>
+                            </li>
+                        </ul>
+                        <form className="d-flex">
+                            <input
+                                className="form-control me-2"
+                                type="search"
+                                placeholder="Search"
+                                aria-label="Search"/>
+                            <button className="btn btn-outline-success" type="submit">
+                                Search
+                            </button>
+                        </form>
+                        <div>
+                            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                                {username ?
+                                    (<li className="nav-item">
+                                        <Link className="nav-link" to="/logout">{username}</Link>
+                                    </li>)
+                                    :
+                                    (<li className="nav-item">
+                                        <Link className="nav-link" to="/login">Login</Link>
+                                    </li>)}
+
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/cart">Cart</Link>
                                 </li>
                             </ul>
-                            <form className="d-flex">
-                                <input
-                                    className="form-control me-2"
-                                    type="search"
-                                    placeholder="Search"
-                                    aria-label="Search"/>
-                                <button className="btn btn-outline-success" type="submit">
-                                    Search
-                                </button>
-                            </form>
-                            <div>
-                                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                                    {email ?
-                                        (<li className="nav-item">
-                                            <Link className="nav-link" to="/logout">{email}</Link>
-                                        </li>)
-                                        :
-                                        (<li className="nav-item">
-                                            <Link className="nav-link" to="/login">Login</Link>
-                                        </li>)}
-
-                                    <li className="nav-item">
-                                        <Link className="nav-link" to="/cart">Cart</Link>
-                                    </li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
-                </nav>
-            </div>
-        );
-    }
-}
-
-const withNavigation = (Component: any) => {
-    return (props: any) => {
-        const navigate = useNavigate();
-        return <Component {...props} navigate={navigate}/>;
-    };
-}
-export default withNavigation(NavBar);
+                </div>
+            </nav>
+        </div>
+    );
+};
+export default NavBar;
