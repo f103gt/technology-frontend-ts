@@ -7,6 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import Authentication from "./components/Authentication";
 import NavBar from "./components/NavBar";
+import PrivateRoute from "./components/PrivateRoute";
+import Tasks from "./components/Tasks";
 
 class App extends Component {
     render() {
@@ -18,6 +20,10 @@ class App extends Component {
                         <Route path={"/"} element={<Home/>}/>
                         <Route path={"/home"} element={<Home/>}/>
                         <Route path="/login" element={<Authentication/>}/>
+                        <Route path={"/tasks"} element={
+                            <PrivateRoute component={Tasks} roles={["staff","manager","admin"]}>
+                            <Tasks/>
+                        </PrivateRoute>}/>
                         <Route path={"/:categoryName/*"} element={<Products/>}/>
                     </Routes>
                 </div>

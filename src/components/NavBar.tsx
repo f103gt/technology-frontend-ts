@@ -12,6 +12,7 @@ interface Category {
 const NavBar = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [username, setUsername] = useState<string | undefined>("");
+    const [role, setRole] = useState<string | undefined>("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,7 +44,8 @@ const NavBar = () => {
                     if (category.childCategories.length > 0) {
                         return (
                             <li className="dropend" key={category.categoryName}>
-                                <Link to={`/${category.categoryName}`} className="dropdown-item dropdown-toggle" role="button"
+                                <Link to={`/${category.categoryName}`} className="dropdown-item dropdown-toggle"
+                                      role="button"
                                       data-bs-toggle="dropdown" id="sub-dropdown-menu"
                                       data-bs-auto-close="outside">
                                     {category.categoryName}
@@ -52,7 +54,7 @@ const NavBar = () => {
                                     {category.childCategories.map(childCategory => (
                                         <li key={childCategory.categoryName}>
                                             <button className="dropdown-item"
-                                                  onClick={() => navigate(`/${childCategory.categoryName}`)}>
+                                                    onClick={() => navigate(`/${childCategory.categoryName}`)}>
                                                 {childCategory.categoryName}
                                             </button>
                                         </li>
@@ -64,7 +66,7 @@ const NavBar = () => {
                         return (
                             <li key={category.categoryName}>
                                 <button className="dropdown-item"
-                                      onClick={() => navigate(`/${category.categoryName}`)}>
+                                        onClick={() => navigate(`/${category.categoryName}`)}>
                                     {category.categoryName}
                                 </button>
                             </li>
@@ -76,9 +78,18 @@ const NavBar = () => {
     }, [categories, navigate]);
 
     useEffect(() => {
-        const email = Cookies.get('email');
+        const email = Cookies.get("email");
         if (email) {
             setUsername(email.split('@')[0]);
+            console.log(email);
+        }
+    }, []);
+
+    useEffect(() => {
+        const userRole = Cookies.get("role");
+        if (userRole) {
+            setRole(userRole);
+            console.log(role);
         }
     }, []);
 
@@ -104,15 +115,20 @@ const NavBar = () => {
                             </li>
                             <li className="nav-item dropdown">
                                 <button className="nav-link dropdown-toggle"
-                                      data-bs-auto-close="outside"
-                                      id="navbarDropdown" role="button"
-                                      data-bs-toggle="dropdown" aria-expanded="false">
+                                        data-bs-auto-close="outside"
+                                        id="navbarDropdown" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
                                     Products
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                     {renderCategories}
                                 </ul>
                             </li>
+                            {role && role !== "user" && (
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/tasks">Tasks</Link>
+                                </li>
+                            )}
                         </ul>
                         <form className="d-flex">
                             <input

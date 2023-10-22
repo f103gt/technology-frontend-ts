@@ -44,7 +44,7 @@ const Products = () => {
                             </div>
                         </div>
                         <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/4.webp"
-                             className="card-img-top" alt="Laptop"/>
+                             className="card-img-top" alt="Laptop" loading={"lazy"}/>
                         <div className="card-body">
                             <div className="d-flex justify-content-between">
                                 <p className="small"><Link to={""} className="text-muted">Laptops</Link></p>
