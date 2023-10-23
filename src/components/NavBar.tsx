@@ -37,6 +37,38 @@ const NavBar = () => {
             });
     }, []);
 
+    const setButtons = () => {
+        if (role && (role === "manager" || role === "admin")) {
+            return (
+                <div>
+                    <button type="button" className="btn btn-info btn-sm"
+                            style={{
+                                padding: '.25rem .5rem',
+                                fontSize: '.75rem',
+                            }}>Delete</button>
+                    <span>&nbsp;</span>
+                    <button type="button" className="btn btn-info btn-sm"
+                            style={{
+                                padding: '.25rem .5rem',
+                                fontSize: '.75rem',
+                            }}>Modify</button>
+                </div>)
+        }
+    }
+
+    const setSingleButton = () => {
+        if (role && (role === "manager" || role === "admin")) {
+            return (
+                <div>
+                    <button type="button" className="btn btn-info btn-sm"
+                            style={{
+                                padding: '.25rem .5rem',
+                                fontSize: '.75rem',
+                            }}>Add</button>
+                </div>)
+        }
+    }
+
     const renderCategories = useMemo(() => {
         return (
             <ul>
@@ -57,8 +89,10 @@ const NavBar = () => {
                                                     onClick={() => navigate(`/${childCategory.categoryName}`)}>
                                                 {childCategory.categoryName}
                                             </button>
+                                            {setButtons()}
                                         </li>
                                     ))}
+                                    {setSingleButton()}
                                 </ul>
                             </li>
                         );
@@ -69,10 +103,12 @@ const NavBar = () => {
                                         onClick={() => navigate(`/${category.categoryName}`)}>
                                     {category.categoryName}
                                 </button>
+                                {setButtons()}
                             </li>
                         );
                     }
                 })}
+                {setSingleButton()}
             </ul>
         );
     }, [categories, navigate]);
@@ -91,7 +127,8 @@ const NavBar = () => {
             setRole(userRole);
             console.log(role);
         }
-    }, []);
+    }, [role]);
+
 
     return (
         <div>

@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Link, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 interface Product {
     productName: string;
@@ -9,7 +10,9 @@ interface Product {
 
 const Products = () => {
     const [products, setProducts] = useState<Product[]>([]);
+    const [role, setRole] = useState("");
     const {categoryName} = useParams<string>();
+    const navigate = useNavigate();
 
     const fetchProductData = useCallback(() => {
         axios.get("/csrf/api/v1")
@@ -31,6 +34,33 @@ const Products = () => {
         fetchProductData();
     }, [fetchProductData]);
 
+    useEffect(() => {
+        const userRole = Cookies.get("role");
+        if (userRole) {
+            setRole(userRole);
+            console.log(role);
+        }
+    }, [role]);
+
+    const setButtons = () => {
+        if (role && (role === "manager" || role === "admin")) {
+            return (
+                <div>
+                    <button type="button" className="btn btn-info">Delete</button>
+                    <span>&nbsp;</span>
+                    <button type="button" className="btn btn-info">Modify</button>
+                </div>)
+        }
+    }
+
+    const setSingleButton = () => {
+        if (role && (role === "manager" || role === "admin")) {
+            return (
+                <div>
+                    <button type="button" className="btn btn-info">Add</button>
+                </div>)
+        }
+    }
     const renderProducts = () => {
         return (products.map(product => (
                 <div className="col-md-12 col-lg-4 mb-4" key={product.productName}>
@@ -52,8 +82,8 @@ const Products = () => {
                             </div>
 
                             <div className="d-flex justify-content-between mb-3">
-                                <p><Link to={`/${categoryName}/${product.productName}`}
-                                         className="text-muted"></Link></p>
+                                <p><button onClick={() => navigate(`/${categoryName}/${product.productName}`)}
+                                         className="text-muted"></button></p>
                                 <h5 className="mb-0">{product.productName}</h5>
                                 <h5 className="text-dark mb-0">{product.productPrice}</h5>
                             </div>
@@ -67,6 +97,7 @@ const Products = () => {
                                     <i className="fa fa-star"></i>
                                     <i className="fa fa-star"></i>
                                 </div>
+                                {setButtons()}
                             </div>
                         </div>
                     </div>
@@ -82,6 +113,7 @@ const Products = () => {
                     <div className="row">
                         {renderProducts()}
                     </div>
+                    {setSingleButton()}
                 </div>
             </section>
         </div>

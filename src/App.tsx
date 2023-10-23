@@ -9,6 +9,7 @@ import Authentication from "./components/Authentication";
 import NavBar from "./components/NavBar";
 import PrivateRoute from "./components/PrivateRoute";
 import Tasks from "./components/Tasks";
+import SpecificProduct from "./components/SpecificProduct";
 
 class App extends Component {
     render() {
@@ -24,7 +25,9 @@ class App extends Component {
                             <PrivateRoute component={Tasks} roles={["staff","manager","admin"]}>
                             <Tasks/>
                         </PrivateRoute>}/>
-                        <Route path={"/:categoryName/*"} element={<Products/>}/>
+                        <Route path={"/:categoryName/*"} element={<Products/>}>
+                            <Route path={":productName"} element={<SpecificProduct/>}/>
+                        </Route>
                     </Routes>
                 </div>
             </BrowserRouter>
