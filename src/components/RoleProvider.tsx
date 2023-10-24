@@ -1,7 +1,7 @@
 import {createContext, ReactNode, useEffect, useState} from "react";
 import React from 'react';
 
-interface RoleContextType{
+export interface RoleContextType{
     role: string;
     setRole: React.Dispatch<React.SetStateAction<string>>
 }

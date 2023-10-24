@@ -1,12 +1,16 @@
 import React, {Component} from 'react';
 import {useNavigate} from 'react-router-dom';
 import axios from "axios";
+import {RoleContext} from "./RoleContext";
+import {RoleContextType} from "./RoleProvider";
 
 interface AuthenticateProps {
     navigate: (path: string) => void;
 }
 
 class Authentication extends Component<AuthenticateProps> {
+    static contextType = RoleContext;
+
     state = {
         username: '',
         password: '',
@@ -43,6 +47,8 @@ class Authentication extends Component<AuthenticateProps> {
                 })
                     .then(response => {
                         if (response.status === 200) {
+                            const context = this.context as RoleContextType;
+                            context.setRole(response.data.role);
                             this.props.navigate("/home");
                         }
                     })
