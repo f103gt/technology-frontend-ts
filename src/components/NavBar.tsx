@@ -3,6 +3,7 @@ import {Link, useNavigate} from "react-router-dom";
 import Cookies from 'js-cookie';
 import axios from "axios";
 import "../css/NavBar.css"
+import {useRole} from "./useRole";
 
 interface Category {
     categoryName: string;
@@ -12,7 +13,7 @@ interface Category {
 const NavBar = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [username, setUsername] = useState<string | undefined>("");
-    const [role, setRole] = useState<string | undefined>("");
+    const role = useRole();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -45,13 +46,15 @@ const NavBar = () => {
                             style={{
                                 padding: '.25rem .5rem',
                                 fontSize: '.75rem',
-                            }}>Delete</button>
+                            }}>Delete
+                    </button>
                     <span>&nbsp;</span>
                     <button type="button" className="btn btn-info btn-sm"
                             style={{
                                 padding: '.25rem .5rem',
                                 fontSize: '.75rem',
-                            }}>Modify</button>
+                            }}>Modify
+                    </button>
                 </div>)
         }
     }
@@ -64,7 +67,8 @@ const NavBar = () => {
                             style={{
                                 padding: '.25rem .5rem',
                                 fontSize: '.75rem',
-                            }}>Add</button>
+                            }}>Add
+                    </button>
                 </div>)
         }
     }
@@ -121,14 +125,20 @@ const NavBar = () => {
         }
     }, []);
 
-    useEffect(() => {
-        const userRole = Cookies.get("role");
-        if (userRole) {
-            setRole(userRole);
-            console.log(role);
-        }
-    }, [role]);
+    const tasksLink = role && role !== "user" && (
+        <li className="nav-item">
+            <Link className="nav-link" to="/tasks">Tasks</Link>
+        </li>
+    );
 
+    const usernameDisplay = username ?
+        (<li className="nav-item">
+            <Link className="nav-link" to="/logout">{username}</Link>
+        </li>)
+        :
+        (<li className="nav-item">
+            <Link className="nav-link" to="/login">Login</Link>
+        </li>);
 
     return (
         <div>
@@ -161,11 +171,7 @@ const NavBar = () => {
                                     {renderCategories}
                                 </ul>
                             </li>
-                            {role && role !== "user" && (
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/tasks">Tasks</Link>
-                                </li>
-                            )}
+                            {tasksLink}
                         </ul>
                         <form className="d-flex">
                             <input
@@ -179,15 +185,7 @@ const NavBar = () => {
                         </form>
                         <div>
                             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                                {username ?
-                                    (<li className="nav-item">
-                                        <Link className="nav-link" to="/logout">{username}</Link>
-                                    </li>)
-                                    :
-                                    (<li className="nav-item">
-                                        <Link className="nav-link" to="/login">Login</Link>
-                                    </li>)}
-
+                                {usernameDisplay}
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/cart">Cart</Link>
                                 </li>

@@ -82,8 +82,8 @@ const Products = () => {
                             </div>
 
                             <div className="d-flex justify-content-between mb-3">
-                                <p><button onClick={() => navigate(`/${categoryName}/${product.productName}`)}
-                                         className="text-muted"></button></p>
+                                <p><Link to={`/${categoryName}/${product.productName}`}
+                                         className="text-muted"></Link></p>
                                 <h5 className="mb-0">{product.productName}</h5>
                                 <h5 className="text-dark mb-0">{product.productPrice}</h5>
                             </div>
