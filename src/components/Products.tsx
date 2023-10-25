@@ -82,9 +82,10 @@ const Products = () => {
                             </div>
 
                             <div className="d-flex justify-content-between mb-3">
-                                <p><Link to={`/${categoryName}/${product.productName}`}
-                                         className="text-muted"></Link></p>
-                                <h5 className="mb-0">{product.productName}</h5>
+                                <p><span className="text-muted"></span></p>
+                                <h5 className="mb-0">
+                                    <Link to={`/${categoryName}/${product.productName}`}>{product.productName}</Link>
+                                </h5>
                                 <h5 className="text-dark mb-0">{product.productPrice}</h5>
                             </div>
 

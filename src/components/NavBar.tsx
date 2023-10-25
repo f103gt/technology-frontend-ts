@@ -1,9 +1,8 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
-import Cookies from 'js-cookie';
 import axios from "axios";
 import "../css/NavBar.css"
-import {useRole} from "./useRole";
+import {RoleBasedComponent} from "./RoleBasedComponent";
 
 interface Category {
     categoryName: string;
@@ -12,8 +11,6 @@ interface Category {
 
 const NavBar = () => {
     const [categories, setCategories] = useState<Category[]>([]);
-    const [username, setUsername] = useState<string | undefined>("");
-    const role = useRole();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -38,40 +35,39 @@ const NavBar = () => {
             });
     }, []);
 
-    const setButtons = () => {
-        if (role && (role === "manager" || role === "admin")) {
+    const setButtons = (roles:any) => {
             return (
-                <div>
-                    <button type="button" className="btn btn-info btn-sm"
-                            style={{
-                                padding: '.25rem .5rem',
-                                fontSize: '.75rem',
-                            }}>Delete
-                    </button>
-                    <span>&nbsp;</span>
-                    <button type="button" className="btn btn-info btn-sm"
-                            style={{
-                                padding: '.25rem .5rem',
-                                fontSize: '.75rem',
-                            }}>Modify
-                    </button>
-                </div>)
-        }
+             <RoleBasedComponent roles={roles}>
+                 <button type="button" className="btn btn-info btn-sm"
+                         style={{
+                             padding: '.25rem .5rem',
+                             fontSize: '.75rem',
+                         }}>Delete
+                 </button>
+                 <span>&nbsp;</span>
+                 <button type="button" className="btn btn-info btn-sm"
+                         style={{
+                             padding: '.25rem .5rem',
+                             fontSize: '.75rem',
+                         }}>Modify
+                 </button>
+            </RoleBasedComponent>
+            );
     }
 
-    const setSingleButton = () => {
-        if (role && (role === "manager" || role === "admin")) {
-            return (
-                <div>
-                    <button type="button" className="btn btn-info btn-sm"
-                            style={{
-                                padding: '.25rem .5rem',
-                                fontSize: '.75rem',
-                            }}>Add
-                    </button>
-                </div>)
-        }
-    }
+    const setSingleButton = (roles: any) => {
+        return (
+            <RoleBasedComponent roles={roles}>
+                <button
+                    type="button"
+                    className="btn btn-info btn-sm"
+                    style={{
+                        padding: '.25rem .5rem',
+                        fontSize: '.75rem',
+                    }}>Add</button>
+            </RoleBasedComponent>
+        );
+    };
 
     const renderCategories = useMemo(() => {
         return (
@@ -93,10 +89,10 @@ const NavBar = () => {
                                                     onClick={() => navigate(`/${childCategory.categoryName}`)}>
                                                 {childCategory.categoryName}
                                             </button>
-                                            {setButtons()}
+                                            {setButtons(["user", "admin", "manager", "staff"])}
                                         </li>
                                     ))}
-                                    {setSingleButton()}
+                                    {setSingleButton(["user", "admin", "manager", "staff"])}
                                 </ul>
                             </li>
                         );
@@ -107,38 +103,25 @@ const NavBar = () => {
                                         onClick={() => navigate(`/${category.categoryName}`)}>
                                     {category.categoryName}
                                 </button>
-                                {setButtons()}
+                                {setButtons(["user", "admin", "manager", "staff"])}
                             </li>
                         );
                     }
                 })}
-                {setSingleButton()}
+                {setSingleButton(["user", "admin", "manager", "staff"])}
             </ul>
         );
     }, [categories, navigate]);
 
-    useEffect(() => {
-        const email = Cookies.get("email");
-        if (email) {
-            setUsername(email.split('@')[0]);
-            console.log(email);
-        }
-    }, []);
 
-    const tasksLink = role && role !== "user" && (
-        <li className="nav-item">
-            <Link className="nav-link" to="/tasks">Tasks</Link>
-        </li>
-    );
-
-    const usernameDisplay = username ?
-        (<li className="nav-item">
-            <Link className="nav-link" to="/logout">{username}</Link>
-        </li>)
-        :
-        (<li className="nav-item">
-            <Link className="nav-link" to="/login">Login</Link>
-        </li>);
+    /* const usernameDisplay = username ?
+         (<li className="nav-item">
+             <Link className="nav-link" to="/logout">{username}</Link>
+         </li>)
+         :
+         (<li className="nav-item">
+             <Link className="nav-link" to="/login">Login</Link>
+         </li>);*/
 
     return (
         <div>
@@ -171,7 +154,11 @@ const NavBar = () => {
                                     {renderCategories}
                                 </ul>
                             </li>
-                            {tasksLink}
+                            <RoleBasedComponent roles={["staff", "manager", "admin", "user"]}>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/tasks">Tasks</Link>
+                                </li>
+                            </RoleBasedComponent>
                         </ul>
                         <form className="d-flex">
                             <input
@@ -185,7 +172,10 @@ const NavBar = () => {
                         </form>
                         <div>
                             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                                {usernameDisplay}
+                                {/*{usernameDisplay}*/}
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/login">Login</Link>
+                                </li>
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/cart">Cart</Link>
                                 </li>

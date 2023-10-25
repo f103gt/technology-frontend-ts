@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {useNavigate} from 'react-router-dom';
 import axios from "axios";
-import {RoleContext} from "./RoleContext";
-import {RoleContextType} from "./RoleProvider";
+import {RoleContext} from "./RoleProvider";
+
 
 interface AuthenticateProps {
     navigate: (path: string) => void;
@@ -47,8 +47,12 @@ class Authentication extends Component<AuthenticateProps> {
                 })
                     .then(response => {
                         if (response.status === 200) {
-                            const context = this.context as RoleContextType;
-                            context.setRole(response.data.role);
+                            // Assuming the role is in response.data.role
+                            const userRole = response.data.role;
+                            console.log(userRole);
+
+                            // Store the user's role in local storage
+                            localStorage.setItem("userRole", userRole);
                             this.props.navigate("/home");
                         }
                     })

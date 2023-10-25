@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useContext} from 'react';
 import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Home from "./components/Home";
@@ -10,10 +10,15 @@ import NavBar from "./components/NavBar";
 import PrivateRoute from "./components/PrivateRoute";
 import Tasks from "./components/Tasks";
 import SpecificProduct from "./components/SpecificProduct";
+import RoleProvider, {RoleContext} from "./components/RoleProvider";
 
-class App extends Component {
-    render() {
-        return (
+
+function App() {
+
+    const userRole = useContext(RoleContext);
+    return (
+        // eslint-disable-next-line react/jsx-no-undef
+        <RoleProvider>
             <BrowserRouter>
                 <div>
                     <NavBar/>
@@ -22,17 +27,17 @@ class App extends Component {
                         <Route path={"/home"} element={<Home/>}/>
                         <Route path="/login" element={<Authentication/>}/>
                         <Route path={"/tasks"} element={
-                            <PrivateRoute component={Tasks} roles={["staff","manager","admin"]}>
-                            <Tasks/>
-                        </PrivateRoute>}/>
-                        <Route path={"/:categoryName/*"} element={<Products/>}>
-                            <Route path={":productName"} element={<SpecificProduct/>}/>
-                        </Route>
+                            <PrivateRoute component={Tasks} roles={["staff", "manager", "admin","user"]}>
+                                <Tasks/>
+                            </PrivateRoute>}/>
+                        <Route path="/:categoryName" element={<Products/>}/>
+                        <Route path="/:categoryName/:productName" element={<SpecificProduct/>}/>
                     </Routes>
                 </div>
             </BrowserRouter>
-        );
-    }
+        </RoleProvider>
+    );
+
 }
 
 export default App;
