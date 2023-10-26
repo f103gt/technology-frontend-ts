@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import Authentication from "./pages/Authentication";
 import NavBar from "./components/NavBar";
-import PrivateRoute from "./components/PrivateRoute";
+import PrivateRoute from "./routes/PrivateRoute";
 import Tasks from "./pages/Tasks";
 import SpecificProduct from "./pages/SpecificProduct";
 import RoleProvider, {RoleContext} from "./context/RoleProvider";
