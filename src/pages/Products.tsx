@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import axios from "axios";
-import {RoleBasedComponent} from "./RoleBasedComponent";
-import ProductCard from "./ProductCard";
+import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
+import ProductCard from "../components/ProductCard";
 
 interface Product {
     productName: string;

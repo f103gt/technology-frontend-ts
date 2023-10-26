@@ -1,15 +1,15 @@
 import React, {Component, useContext} from 'react';
 import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import Home from "./components/Home";
-import Products from "./components/Products";
+import Home from "./pages/Home";
+import Products from "./pages/Products";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import Authentication from "./components/Authentication";
+import Authentication from "./pages/Authentication";
 import NavBar from "./components/NavBar";
 import PrivateRoute from "./components/PrivateRoute";
-import Tasks from "./components/Tasks";
-import SpecificProduct from "./components/SpecificProduct";
+import Tasks from "./pages/Tasks";
+import SpecificProduct from "./pages/SpecificProduct";
 import RoleProvider, {RoleContext} from "./context/RoleProvider";
 
 

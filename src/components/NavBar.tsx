@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 import "../css/NavBar.css"
-import {RoleBasedComponent} from "./RoleBasedComponent";
+import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
 
 interface Category {
     categoryName: string;

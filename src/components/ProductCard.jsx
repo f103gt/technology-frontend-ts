@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {RoleBasedComponent} from "./RoleBasedComponent";
+import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
 
 const ProductCard = ({ product, categoryName }) => {
     const setButtons = (roles) => {
