@@ -10,7 +10,7 @@ import NavBar from "./components/NavBar";
 import PrivateRoute from "./components/PrivateRoute";
 import Tasks from "./components/Tasks";
 import SpecificProduct from "./components/SpecificProduct";
-import RoleProvider, {RoleContext} from "./components/RoleProvider";
+import RoleProvider, {RoleContext} from "./context/RoleProvider";
 
 
 function App() {

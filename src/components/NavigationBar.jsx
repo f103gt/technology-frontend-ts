@@ -1,25 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-/*import Cookies from "js-cookie";
-import jwt from 'jsonwebtoken';*/
-
-//<Route path={"/home"} element={<PrivateRoute><Home/></PrivateRoute>}/>
 const NavigationBar = () => {
     const [categories, setCategories] = useState([]);
     const [userState, setUserState] = useState(null);
     const navigation = useNavigate();
-    /*const userCookie = Cookies.get("user");*/
     const [username, setUsername] = useState("");
     const [role, setRole] = useState("");
-
-    /*if (userCookie) {
-        const jwtPayload = jwt.decode(userCookie);
-        if (jwtPayload) {
-            setUsername(jwtPayload.username);
-            setRole(jwtPayload.role);
-        }
-    }*/
-
 
     useEffect(() => {
         fetch("/api/v1/all-categories", {

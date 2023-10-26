@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import {RoleContext} from "./RoleProvider";
+import {RoleContext} from "../context/RoleProvider";
 
 export const RoleBasedComponent = ({ roles, children }) => {
     const { userRole } = useContext(RoleContext);
