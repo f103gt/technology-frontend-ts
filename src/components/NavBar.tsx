@@ -1,11 +1,17 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import "../css/NavBar.css"
 import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
 import CategoriesDropdown from "./CategoriesDropdown";
+import CartModal from "./CartModal";
+import {Form, FormControl, Nav, Navbar} from "react-bootstrap";
+import Button from "react-bootstrap/Button";
 
 
 const NavBar = () => {
+
+    const [show, setShow] = useState(false);
+    const handleShow = () => setShow(true);
 
     /* const usernameDisplay = username ?
          (<li className="nav-item">
@@ -18,65 +24,54 @@ const NavBar = () => {
 
     return (
         <div>
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <Navbar expand="lg" bg="light">
                 <div className="container">
-                    <Link className="navbar-brand" to="/">Navbar</Link>
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/home">Home</Link>
-                            </li>
-                            <li className="nav-item dropdown">
-                                <button className="nav-link dropdown-toggle"
-                                        data-bs-auto-close="outside"
-                                        id="navbarDropdown" role="button"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                    Products
-                                </button>
-                                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <CategoriesDropdown/>
-                                </ul>
-                            </li>
-                            <RoleBasedComponent roles={["staff", "manager", "admin", "user"]}>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/tasks">Tasks</Link>
-                                </li>
+                    <Navbar.Brand as={Link} to="/">
+                        Navbar
+                    </Navbar.Brand>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav className="me-auto">
+                            <Nav.Item>
+                                <Nav.Link as={Link} to="/home">
+                                    Home
+                                </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <CategoriesDropdown/>
+                            </Nav.Item>
+                            <RoleBasedComponent roles={['staff', 'manager', 'admin', 'user']}>
+                                <Nav.Item>
+                                    <Nav.Link as={Link} to="/tasks">
+                                        Tasks
+                                    </Nav.Link>
+                                </Nav.Item>
                             </RoleBasedComponent>
-                        </ul>
-                        <form className="d-flex">
-                            <input
-                                className="form-control me-2"
-                                type="search"
-                                placeholder="Search"
-                                aria-label="Search"/>
-                            <button className="btn btn-outline-success" type="submit">
+                        </Nav>
+                        <Form className="d-flex">
+                            <FormControl type="search" placeholder="Search" className="me-2" aria-label="Search"/>
+                            <Button variant="outline-success" type="submit">
                                 Search
-                            </button>
-                        </form>
+                            </Button>
+                        </Form>
                         <div>
-                            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                                {/*{usernameDisplay}*/}
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/login">Login</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/cart">Cart</Link>
-                                </li>
-                            </ul>
+                            <Nav className="ms-2 me-auto">
+                                <Nav.Item>
+                                    <Nav.Link as={Link} to="/login">
+                                        Login
+                                    </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Button variant="link" onClick={handleShow}>
+                                        Cart
+                                    </Button>
+                                </Nav.Item>
+                            </Nav>
                         </div>
-                    </div>
+                    </Navbar.Collapse>
                 </div>
-            </nav>
+            </Navbar>
+            <CartModal show={show} setShow={setShow}/>
         </div>
     );
 };

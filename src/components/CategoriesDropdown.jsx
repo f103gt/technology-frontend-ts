@@ -2,6 +2,8 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
 import axios from "axios";
+import {Dropdown, DropdownButton} from 'react-bootstrap';
+import Button from "react-bootstrap/Button";
 
 const CategoriesDropdown = () => {
     const [categories, setCategories] = useState([]);
@@ -35,13 +37,13 @@ const CategoriesDropdown = () => {
 
     const setButtons = (roles) => {
         return (
-            <RoleBasedComponent roles={roles}>
-                <button type="button" className="btn btn-info btn-sm"
+            <div><RoleBasedComponent roles={roles}>
+                <Button type="button" className="btn btn-info btn-sm"
                         style={{
                             padding: '.25rem .5rem',
                             fontSize: '.75rem',
                         }}>Delete
-                </button>
+                </Button>
                 <span>&nbsp;</span>
                 <button type="button" className="btn btn-info btn-sm"
                         style={{
@@ -49,13 +51,13 @@ const CategoriesDropdown = () => {
                             fontSize: '.75rem',
                         }}>Modify
                 </button>
-            </RoleBasedComponent>
+            </RoleBasedComponent></div>
         );
     }
 
     const setSingleButton = (roles) => {
         return (
-            <RoleBasedComponent roles={roles}>
+            <div><RoleBasedComponent roles={roles}>
                 <button
                     type="button"
                     className="btn btn-info btn-sm"
@@ -64,51 +66,45 @@ const CategoriesDropdown = () => {
                         fontSize: '.75rem',
                     }}>Add
                 </button>
-            </RoleBasedComponent>
+            </RoleBasedComponent></div>
         );
     };
     return (
-        <div>
-            <ul>
-                {categories.map(category => {
-                    if (category.childCategories.length > 0) {
-                        return (
-                            <li className="dropend" key={category.categoryName}>
-                                <Link to={`/${category.categoryName}`} className="dropdown-item dropdown-toggle"
-                                      role="button"
-                                      data-bs-toggle="dropdown" id="sub-dropdown-menu"
-                                      data-bs-auto-close="outside">
+        <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-basic">
+                Categories
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+                {categories.map(category => (
+                    <React.Fragment key={category.categoryName}>
+                        {category.childCategories.length > 0 ? (
+                            <Dropdown>
+                                <Dropdown.Toggle variant="light" id={`dropdown-submenu-${category.categoryName}`}>
                                     {category.categoryName}
-                                </Link>
-                                <ul className="dropdown-menu" aria-labelledby="sub-dropdown-menu">
-                                    {category.childCategories.map(childCategory => (
-                                        <li key={childCategory.categoryName}>
-                                            <button className="dropdown-item"
-                                                    onClick={() => navigate(`/${childCategory.categoryName}`)}>
-                                                {childCategory.categoryName}
-                                            </button>
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    {category.childCategories.map((childCategory) => (
+                                        <Dropdown.Item onClick={() => navigate(`/${childCategory.categoryName}`)}
+                                        key = {childCategory.categoryName}>
+                                            {childCategory.categoryName}
                                             {setButtons(["user", "admin", "manager", "staff"])}
-                                        </li>
+                                        </Dropdown.Item>
                                     ))}
                                     {setSingleButton(["user", "admin", "manager", "staff"])}
-                                </ul>
-                            </li>
-                        );
-                    } else {
-                        return (
-                            <li key={category.categoryName}>
-                                <button className="dropdown-item"
-                                        onClick={() => navigate(`/${category.categoryName}`)}>
-                                    {category.categoryName}
-                                </button>
-                                {setButtons(["user", "admin", "manager", "staff"])}
-                            </li>
-                        );
-                    }
-                })}
-
-            </ul>
-        </div>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        ) : (
+                            <Dropdown.Item onClick={() => navigate(`/${category.categoryName}`)} key = {category.categoryName}>
+                                {category.categoryName}
+                            </Dropdown.Item>
+                        )}
+                        {setButtons(["user", "admin", "manager", "staff"])}
+                    </React.Fragment>
+                ))}
+                {setSingleButton(["user", "admin", "manager", "staff"])}
+            </Dropdown.Menu>
+        </Dropdown>
     );
 };
 

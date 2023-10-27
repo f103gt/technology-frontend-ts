@@ -39,7 +39,7 @@ const Products = () => {
     const setSingleButton = (roles: any) => {
         return (
             <RoleBasedComponent roles={roles}>
-                <button type="button" className="btn btn-info" >Add</button>
+                <button type="button" className="btn btn-info">Add</button>
             </RoleBasedComponent>
         );
     };
@@ -50,10 +50,10 @@ const Products = () => {
                 <div className="container py-5">
                     <div className="row">
                         {products.map(product => (
-                            <ProductCard key={product.productName} product={product} categoryName={categoryName} />
+                            <ProductCard key={product.productName} product={product} categoryName={categoryName}/>
                         ))}
                     </div>
-                    {setSingleButton(["user","admin","manager"])}
+                    {setSingleButton(["user", "admin", "manager"])}
                 </div>
             </section>
         </div>
