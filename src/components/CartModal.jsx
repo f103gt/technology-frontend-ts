@@ -2,11 +2,11 @@ import React, {useContext} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import {CartContext} from "../context/CartContext";
+import CartItemCard from "./CartItemCard";
 
 const CartModal = ({show, setShow}) => {
     const handleClose = () => setShow(false);
-    const cart = useContext(CartContext);
-
+    const {items} = useContext(CartContext);
 
 
     return (
@@ -15,7 +15,12 @@ const CartModal = ({show, setShow}) => {
                 <Modal.Title>Shopping Cart</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {/* Your modal content */}
+                {items.map((cartItem) => {
+                    //console.log(cartItem);
+                    return (
+                        <CartItemCard cartItem={cartItem} key={cartItem.productName} />
+                    );
+                })}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
@@ -24,7 +29,8 @@ const CartModal = ({show, setShow}) => {
                 {/* Other buttons */}
             </Modal.Footer>
         </Modal>
-    );
+    )
+        ;
 };
 
 export default CartModal;

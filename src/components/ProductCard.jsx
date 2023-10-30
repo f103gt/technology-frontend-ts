@@ -2,14 +2,16 @@ import React from 'react';
 import {Link} from "react-router-dom";
 import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
 import {Badge, Card, Col} from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import {RiDeleteBin5Fill} from "react-icons/ri";
+import {MdAutoFixHigh} from "react-icons/md";
 
 const ProductCard = ({ product, categoryName }) => {
     const setButtons = (roles) => {
         return (
             <RoleBasedComponent roles={roles}>
-                <button type="button" className="btn btn-info">Delete</button>
-                <span>&nbsp;</span>
-                <button type="button" className="btn btn-info">Modify</button>
+                <Button className="btn btn-link"><RiDeleteBin5Fill color={"black"} size={"25"}/></Button>
+                <button className="btn btn-link"><MdAutoFixHigh color={"black"} size={"25"}/></button>
             </RoleBasedComponent>
         );
     };

@@ -3,8 +3,13 @@ import {useParams} from "react-router-dom";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import {CartContext} from "../context/CartContext";
+import {Toast} from "react-bootstrap";
+import {LoadingContext} from "../context/LoadingContext";
+import Skeleton from "react-loading-skeleton";
+import 'react-loading-skeleton/dist/skeleton.css';
 
-interface ProductDetails {
+
+export interface ProductDetails {
     categoryName: string;
     productName: string;
     productSku: string,
@@ -14,25 +19,19 @@ interface ProductDetails {
     productInfoFile: File;*/
 }
 
-interface CartItem {
-    categoryName: string;
-    productName: string;
-    /*productImage: File;*/
-    cartItemQuantity: number;
-    cartItemPrice: number;
-}
-
 const SpecificProduct = () => {
     const [product, setProduct] = useState<ProductDetails>();
-    const {categoryName} = useParams<string>();
     const {productName} = useParams<string>();
     const cart = useContext(CartContext);
+    const [showToast, setShowToast] = useState(false);
+    const { setLoading } = useContext(LoadingContext);
 
     const fetchProductData = useCallback(() => {
+        setLoading(true);
         axios.get("/csrf/api/v1")
             .then(response => {
                 const csrfToken = response.data.headers;
-                axios.get(`/api/v1/specific-product?categoryName=${categoryName}&productName=${productName}`, {
+                axios.get(`/api/v1/specific-product?productName=${productName}`, {
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': csrfToken
@@ -40,28 +39,52 @@ const SpecificProduct = () => {
                 })
                     .then(result => {
                         setProduct(result.data);
-                        console.log(result.data.productName);
+                    })
+                    .catch((errorMessage)=>{
+                        throw new Error(errorMessage)
+                    })
+                    .finally(()=>{
+                        setLoading(false);
                     });
             })
-    }, [categoryName, productName, setProduct]);
+    }, [productName]);
 
     useEffect(() => {
         fetchProductData();
     }, [fetchProductData]);
+
+    const addToCart = () => {
+        if (!product) {
+            throw new Error("product not found");
+        }
+        const existingCartItem =
+            cart.items.find(cartItem => cartItem.productName === product.productName);
+        if (!existingCartItem) {
+            cart.addNewOneToCart(product);
+        } else {
+            cart.addOneToCart(product.productName);
+        }
+        setShowToast(true);
+    };
+
+    if (!product) {
+        return <Skeleton count={5} />; // Adjust this as needed
+    }
+
     return (
         <div>
-            <Button variant="primary" onClick={() => {
-                if (product !== undefined) {
-                    const cartItem: CartItem = {
-                        productName: product?.productName,
-                        categoryName: product?.categoryName,
-                        /*productImage: product?.productImages[0],*/
-                        cartItemPrice: product?.productPrice,
-                        cartItemQuantity: 0
-                    };
-                    cart.addOneToCart(cartItem);
-                }
-            }}>Cart</Button>
+            <span>{product?.productName}</span>
+            <Button variant="primary" onClick={() => addToCart()}>
+                Add to cart</Button>
+            <Toast onClose={() => setShowToast(false)}
+                   show={showToast} delay={3000} autohide>
+                <Toast.Header>
+                    <strong className="mr-auto"></strong>
+                    <Toast.Body>
+                        The product has been added to the cart!
+                    </Toast.Body>
+                </Toast.Header>
+            </Toast>
         </div>
     );
 };

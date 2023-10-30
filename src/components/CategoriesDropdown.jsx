@@ -2,8 +2,12 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
 import axios from "axios";
-import {Dropdown, DropdownButton} from 'react-bootstrap';
-import Button from "react-bootstrap/Button";
+import {Dropdown} from 'react-bootstrap';
+import {CgMenuRound} from "react-icons/cg";
+import {RiDeleteBin5Fill} from "react-icons/ri";
+import "../css/CategoriesDropdown.css"
+import {MdAutoFixHigh} from "react-icons/md";
+import {IoMdAddCircle} from "react-icons/io";
 
 const CategoriesDropdown = () => {
     const [categories, setCategories] = useState([]);
@@ -37,53 +41,35 @@ const CategoriesDropdown = () => {
 
     const setButtons = (roles) => {
         return (
-            <div><RoleBasedComponent roles={roles}>
-                <Button type="button" className="btn btn-info btn-sm"
-                        style={{
-                            padding: '.25rem .5rem',
-                            fontSize: '.75rem',
-                        }}>Delete
-                </Button>
+            <RoleBasedComponent roles={roles}>
+                <Link to={"/"} type="button" className="custom-button"><RiDeleteBin5Fill color={"orange"}/></Link>
                 <span>&nbsp;</span>
-                <button type="button" className="btn btn-info btn-sm"
-                        style={{
-                            padding: '.25rem .5rem',
-                            fontSize: '.75rem',
-                        }}>Modify
-                </button>
-            </RoleBasedComponent></div>
+                <Link to={"/"} type="button" className="custom-button"><MdAutoFixHigh color={"orange"}/></Link>
+            </RoleBasedComponent>
         );
     }
 
     const setSingleButton = (roles) => {
         return (
             <div><RoleBasedComponent roles={roles}>
-                <button
-                    type="button"
-                    className="btn btn-info btn-sm"
-                    style={{
-                        padding: '.25rem .5rem',
-                        fontSize: '.75rem',
-                    }}>Add
-                </button>
+                <Link to={"/"} type="button" className="custom-button"><IoMdAddCircle color={"orange"}/>
+                </Link>
             </RoleBasedComponent></div>
         );
     };
     return (
         <Dropdown>
-            <Dropdown.Toggle variant="success" id="dropdown-basic">
-                Categories
-            </Dropdown.Toggle>
+            <Dropdown.Toggle variant="dark" id="dropdown-basic"><CgMenuRound size={"30"}/></Dropdown.Toggle>
 
-            <Dropdown.Menu>
+            <Dropdown.Menu variant={"dark"}>
                 {categories.map(category => (
                     <React.Fragment key={category.categoryName}>
                         {category.childCategories.length > 0 ? (
-                            <Dropdown>
-                                <Dropdown.Toggle variant="light" id={`dropdown-submenu-${category.categoryName}`}>
+                            <Dropdown variant={"dark "}>
+                                <Dropdown.Toggle variant="dark" id={`dropdown-submenu-${category.categoryName}`}>
                                     {category.categoryName}
                                 </Dropdown.Toggle>
-                                <Dropdown.Menu>
+                                <Dropdown.Menu variant={"dark"} style={{ position: 'absolute', left: '100%', top: '0', width: '80%' }}>
                                     {category.childCategories.map((childCategory) => (
                                         <Dropdown.Item onClick={() => navigate(`/${childCategory.categoryName}`)}
                                         key = {childCategory.categoryName}>

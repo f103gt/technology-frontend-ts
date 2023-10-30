@@ -6,6 +6,10 @@ import CategoriesDropdown from "./CategoriesDropdown";
 import CartModal from "./CartModal";
 import {Form, FormControl, Nav, Navbar} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+import {FaShoppingCart, FaTasks} from "react-icons/fa";
+import {HiHome} from "react-icons/hi";
+import {ImSearch} from "react-icons/im";
+import {BiSolidLogInCircle} from "react-icons/bi";
 
 
 const NavBar = () => {
@@ -24,7 +28,7 @@ const NavBar = () => {
 
     return (
         <div>
-            <Navbar expand="lg" bg="light">
+            <Navbar expand="lg" bg="dark" variant="dark">
                 <div className="container">
                     <Navbar.Brand as={Link} to="/">
                         Navbar
@@ -33,38 +37,28 @@ const NavBar = () => {
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
                             <Nav.Item>
-                                <Nav.Link as={Link} to="/home">
-                                    Home
-                                </Nav.Link>
+                                <Nav.Link as={Link} to="/home"><HiHome size={"25"} color={"white"}/></Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
                                 <CategoriesDropdown/>
                             </Nav.Item>
                             <RoleBasedComponent roles={['staff', 'manager', 'admin', 'user']}>
                                 <Nav.Item>
-                                    <Nav.Link as={Link} to="/tasks">
-                                        Tasks
-                                    </Nav.Link>
+                                    <Nav.Link as={Link} to="/tasks"><FaTasks size={"25"} color={"orange"}/></Nav.Link>
                                 </Nav.Item>
                             </RoleBasedComponent>
                         </Nav>
                         <Form className="d-flex">
                             <FormControl type="search" placeholder="Search" className="me-2" aria-label="Search"/>
-                            <Button variant="outline-success" type="submit">
-                                Search
-                            </Button>
+                            <Button variant="outline-success dark" type="submit"><ImSearch size={"20"} color={"orange"}/></Button>
                         </Form>
                         <div>
                             <Nav className="ms-2 me-auto">
                                 <Nav.Item>
-                                    <Nav.Link as={Link} to="/login">
-                                        Login
-                                    </Nav.Link>
+                                    <Nav.Link as={Link} to="/login"><BiSolidLogInCircle size={"30"} color={"white"}/></Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Button variant="link" onClick={handleShow}>
-                                        Cart
-                                    </Button>
+                                    <Nav.Link onClick={handleShow}> <FaShoppingCart size={"25"} color={"white"}/></Nav.Link>
                                 </Nav.Item>
                             </Nav>
                         </div>

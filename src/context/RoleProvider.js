@@ -1,7 +1,10 @@
 import React, { createContext, useEffect, useState } from "react";
 
 // Create a context for user role
-export const RoleContext = createContext("guest");
+export const RoleContext = createContext({
+    userRole: "guest",
+    setUserRole: {}
+});
 
 // Provide a component that wraps the app
 const RoleProvider = ({ children }) => {
@@ -17,8 +20,12 @@ const RoleProvider = ({ children }) => {
         localStorage.setItem("userRole", userRole);
     }, [userRole]);
 
+    const contextValue={
+        userRole,
+        setUserRole
+    }
     return (
-        <RoleContext.Provider value={{ userRole, setUserRole }}>
+        <RoleContext.Provider value={contextValue}>
             {children}
         </RoleContext.Provider>
     );
