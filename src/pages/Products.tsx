@@ -6,6 +6,7 @@ import ProductCard from "../components/ProductCard";
 import {LoadingContext} from "../context/LoadingContext";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
+import AddProductModal from "../components/AddProductModal";
 
 interface Product {
     productName: string;
@@ -16,6 +17,7 @@ const Products = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const {categoryName} = useParams<string>();
     const {isLoading,setLoading} =  useContext(LoadingContext);
+    const [show,setShow] = useState(false);
 
     const fetchProductData = useCallback(() => {
         setLoading(true);
@@ -45,7 +47,7 @@ const Products = () => {
     const setSingleButton = (roles: any) => {
         return (
             <RoleBasedComponent roles={roles}>
-                <button type="button" className="btn btn-info">Add</button>
+                <button type="button" className="btn btn-info" onClick={()=>setShow(true)}>Add</button>
             </RoleBasedComponent>
         );
     };
@@ -77,7 +79,7 @@ const Products = () => {
                     </div>
                 </section>
             )}
-
+            <AddProductModal show={show} setShow={setShow} categoryName={categoryName}></AddProductModal>
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
 import axios from "axios";
 import {Dropdown} from 'react-bootstrap';
@@ -8,10 +8,13 @@ import {RiDeleteBin5Fill} from "react-icons/ri";
 import "../css/CategoriesDropdown.css"
 import {MdAutoFixHigh} from "react-icons/md";
 import {IoMdAddCircle} from "react-icons/io";
+import Button from "react-bootstrap/Button";
+import AddProductModal from "./AddProductModal";
 
 const CategoriesDropdown = () => {
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
+    const [show,setShow] = useState(false);
 
     const fetchCategories = useCallback(() => {
         axios.get('/csrf/api/v1')
@@ -39,22 +42,13 @@ const CategoriesDropdown = () => {
         fetchCategories();
     }, [fetchCategories]);
 
-    const setButtons = (roles) => {
+    const setButton = (roles, IconComponent, className, color) => {
         return (
             <RoleBasedComponent roles={roles}>
-                <Link to={"/"} type="button" className="custom-button"><RiDeleteBin5Fill color={"orange"}/></Link>
-                <span>&nbsp;</span>
-                <Link to={"/"} type="button" className="custom-button"><MdAutoFixHigh color={"orange"}/></Link>
+                <Button variant={"btn btn-link"} type="button" className={className}
+                onClick = {()=>setShow(true)}><IconComponent
+                    color={color}/></Button>
             </RoleBasedComponent>
-        );
-    }
-
-    const setSingleButton = (roles) => {
-        return (
-            <div><RoleBasedComponent roles={roles}>
-                <Link to={"/"} type="button" className="custom-button"><IoMdAddCircle color={"orange"}/>
-                </Link>
-            </RoleBasedComponent></div>
         );
     };
     return (
@@ -69,26 +63,30 @@ const CategoriesDropdown = () => {
                                 <Dropdown.Toggle variant="dark" id={`dropdown-submenu-${category.categoryName}`}>
                                     {category.categoryName}
                                 </Dropdown.Toggle>
-                                <Dropdown.Menu variant={"dark"} style={{ position: 'absolute', left: '100%', top: '0', width: '80%' }}>
+                                <Dropdown.Menu variant={"dark"}
+                                               style={{position: 'absolute', left: '100%', top: '0', width: '80%'}}>
                                     {category.childCategories.map((childCategory) => (
                                         <Dropdown.Item onClick={() => navigate(`/${childCategory.categoryName}`)}
-                                        key = {childCategory.categoryName}>
+                                                       key={childCategory.categoryName}>
                                             {childCategory.categoryName}
-                                            {setButtons(["user", "admin", "manager", "staff"])}
+                                            {setButton(["user", "admin", "manager", "staff"], RiDeleteBin5Fill, "custom-button", "orange")}
+                                            {setButton(["user", "admin", "manager", "staff"], MdAutoFixHigh, "custom-button", "orange")}
                                         </Dropdown.Item>
                                     ))}
-                                    {setSingleButton(["user", "admin", "manager", "staff"])}
+                                    {setButton(["user", "admin", "manager", "staff"], IoMdAddCircle, "custom-button", "orange")}
                                 </Dropdown.Menu>
                             </Dropdown>
                         ) : (
-                            <Dropdown.Item onClick={() => navigate(`/${category.categoryName}`)} key = {category.categoryName}>
+                            <Dropdown.Item onClick={() => navigate(`/${category.categoryName}`)}
+                                           key={category.categoryName}>
                                 {category.categoryName}
                             </Dropdown.Item>
                         )}
-                        {setButtons(["user", "admin", "manager", "staff"])}
+                        {setButton(["user", "admin", "manager", "staff"], RiDeleteBin5Fill, "custom-button", "orange")}
+                        {setButton(["user", "admin", "manager", "staff"], MdAutoFixHigh, "custom-button", "orange")}
                     </React.Fragment>
                 ))}
-                {setSingleButton(["user", "admin", "manager", "staff"])}
+                {setButton(["user", "admin", "manager", "staff"], IoMdAddCircle, "custom-button", "orange")}
             </Dropdown.Menu>
         </Dropdown>
     );
