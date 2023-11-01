@@ -1,42 +1,38 @@
-import React, {Component} from 'react';
-import UserContext from "../context/UserContext";
-import {Link, useNavigate} from "react-router-dom";
-import {getCookies} from "../utilities/CookiesUtil";
+import React, {useContext, useState} from 'react';
+import {Link} from "react-router-dom";
 import "../css/NavBar.css";
+import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
+import CategoriesDropdown from "./CategoriesDropdown";
+import CartModal from "../modals/CartModal";
+import {Form, FormControl, Nav, Navbar} from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import {FaTasks} from "react-icons/fa";
+import {ImSearch} from "react-icons/im";
+import {BiSolidLogInCircle} from "react-icons/bi";
+import {RoleContext} from "../context/RoleProvider";
+import {FaCircleUser} from "react-icons/fa6";
+import {IoMdCart} from "react-icons/io";
+import {RiHome6Fill} from "react-icons/ri";
 
 
-interface Category{
-    categoryName: string;
-    childCategories: Category[];
-}
+const NavBar = () => {
 
-interface NavBarProps{
-    navigate: (path:string) => void;
-}
+    const [show, setShow] = useState(false);
+    const {userRole} = useContext(RoleContext);
+    const handleShow = () => setShow(true);
 
-interface NavBarState{
-    categories: Category[];
-}
-class NavBar extends Component<NavBarProps,NavBarState> {
-    constructor(props: NavBarProps) {
-        super(props);
-        this.state={
-            categories: [],
-        };
-    };
-
-    componentDidMount() {
-        fetch("/api/v1/all-categories", {
-            method: "GET"
-        })
-            .then(res => res.json())
-            .then(result => {
-                console.log(result);
-                this.setState({categories:result});
-                console.log(this.state.categories);
-            });
+    const isLogged = () => {
+        if (userRole === "guest")
+            return (
+                <Nav.Link as={Link} to="/login"><BiSolidLogInCircle size={"30"} color={"white"}/></Nav.Link>
+            );
+        if (userRole !== "guest") {
+            return (
+                <Button variant={"btn btn-link"} onClick={() => setShow(true)}>
+                    <FaCircleUser size={"29"} color={"white"}/></Button>
+            );
+        }
     }
-
 
 
     //TODO implement formatting for /categoryName url
@@ -44,121 +40,49 @@ class NavBar extends Component<NavBarProps,NavBarState> {
     // if the url has multiple parts make them look like represented below
     // smartphone and mobile-phone
 
-    renderCategories = (categories: Category[]) => {
-        return (
-            <ul>
-                {categories.map(category => {
-                    if (category.childCategories.length > 0) {
-                        return (
-                            <li className="dropend" key={category.categoryName}>
-                                <span className="dropdown-item dropdown-toggle" role="button"
-                                      data-bs-toggle="dropdown" id="sub-dropdown-menu"
-                                      data-bs-auto-close="outside">
-                                    {category.categoryName}
-                                </span>
-                                <ul className="dropdown-menu" aria-labelledby="sub-dropdown-menu">
-                                    {category.childCategories.map(childCategory => (
-                                        <li key={childCategory.categoryName}>
-                                            <span className="dropdown-item"
-                                                  onClick={() => this.props.navigate(`/${childCategory.categoryName}`)}>
-                                                {childCategory.categoryName}
-                                            </span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </li>
-                        );
-                    } else {
-                        return (
-                            <li key={category.categoryName}>
-                                <span className="dropdown-item"
-                                      onClick={() => this.props.navigate(`/${category.categoryName}`)}>
-                                    {category.categoryName}
-                                </span>
-                            </li>
-                        );
-                    }
-                })}
-            </ul>
-        );
-    };
-
-
-    render() {
-        const userRole = getCookies("userRole");
-        return (
-            <div>
-                <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                    <div className="container">
-                        <Link className="navbar-brand" to="/">TECHNOLOGY</Link>
-                        <button
-                            className="navbar-toggler"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#navbarSupportedContent"
-                            aria-controls="navbarSupportedContent"
-                            aria-expanded="false"
-                            aria-label="Toggle navigation">
-                            <span className="navbar-toggler-icon"></span>
-                        </button>
-                        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/home">Home</Link>
-                                </li>
-                                <li className="nav-item dropdown">
-                                <span className="nav-link dropdown-toggle"
-                                      data-bs-auto-close="outside"
-                                      id="navbarDropdown" role="button"
-                                      data-bs-toggle="dropdown" aria-expanded="false">
-                                    Products
-                                </span>
-                                    <ul className="dropdown-menu" aria-labelledby="navbarDropdown">{
-                                        this.renderCategories(this.state.categories)
-                                    }
-                                    </ul>
-                                </li>
-                            </ul>
-                            <form className="d-flex">
-                                <input
-                                    className="form-control me-2"
-                                    type="search"
-                                    placeholder="Search"
-                                    aria-label="Search"/>
-                                <button className="btn btn-outline-success" type="submit">
-                                    Search
-                                </button>
-                            </form>
-                            <div>
-                                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                                    {userRole ?
-                                        (<li className="nav-item">
-                                            <Link className="nav-link" to="/logout">Logout</Link>
-                                        </li>)
-                                        :
-                                        (<li className="nav-item">
-                                            <Link className="nav-link" to="/login">Login</Link>
-                                        </li>)}
-
-                                    <li className="nav-item">
-                                        <Link className="nav-link" to="/cart">Cart</Link>
-                                    </li>
-                                </ul>
-                            </div>
+    return (
+        <div>
+            <Navbar expand="lg" bg="dark" variant="dark">
+                <div className="container">
+                    <Navbar.Brand as={Link} to="/">
+                        Navbar
+                    </Navbar.Brand>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav className="me-auto">
+                            <Nav.Item>
+                                <Nav.Link as={Link} to="/home"><RiHome6Fill size={"30"} color={"white"}/></Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <CategoriesDropdown/>
+                            </Nav.Item>
+                            <RoleBasedComponent roles={['staff', 'manager', 'admin', 'user']}>
+                                <Nav.Item>
+                                    <Nav.Link as={Link} to="/tasks"><FaTasks size={"25"} color={"white"}/></Nav.Link>
+                                </Nav.Item>
+                            </RoleBasedComponent>
+                        </Nav>
+                        <Form className="d-flex">
+                            <FormControl type="search" placeholder="Search" className="me-2" aria-label="Search"/>
+                            <Button variant="outline-success dark" type="submit"><ImSearch size={"20"}
+                                                                                           color={"white"}/></Button>
+                        </Form>
+                        <div>
+                            <Nav className="ms-2 me-auto">
+                                <Nav.Item>
+                                    {isLogged()}
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link onClick={handleShow}> <IoMdCart size={"30"}
+                                                                                    color={"white"}/></Nav.Link>
+                                </Nav.Item>
+                            </Nav>
                         </div>
-                    </div>
-                </nav>
-            </div>
-        );
-    }
-}
-
-NavBar.contextType = UserContext;
-
-const withNavigation = (Component:any) => {
-    return (props:any) => {
-        const navigate = useNavigate();
-        return <Component {...props} navigate={navigate} />;
-    };
-}
-export default withNavigation(NavBar);
+                    </Navbar.Collapse>
+                </div>
+            </Navbar>
+            <CartModal show={show} setShow={setShow}/>
+        </div>
+    );
+};
+export default NavBar;

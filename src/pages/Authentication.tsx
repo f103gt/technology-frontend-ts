@@ -1,18 +1,19 @@
 import React, {Component} from 'react';
 import {useNavigate} from 'react-router-dom';
-import UserContext, {User, UserContextType} from '../context/UserContext';
+import axios from "axios";
+import {RoleContext} from "../context/RoleProvider";
 
 interface AuthenticateProps {
     navigate: (path: string) => void;
 }
 
 class Authentication extends Component<AuthenticateProps> {
+    static contextType = RoleContext;
+
     state = {
         username: '',
         password: '',
     };
-
-    //TODO consider whether the user email is needed to be placed in the context
 
     updateUsername = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({username: event.target.value});
@@ -30,43 +31,31 @@ class Authentication extends Component<AuthenticateProps> {
             password: password,
         };
 
-        fetch('api/v1/auth/authenticate', {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            method: 'post',
-            body: JSON.stringify(requestBody),
-        })
-            .then((response) => {
-                if (response.status === 200) {
-                    return Promise.all([response.json(), response.headers]);
-                } else {
-                    return Promise.reject('Invalid login attempt');
-                }
-            })
-            .then(([body, headers]) => {
-                console.log(headers);
-                console.log(body);
-
-                const token = headers.get("Authorization");
-                if(token){
-                    const tokenParts = token.split(".");
-                    const payload = JSON.parse(atob(tokenParts[1])
-                        .replace(/-/g, '+')
-                        .replace(/_/g, '/'));
-                    const userData: User = {
-                        username: payload.username,
-                        role: payload.role,
-                    };
-
-                    document.cookie = `userRole=${payload.role};path=/`;
-                    (this.context as UserContextType).login(userData);
-                    this.props.navigate('/home');
-                }else{
-                    throw new Error("Authorization token not found");
-                }
-            })
-            .catch((message) => alert(message));
+        axios.get("/csrf/api/v1")
+            .then(response => {
+                const csrfToken = response.data.headers;
+                axios({
+                    method: 'post',
+                    url: "/api/v1/auth/authenticate",
+                    data: requestBody,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    withCredentials: true
+                })
+                    .then(response => {
+                        if (response.status === 200) {
+                            const userRole = response.data.role;
+                            //console.log(userRole);
+                            localStorage.setItem("userRole", userRole);
+                            this.props.navigate("/home");
+                        }
+                    })
+                    .catch(error => {
+                        alert(error)
+                    });
+            });
     }
 
     render() {
@@ -95,8 +84,6 @@ class Authentication extends Component<AuthenticateProps> {
         );
     }
 }
-
-Authentication.contextType = UserContext;
 
 const withNavigation = (Component: any) => {
     return (props: any) => {
