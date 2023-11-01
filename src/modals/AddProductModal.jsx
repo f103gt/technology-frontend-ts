@@ -5,34 +5,67 @@ import {Form} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 
 const AddProductModal = ({categoryName, show, setShow}) => {
-    console.log("in modal");
     const [productName, setProductName] = useState("");
     const [productSku, setProductSku] = useState("");
     const [productPrice, setProductPrice] = useState("");
     const [productQuantity, setProductQuantity] = useState("");
     const [productDescription, setProductDescription] = useState(null);
+    const [primaryImage, setPrimaryImage] = useState(null);
     const [productImages, setProductImages] = useState([]);
 
+    /*
+    const product = {
+            categoryName: categoryName,
+            productName: productName,
+            sku: productSku,
+            quantity: productQuantity,
+            price: productPrice
+        };
+
+        const formData = new FormData();
+        formData.append("product", JSON.stringify(product));
+        formData.append("description", productDescription);
+        formData.append("primaryImage", primaryImage);
+        productImages.forEach((image, index) => {
+            formData.append(`images`, image);  // Append the images as an array
+        });
+    * */
     const handleSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData();
+        formData.append("categoryName",categoryName);
         formData.append("productName", productName);
         formData.append("sku", productSku);
-        formData.append("price", productPrice);
         formData.append("quantity", productQuantity);
+        formData.append("price", productPrice);
         formData.append("description", productDescription);
+        formData.append("primaryImage", primaryImage);
         productImages.forEach((image, index) => {
-            formData.append(`images[${index}]`, image);
+            formData.append(`images`, image);  // Append the images as an array
         });
-        axios.post("url", formData, {
-            headers:
-                {"Content-Type": "application/json"},
-        }).then(() => {
-        })
+
+        axios.get("/csrf/api/v1")
+            .then(response => {
+                const csrfToken = response.data.headers;
+                axios({
+                    method: 'post',
+                    url: "/manager/add-product",
+                    data: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    withCredentials: true
+                })
+                    .catch(error => {
+                        alert(error)
+                    });
+            });
+
     }
 
     return (
-        <Modal show={show} onHide={()=>setShow(false)}>
+        <Modal show={show} onHide={() => setShow(false)}>
             <Modal.Header closeButton>
                 <Modal.Title>New Product</Modal.Title>
             </Modal.Header>
@@ -63,13 +96,19 @@ const AddProductModal = ({categoryName, show, setShow}) => {
                     <Form.Group controlId="productDescription">
                         <Form.Label>Description</Form.Label>
                         <Form.Control type={"file"} label="Product Description"
-                                  onChange={event => setProductDescription(event.target.files[0])}/>
+                                      onChange={event => setProductDescription(event.target.files[0])}/>
+                    </Form.Group>
+
+                    <Form.Group controlId="primaryImage">
+                        <Form.Label>Primary Image</Form.Label>
+                        <Form.Control type={"file"} label="Product Description"
+                                      onChange={event => setPrimaryImage(event.target.files[0])}/>
                     </Form.Group>
 
                     <Form.Group>
                         <Form.Label>Images</Form.Label>
                         <Form.Control type="file" label="Product Images" multiple
-                                  onChange={event => setProductImages(event.target.files)}/>
+                                      onChange={event => setProductImages(Array.from(event.target.files))}/>
                     </Form.Group>
                     <Button variant="primary" type="submit">Submit</Button>
                 </Form>

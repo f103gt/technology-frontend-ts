@@ -47,11 +47,8 @@ class Authentication extends Component<AuthenticateProps> {
                 })
                     .then(response => {
                         if (response.status === 200) {
-                            // Assuming the role is in response.data.role
                             const userRole = response.data.role;
-                            console.log(userRole);
-
-                            // Store the user's role in local storage
+                            //console.log(userRole);
                             localStorage.setItem("userRole", userRole);
                             this.props.navigate("/home");
                         }

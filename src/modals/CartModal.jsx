@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import {CartContext} from "../context/CartContext";
-import CartItemCard from "./CartItemCard";
+import CartItemCard from "../components/CartItemCard";
 
 const CartModal = ({show, setShow}) => {
     const handleClose = () => setShow(false);

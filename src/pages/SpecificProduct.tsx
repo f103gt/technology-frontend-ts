@@ -47,7 +47,7 @@ const SpecificProduct = () => {
                         setLoading(false);
                     });
             })
-    }, [productName]);
+    }, [productName, setLoading]);
 
     useEffect(() => {
         fetchProductData();

@@ -6,7 +6,7 @@ import ProductCard from "../components/ProductCard";
 import {LoadingContext} from "../context/LoadingContext";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
-import AddProductModal from "../components/AddProductModal";
+import AddProductModal from "../modals/AddProductModal";
 
 interface Product {
     productName: string;
