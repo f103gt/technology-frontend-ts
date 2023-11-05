@@ -16,21 +16,16 @@ const CartModal = ({show, setShow}) => {
             </Modal.Header>
             <Modal.Body>
                 {items.map((cartItem) => {
-                    //console.log(cartItem);
                     return (
                         <CartItemCard cartItem={cartItem} key={cartItem.productName} />
                     );
                 })}
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                    Close
-                </Button>
-                {/* Other buttons */}
+                <Button variant="dark" onClick={handleClose}>Order</Button>
             </Modal.Footer>
         </Modal>
-    )
-        ;
+    );
 };
 
 export default CartModal;

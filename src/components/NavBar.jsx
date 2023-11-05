@@ -14,26 +14,37 @@ import {FaCircleUser} from "react-icons/fa6";
 import {IoMdCart} from "react-icons/io";
 import {RiHome6Fill} from "react-icons/ri";
 import AuthenticationModal from "../modals/AuthenticationModal";
+import Tasks from "../pages/Tasks";
 
 
 const NavBar = () => {
-
-
     const {userRole} = useContext(RoleContext);
     const [showCart, setShowCart] = useState(false);
     const [showAuth, setShowAuth] = useState(false);
 
     const isLogged = () => {
-        if (userRole === "guest")
+        if (userRole === "guest"){
             return (
-                <Nav.Link onClick={()=>setShowAuth(true)}>
+                <Nav.Link onClick={() => setShowAuth(true)}>
                     <BiSolidLogInCircle size={"30"} color={"white"}/></Nav.Link>
             );
+        }
         if (userRole !== "guest") {
             return (
-                <Nav.Link onClick={()=>setShowAuth(true)}>
+                <Nav.Link onClick={() => setShowAuth(true)}>
                     <FaCircleUser size={"29"} color={"white"}/></Nav.Link>
             );
+        }
+    }
+
+    const tasksDisplay = () => {
+        if (userRole === "admin") {
+            return (<Tasks/>);
+        } else {
+            return (
+                <RoleBasedComponent roles={['user', 'staff', 'manager']}>
+                    <Nav.Link as={Link} to="/todo"><FaTasks size={"25"} color={"white"}/></Nav.Link>
+                </RoleBasedComponent>);
         }
     }
 
@@ -60,9 +71,7 @@ const NavBar = () => {
                                 <CategoriesDropdown/>
                             </Nav.Item>
                             <RoleBasedComponent roles={['staff', 'manager', 'admin', 'user']}>
-                                <Nav.Item>
-                                    <Nav.Link as={Link} to="/tasks"><FaTasks size={"25"} color={"white"}/></Nav.Link>
-                                </Nav.Item>
+                                <Nav.Item>{tasksDisplay()}</Nav.Item>
                             </RoleBasedComponent>
                         </Nav>
                         <Form className="d-flex">
@@ -76,8 +85,8 @@ const NavBar = () => {
                                     {isLogged()}
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Nav.Link onClick={()=>setShowCart(true)}> <IoMdCart size={"30"}
-                                                                                    color={"white"}/></Nav.Link>
+                                    <Nav.Link onClick={() => setShowCart(true)}> <IoMdCart size={"30"}
+                                                                                           color={"white"}/></Nav.Link>
                                 </Nav.Item>
                             </Nav>
                         </div>

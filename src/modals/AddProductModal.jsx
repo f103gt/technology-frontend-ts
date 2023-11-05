@@ -82,22 +82,22 @@ const AddProductModal = ({categoryName, show, setShow}) => {
 
                     <Form.Group controlId="productDescription">
                         <Form.Label>Description</Form.Label>
-                        <Form.Control type={"file"} label="Product Description"
+                        <Form.Control type={"file"} label="Product Description" accept={".txt"}
                                       onChange={event => setProductDescription(event.target.files[0])}/>
                     </Form.Group>
 
                     <Form.Group controlId="primaryImage">
                         <Form.Label>Primary Image</Form.Label>
-                        <Form.Control type={"file"} label="Product Description"
+                        <Form.Control type={"file"} label="Product Description" accept={[".png",".jpg",".jpeg"]}
                                       onChange={event => setPrimaryImage(event.target.files[0])}/>
                     </Form.Group>
 
                     <Form.Group>
                         <Form.Label>Images</Form.Label>
-                        <Form.Control type="file" label="Product Images" multiple
+                        <Form.Control type="file" label="Product Images" multiple accept={[".png",".jpg",".jpeg"]}
                                       onChange={event => setProductImages(Array.from(event.target.files))}/>
                     </Form.Group>
-                    <Button variant="primary" type="submit">Submit</Button>
+                    <Button variant="dark" type="submit">Submit</Button>
                 </Form>
             </Modal.Body>
         </Modal>
