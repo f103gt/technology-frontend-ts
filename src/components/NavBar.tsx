@@ -13,23 +13,26 @@ import {RoleContext} from "../context/RoleProvider";
 import {FaCircleUser} from "react-icons/fa6";
 import {IoMdCart} from "react-icons/io";
 import {RiHome6Fill} from "react-icons/ri";
+import AuthenticationModal from "../modals/AuthenticationModal";
 
 
 const NavBar = () => {
 
-    const [show, setShow] = useState(false);
+
     const {userRole} = useContext(RoleContext);
-    const handleShow = () => setShow(true);
+    const [showCart, setShowCart] = useState(false);
+    const [showAuth, setShowAuth] = useState(false);
 
     const isLogged = () => {
         if (userRole === "guest")
             return (
-                <Nav.Link as={Link} to="/login"><BiSolidLogInCircle size={"30"} color={"white"}/></Nav.Link>
+                <Nav.Link onClick={()=>setShowAuth(true)}>
+                    <BiSolidLogInCircle size={"30"} color={"white"}/></Nav.Link>
             );
         if (userRole !== "guest") {
             return (
-                <Button variant={"btn btn-link"} onClick={() => setShow(true)}>
-                    <FaCircleUser size={"29"} color={"white"}/></Button>
+                <Nav.Link onClick={()=>setShowAuth(true)}>
+                    <FaCircleUser size={"29"} color={"white"}/></Nav.Link>
             );
         }
     }
@@ -73,7 +76,7 @@ const NavBar = () => {
                                     {isLogged()}
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Nav.Link onClick={handleShow}> <IoMdCart size={"30"}
+                                    <Nav.Link onClick={()=>setShowCart(true)}> <IoMdCart size={"30"}
                                                                                     color={"white"}/></Nav.Link>
                                 </Nav.Item>
                             </Nav>
@@ -81,7 +84,8 @@ const NavBar = () => {
                     </Navbar.Collapse>
                 </div>
             </Navbar>
-            <CartModal show={show} setShow={setShow}/>
+            <CartModal show={showCart} setShow={setShowCart}/>
+            <AuthenticationModal show={showAuth} setShow={setShowAuth}/>*
         </div>
     );
 };

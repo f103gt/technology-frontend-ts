@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 const TaskNotification = () => {
-    const [username, setUsername] = useState<string | undefined>("");
+    const [username, setUsername] = useState("");
     return (
         <div>
 
