@@ -25,7 +25,7 @@ const ProductCard = ({ product, categoryName }) => {
                         <p className="text-white mb-0 small">x4</p>
                     </Badge>
                 </Card.Body>
-                <Card.Img variant="top" src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/4.webp" alt="Laptop" loading={"lazy"} />
+                <Card.Img variant="top" src={product.primaryImage} alt="Laptop" loading={"lazy"} />
                 <Card.Body>
                     <div className="d-flex justify-content-between">
                         <small><Link to={""} className="text-muted">Laptops</Link></small>
@@ -37,7 +37,7 @@ const ProductCard = ({ product, categoryName }) => {
                         <h5 className="mb-0">
                             <Link to={`/${categoryName}/${product.productName}`}>{product.productName}</Link>
                         </h5>
-                        <h5 className="text-dark mb-0">{product.productPrice.toFixed(2)}$</h5>
+                        <h5 className="text-dark mb-0">{product.price.toFixed(2)}$</h5>
                     </div>
                     <div className="d-flex justify-content-between mb-2">
                         <p className="text-muted mb-0">Available: <span className="fw-bold">6</span></p>

@@ -13,8 +13,9 @@ const AddProductModal = ({categoryName, show, setShow}) => {
     const [primaryImage, setPrimaryImage] = useState(null);
     const [productImages, setProductImages] = useState([]);
 
-    /*
-    const product = {
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const product = {
             categoryName: categoryName,
             productName: productName,
             sku: productSku,
@@ -24,20 +25,6 @@ const AddProductModal = ({categoryName, show, setShow}) => {
 
         const formData = new FormData();
         formData.append("product", JSON.stringify(product));
-        formData.append("description", productDescription);
-        formData.append("primaryImage", primaryImage);
-        productImages.forEach((image, index) => {
-            formData.append(`images`, image);  // Append the images as an array
-        });
-    * */
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const formData = new FormData();
-        formData.append("categoryName",categoryName);
-        formData.append("productName", productName);
-        formData.append("sku", productSku);
-        formData.append("quantity", productQuantity);
-        formData.append("price", productPrice);
         formData.append("description", productDescription);
         formData.append("primaryImage", primaryImage);
         productImages.forEach((image, index) => {

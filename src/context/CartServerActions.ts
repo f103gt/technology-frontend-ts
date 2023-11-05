@@ -4,12 +4,9 @@ export function deleteCartItemServer(cartItemName: string) {
     axios.get("/csrf/api/v1")
         .then(response => {
             const csrfToken = response.data.headers;
-            axios.delete("cart/api/v1/delete-item", {
+            axios.delete(`/cart/api/v1/delete-item?cartItemName=${cartItemName}`, {
                 headers: {
                     'X-CSRF-TOKEN': csrfToken
-                },
-                data: {
-                    cartItemName
                 }
             })
                 .catch(error => new Error(error));
@@ -28,6 +25,4 @@ export function addNewItemServer(cartItemName: string) {
             })
                 .catch(error => new Error(error));
         })
-
-
 }

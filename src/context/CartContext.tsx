@@ -1,5 +1,4 @@
 import React, {createContext, ReactNode, useContext, useEffect, useReducer, useState} from 'react';
-import {ProductDetails} from '../pages/SpecificProduct';
 import {RoleContext} from "./RoleProvider";
 import {addNewItemServer, deleteCartItemServer} from "./CartServerActions";
 
@@ -41,7 +40,7 @@ function reducer(state: CartItem[], action: {
 export const CartContext = createContext({
     items: [] as CartItem[],
     getProductQuantity: (productName: string) => Number(0),
-    addNewOneToCart: (product: ProductDetails) => {
+    addNewOneToCart: (product: any) => {
     },
     addOneToCart: (productName: string) => {
     },
@@ -59,12 +58,12 @@ function getProductQuantity(state: CartItem[], productName: string) {
     return quantity ?? 0;
 }
 
-function addNewOneToCart(state: CartItem[], product: ProductDetails) {
+function addNewOneToCart(state: CartItem[], product: any) {
     const newCartItem: CartItem = {
         productName: product.productName,
         categoryName: product.categoryName,
         cartItemQuantity: 1,
-        cartItemPrice: Number(product.productPrice),
+        cartItemPrice: Number(product.price),
     };
     return [...state, newCartItem];
 }
@@ -140,34 +139,41 @@ export const CartProvider = ({children}: { children: ReactNode }) => {
     }, [cartItems]);
 
     useEffect(() => {
-        const newItemAdded = cartItems.some((item) => {
+        function findAddedItem(item: CartItem) {
             const prevItem = prevCartItems.find((prevItem) => prevItem.productName === item.productName);
             return !prevItem || (prevItem && item.cartItemQuantity > prevItem.cartItemQuantity);
+        }
+
+        function findRemovedItem(prevItem: CartItem) {
+            const item = cartItems.find((item) => item.productName === prevItem.productName);
+            return !item || (item && prevItem.cartItemQuantity > item.cartItemQuantity);
+        }
+
+        const newItemAdded = cartItems.some((item) => {
+            return findAddedItem(item);
         });
-        console.log(newItemAdded);
-        const itemRemoved = cartItems.some((item) => {
-            const prevItem = prevCartItems.find((prevItem) => prevItem.productName === item.productName);
-            return prevItem && item.cartItemQuantity < prevItem.cartItemQuantity;
+
+        const itemRemoved = prevCartItems.some((item) => {
+            return findRemovedItem(item);
         });
+
         if (newItemAdded && userRole !== "guest") {
             const addedItem = cartItems.find((item) => {
-                const prevItem = prevCartItems.find((prevItem) => prevItem.productName === item.productName);
-                return !prevItem || (prevItem && item.cartItemQuantity > prevItem.cartItemQuantity);
+                return findAddedItem(item);
             });
-            console.log(addedItem);
             if (addedItem) {
                 addNewItemServer(addedItem.productName);
             }
-
         } else if (itemRemoved && userRole !== "guest") {
-            const deletedItem = prevCartItems.find((prevItem) =>
-                !cartItems.some((item) => item.productName === prevItem.productName));
+            const deletedItem = prevCartItems.find((item) => {
+                return findRemovedItem(item);
+            });
             if (deletedItem) {
                 deleteCartItemServer(deletedItem.productName);
             }
         }
-
     }, [prevCartItems, cartItems, userRole]);
+
 
     function getTotalCost(cartItems: CartItem[]) {
         return cartItems.reduce(
@@ -179,7 +185,7 @@ export const CartProvider = ({children}: { children: ReactNode }) => {
     const contextValue = {
         items: cartItems,
         getProductQuantity: (productName: string) => getProductQuantity(cartItems, productName),
-        addNewOneToCart: (product: ProductDetails) => dispatch({type: ACTIONS.ADD_NEW, payload: product}),
+        addNewOneToCart: (product: any) => dispatch({type: ACTIONS.ADD_NEW, payload: product}),
         addOneToCart: (productName: string) => dispatch({type: ACTIONS.ADD_ANOTHER, payload: productName}),
         removeOneFromCart: (productName: string) => dispatch({type: ACTIONS.REMOVE_ONE, payload: productName}),
         deleteFromCart: (productName: string) => dispatch({type: ACTIONS.DELETE_ALL, payload: productName}),
