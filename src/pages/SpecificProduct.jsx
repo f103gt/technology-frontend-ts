@@ -2,7 +2,7 @@ import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import {CartContext} from "../context/CartContext";
-import {Card, Carousel, Col, Image, Row} from "react-bootstrap";
+import {Carousel, Col, Image, Row} from "react-bootstrap";
 import {LoadingContext} from "../context/LoadingContext";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
