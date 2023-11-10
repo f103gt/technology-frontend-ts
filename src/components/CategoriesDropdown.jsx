@@ -87,7 +87,8 @@ const CategoriesDropdown = () => {
                         <React.Fragment key={category.categoryName}>
                             {category.childCategories.length > 0 ? (
                                 <Dropdown id="subDropdownMenu" variant="dark">
-                                    <Dropdown.Toggle variant="dark" id={`dropdown-submenu-${category.categoryName}`}>
+                                    <Dropdown.Toggle variant="dark" style={{backgroundColor: '#212529'}}
+                                                     id={`dropdown-submenu-${category.categoryName}`}>
                                         {category.categoryName}
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu variant="dark"

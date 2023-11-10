@@ -1,8 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
+import {Card, Col, Dropdown, Form, Row} from "react-bootstrap";
+import AddressInput from "../components/AddressInput";
 import Button from "react-bootstrap/Button";
-import {Card, Col, Form, Image, Row} from "react-bootstrap";
 
 const OrderModal = () => {
+
+    const [curierDelive, setCurierDelivery] = useState(true);
+    const [meestDelivery, setMeestDelivery] = useState(false);
 
     return (
         <Card bg="dark" text="white" className="rounded-3">
@@ -49,27 +53,29 @@ const OrderModal = () => {
 
                             <Row className="mt-3 mx-4">
                                 <Col md={12}>
-                                    <Form.Label className="order-form-label">Address</Form.Label>
+                                    <Form.Label className="order-form-label">Delivery</Form.Label>
+                                    {/*<Dropdown></Dropdown>*/}
                                 </Col>
                                 <Col md={12}>
                                     <Form.Group className="form-outline">
-                                        <Form.Control type="text" id="form5" className="order-form-input"/>
+                                        {/*<Form.Control type="text" id="form5" className="order-form-input"/>*/}
+                                        <AddressInput/>
                                         <Form.Label htmlFor="form5">Region</Form.Label>
                                     </Form.Group>
                                 </Col>
-                                <Col sm={6} className="mt-2 pe-sm-2">
+                                <Col md={6}>
                                     <Form.Group className="form-outline">
-                                        <Form.Control type="text" id="form7" className="order-form-input"/>
-                                        <Form.Label htmlFor="form7">Street</Form.Label>
+                                        <Form.Control type="text" id="form5" className="order-form-input"/>
+                                        <Form.Label htmlFor="form5">Street</Form.Label>
                                     </Form.Group>
                                 </Col>
-                                <Col sm={6} className="mt-2 ps-sm-0">
+                                <Col sm={3} className="mt-2 mt-sm-0">
                                     <Form.Group className="form-outline">
                                         <Form.Control type="text" id="form8" className="order-form-input"/>
                                         <Form.Label htmlFor="form8">Premise</Form.Label>
                                     </Form.Group>
                                 </Col>
-                                <Col sm={6} className="mt-2 pe-sm-2">
+                                <Col sm={3} className="mt-2 mt-sm-0">
                                     <Form.Group className="form-outline">
                                         <Form.Control type="text" id="form9" className="order-form-input"/>
                                         <Form.Label htmlFor="form9">Postal / Zip Code</Form.Label>
@@ -121,20 +127,28 @@ const OrderModal = () => {
                             </Form.Group>
                         </Col>
                     </Row>
+                    <hr className="my-4"/>
+                    <Row className="justify-content-between">
+                        <Col><p className="mb-2">Subtotal</p></Col>
+                        <Col className="text-end"><p className="mb-2">$4798.00</p></Col>
+                    </Row>
+                    <Row className="justify-content-between">
+                        <Col><p className="mb-2">Shipping</p></Col>
+                        <Col className="text-end"><p className="mb-2">$20.00</p></Col>
+                    </Row>
+                    <Row className="justify-content-between mb-4">
+                        <Col><p className="mb-2">Total</p></Col>
+                        <Col className="text-end"><p className="mb-2">$4818.00</p></Col>
+                    </Row>
+                    <Button type="button" className="btn btn-outline-light btn-dark btn-block btn-lg">
+                        <Row className="justify-content-between">
+                            <Col><span>$4818.00</span></Col>
+                            <Col className="text-end">
+                                <span>Checkout <i className="fas fa-long-arrow-alt-right ms-2"></i></span>
+                            </Col>
+                        </Row>
+                    </Button>
                 </Form>
-                <hr className="my-4"/>
-                <Row className="justify-content-between">
-                    <Col><p className="mb-2">Subtotal</p></Col>
-                    <Col className="text-end"><p className="mb-2">$4798.00</p></Col>
-                </Row>
-                <Row className="justify-content-between">
-                    <Col><p className="mb-2">Shipping</p></Col>
-                    <Col className="text-end"><p className="mb-2">$20.00</p></Col>
-                </Row>
-                <Row className="justify-content-between mb-4">
-                    <Col><p className="mb-2">Total</p></Col>
-                    <Col className="text-end"><p className="mb-2">$4818.00</p></Col>
-                </Row>
             </Card.Body>
         </Card>
     );

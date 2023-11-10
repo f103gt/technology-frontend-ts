@@ -36,14 +36,7 @@ const CartModal = ({show, setShow}) => {
                 </Modal.Body>
                 <Modal.Footer>
                     {showOrder ?
-                        <Button type="button" className="btn btn-outline-light btn-dark btn-block btn-lg">
-                            <Row className="justify-content-between">
-                                <Col><span>$4818.00</span></Col>
-                                <Col className="text-end">
-                                    <span>Checkout <i className="fas fa-long-arrow-alt-right ms-2"></i></span>
-                                </Col>
-                            </Row>
-                        </Button>
+                        null
                         :
                         <Button variant="dark" onClick={() => setShowOrder(true)}>Order</Button>
                     }
