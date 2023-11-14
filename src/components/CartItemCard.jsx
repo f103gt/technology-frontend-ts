@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Breadcrumb, Card, Col, Dropdown, Image, Row} from "react-bootstrap";
+import {Card, Col, Image, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import {CartContext} from "../context/CartContext";

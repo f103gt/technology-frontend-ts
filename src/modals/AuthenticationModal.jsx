@@ -3,10 +3,12 @@ import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import {Form} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+import RegistrationModal from "./RegistrationModal";
 
 function AuthenticationModal({show,setShow}) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showRegistration, setShowRegistration] = useState(false);
 
     const handleClose = () => setShow(false);
 
@@ -16,6 +18,11 @@ function AuthenticationModal({show,setShow}) {
 
     const updatePassword = (event) => {
         setPassword(event.target.value);
+    }
+
+    const handleRegisterRedirection = ()=> {
+        setShow(false);
+        setShowRegistration(true);
     }
 
     const sendAuthRequest = (event) => {
@@ -51,7 +58,8 @@ function AuthenticationModal({show,setShow}) {
     }
 
     return (
-        <Modal show={show} onHide={handleClose}>
+        <div>
+            <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
                 <Modal.Title>Login</Modal.Title>
             </Modal.Header>
@@ -59,7 +67,8 @@ function AuthenticationModal({show,setShow}) {
                 <Form onSubmit={sendAuthRequest} onHide={() => setShow(false)}>
                     <Form.Group controlId="emaiil">
                         <Form.Label>Email address</Form.Label>
-                        <Form.Control type="email" value={username} onChange={updateUsername} aria-describedby="emailHelp"/>
+                        <Form.Control type="email" value={username} onChange={updateUsername}
+                                      aria-describedby="emailHelp"/>
                         <Form.Text className="text-muted">
                             We'll never share your email with anyone else.
                         </Form.Text>
@@ -69,12 +78,21 @@ function AuthenticationModal({show,setShow}) {
                         <Form.Control type="password" value={password} onChange={updatePassword}/>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="checkBox">
-                        <Form.Check type="checkbox" label="Remember me" />
+                        <Form.Check type="checkbox" label="Remember me"/>
                     </Form.Group>
                     <Button variant="dark" type="submit">Login</Button>
                 </Form>
             </Modal.Body>
+            <Modal.Footer>
+                <p className="text-muted align-content-center">
+                    Do not have an account yet?
+                    <Button variant={"btn btn-link"} onClick={handleRegisterRedirection}>
+                        Register</Button>
+                </p>
+            </Modal.Footer>
         </Modal>
+            <RegistrationModal show={showRegistration} setShow={setShowRegistration}/>
+        </div>
     );
 }
 
