@@ -11,7 +11,7 @@ const CartItemCard = (props) => {
     const {addOneToCart, removeOneFromCart, deleteFromCart} = useContext(CartContext);
     return (
         <Card>
-            <Card.Body className="p-4">
+            <Card.Body className="p-12">
                 <Row>
                     <Col lg={15}>
                         <Card className="mb-3">

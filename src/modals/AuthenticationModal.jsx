@@ -48,6 +48,9 @@ function AuthenticationModal({show,setShow}) {
                     .then(response => {
                         if (response.status === 200) {
                             localStorage.setItem('userRole', response.data.role);
+                            if(!response.data.uuid.isEmpty){
+                                localStorage.setItem("id",response.data.uuid);
+                            }
                             handleClose();
                         }
                     })

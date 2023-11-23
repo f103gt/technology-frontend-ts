@@ -12,37 +12,43 @@ import CartProvider from "./context/CartContext";
 import LoadingProvider from "./context/LoadingContext";
 import NavBar from "./components/NavBar";
 import AddProductModal from "./modals/AddProductModal";
-import AddCategoryModal from "./modals/AddCategoryModal";
 import PlaceOrderModal from "./modals/PlaceOrderModal";
-
+import ToDoList from "./pages/ToDoList";
+import PushNotificationComponent from "./components/PushNotificationComponent";
+import TaskNotification from "./pages/TaskNotification";
+import Activity from "./components/Activity";
 function App() {
     return (
-            <BrowserRouter>
-                <LoadingProvider>
-                    <RoleProvider>
-                        <CartProvider>
-                            <NavBar/>
-                            <Routes>
-                                <Route path={"/"} element={<Home/>}/>
-                                <Route path={"/home"} element={<Home/>}/>
-                                <Route element={
-                                    <PrivateRoute component={AddProductModal} roles={["manager","admin"]}>
-                                        <AddProductModal/>
-                                    </PrivateRoute>
-                                }/>
-                                <Route path={"/order"} element={<PlaceOrderModal/>}/>
-                                <Route path={"/tasks"} element={
-                                    <PrivateRoute component={Tasks} roles={["staff", "manager", "admin"]}>
-                                        <Tasks/>
-                                    </PrivateRoute>}/>
-                                <Route path="/:categoryName" element={<Products/>}/>
-                                <Route path="/:categoryName/:productName" element={<SpecificProduct/>}/>
-                            </Routes>
-                        </CartProvider>
-                    </RoleProvider>
-                </LoadingProvider>
-            </BrowserRouter>
-/*</div>*/
+        <BrowserRouter>
+            <LoadingProvider>
+                <RoleProvider>
+                    <CartProvider>
+                        <NavBar/>
+                        <Routes>
+                            <Route path={"/"} element={<Home/>}/>
+                            <Route path={"/home"} element={<Home/>}/>
+                            <Route element={
+                                <PrivateRoute component={AddProductModal} roles={["manager", "admin"]}>
+                                    <AddProductModal/>
+                                </PrivateRoute>
+                            }/>
+                            <Route path={"/order"} element={<PlaceOrderModal/>}/>
+                            <Route path={"/tasks"} element={
+                                <PrivateRoute component={Tasks} roles={["staff", "manager", "admin"]}>
+                                    <Tasks/>
+                                </PrivateRoute>}/>
+                            <Route path="/:categoryName" element={<Products/>}/>
+                            <Route path="/:categoryName/:productName" element={<SpecificProduct/>}/>
+                            <Route path={"/todo"} element={<ToDoList/>}/>
+                            {/*<Route path={"/notification" } element={<PushNotificationComponent/>}/>*/}
+                            <Route path={"/notification" } element={<TaskNotification/>}/>
+                            <Route path={"/active" } element={<Activity/>}/>
+                        </Routes>
+                    </CartProvider>
+                </RoleProvider>
+            </LoadingProvider>
+        </BrowserRouter>
+        /*</div>*/
     );
 }
 

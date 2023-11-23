@@ -1,72 +1,83 @@
-import React, {useState} from 'react';
+import React, {useEffect} from 'react';
+import {Alert} from 'react-bootstrap';
+import axios from "axios";
+
+export const NotificationContext = React.createContext();
+
+export const NotificationProvider = ({ children }) => {
+    const [notification, setNotification] = React.useState(null);
+
+    return (
+        <NotificationContext.Provider value={{ notification, setNotification }}>
+            {children}
+        </NotificationContext.Provider>
+    );
+};
+
+export const Notification = ({ message }) => {
+    return (
+        <div className="notification">
+            {message}
+        </div>
+    );
+};
 
 const TaskNotification = () => {
-    const [username, setUsername] = useState("");
+    useEffect(() => {
+        axios.get('/csrf/api/v1')
+            .then(csrfResponse => {
+                const csrfToken = csrfResponse.data.headers;
+                axios.get('/trigger-notification', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                })
+                    .catch(error => {
+                    console.error('Error fetching categories:', error);
+                })
+            })
+            .catch(error => {
+                console.error('Error fetching CSRF token:', error);
+            });
+    }, []);
+
+
     return (
         <div>
-
+            <Alert>a message for someone</Alert>
         </div>
     );
 };
 
 export default TaskNotification;
 
-/*
-import React from 'react';
-import { Client } from '@stomp/stompjs';
 
-interface Props {
-  userId: string;
-}
+/*const [employeeEmail, setEmployeeEmail] = useState('');
+    const [currentEmail, setCurrentEmail] = useState('');
+    const [stompClient, setStompClient] = useState(null);
 
-interface State {
-  notification: string;
-}
 
-class NotificationComponent extends React.Component<Props, State> {
-  private client!: Client;
-
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      notification: '',
+    const onMessageReceived = (message) => {
+        const receivedMessage = JSON.parse(message.body);
+        setCurrentEmail(receivedMessage.email);
+        setEmployeeEmail(receivedMessage.employeeEmail);
     };
-  }
 
-  componentDidMount() {
-    const { userId } = this.props;
-
-    this.client = new Client({
-      brokerURL: `ws://localhost:8080/staff/task-processing/user-${userId}`,
-      onConnect: () => {
-        this.client.subscribe(`/staff/task-processing/user-${userId}`, (message) => {
-          if (message.body) {
-            this.setState({ notification: message.body });
-          }
+    useEffect(() => {
+        const socket = new SockJS('/socket/');
+        const client = Stomp.over(socket);
+        client.connect({}, () => {
+            /!*client.send('/server/trigger-socket', {}, JSON.stringify("hello"));*!/
+            client.subscribe('/notification/general', onMessageReceived);
         });
-      },
-    });
+        setStompClient(client);
 
-    this.client.activate();
-  }
+        return () => {
+            client.disconnect();
+        };
+    }, []);*/
 
-  componentWillUnmount() {
-    this.client.deactivate();
-  }
 
-  render() {
-    return (
-      <div>
-        {this.state.notification && (
-          <div className="notification">
-            {this.state.notification}
-          </div>
-        )}
-      </div>
-    );
-  }
-}
-
-export default NotificationComponent;
-
-* */
+// Retrieve user ID from local storage
+//const userId = localStorage.getItem('id'); // Replace 'userId' with your actual key

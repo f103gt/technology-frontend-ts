@@ -5,16 +5,19 @@ import axios from "axios";
 import {Dropdown} from 'react-bootstrap';
 import {CgMenuRound} from "react-icons/cg";
 import {RiDeleteBin5Fill} from "react-icons/ri";
-import {IoMdAddCircle} from "react-icons/io";
 import Button from "react-bootstrap/Button";
-import CategoryInputField from "./CategoryInputField";
 import {MdAutoFixHigh} from "react-icons/md";
+import "../css/NavBar.css"
+import AddCategoryModal from "../modals/AddCategoryModal";
+import {IoMdAddCircle} from "react-icons/io";
 
 const CategoriesDropdown = () => {
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
-    const [activeCategory, setActiveCategory] = useState("");
+    /*const [activeCategory, setActiveCategory] = useState("");*/
+    const [showAdd, setShowAdd] = useState(false);
+    const [parentCategory,setParentCategory] = useState("");
 
     const fetchCategories = useCallback(() => {
         axios.get('/csrf/api/v1')
@@ -46,32 +49,30 @@ const CategoriesDropdown = () => {
     }, [fetchCategories]);
 
 
-    const showInput = (categoryName) => {
-        if (!activeCategory) {
-            return (
-                <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
-                    <Button variant="btn btn-link" type="button" className="custom-button"
-                            onClick={() => {
-                                setActiveCategory(categoryName)
-                            }}>
-                        < IoMdAddCircle color="white"/>
-                    </Button>
-                </RoleBasedComponent>
-            );
-        } else if (activeCategory === categoryName) {
-            return (
-                <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
-                    <CategoryInputField parentCategoryName={categoryName}
-                                        setActiveCategory={setActiveCategory}/>
-                </RoleBasedComponent>
-            );
-        }
-    }
+    /* const showInput = (categoryName) => {
+         if (!activeCategory) {
+             return (
+                 <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
+                     <Button variant="btn btn-link" type="button" className="custom-button"
+                             onClick={() => {setShowAdd(true)}}>
+                         < IoMdAddCircle color="white"/>
+                     </Button>
+                 </RoleBasedComponent>
+             );
+         } else if (activeCategory === categoryName) {
+             return (
+                 <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
+                     <CategoryInputField parentCategoryName={categoryName}
+                                         setActiveCategory={setActiveCategory}/>
+                 </RoleBasedComponent>
+             );
+         }
+     }*/
 
     if (isLoading) {
         return (
-            <Dropdown.Toggle variant="dark" id="dropdown-basic">
-                <CgMenuRound size={30}/>
+            <Dropdown.Toggle variant="dark" id="dropdown-basic"> Products
+                <CgMenuRound className={"icon"} size={"23"}/>
             </Dropdown.Toggle>
         );
     }
@@ -79,8 +80,8 @@ const CategoriesDropdown = () => {
     return (
         <div>
             <Dropdown id="mainDropdownMenu">
-                <Dropdown.Toggle variant="dark" id="dropdown-basic">
-                    <CgMenuRound size={30}/>
+                <Dropdown.Toggle variant="dark" id="dropdown-basic">Products
+                    <CgMenuRound  size={"23"} className={"icon"}/>
                 </Dropdown.Toggle>
                 <Dropdown.Menu variant="dark">
                     {categories.map(category => (
@@ -111,7 +112,13 @@ const CategoriesDropdown = () => {
                                                 </RoleBasedComponent>
                                             </Dropdown.Item>
                                         ))}
-                                        {showInput(category.categoryName)}
+                                        <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
+                                            <Button variant="btn btn-link" type="button" className="custom-button"
+                                                    onClick={() => {setShowAdd(true);
+                                                    setParentCategory(category.categoryName)}}>
+                                                <IoMdAddCircle color="white"/>
+                                            </Button>
+                                        </RoleBasedComponent>
                                     </Dropdown.Menu>
                                 </Dropdown>
                             ) : (
@@ -130,11 +137,19 @@ const CategoriesDropdown = () => {
                                     <MdAutoFixHigh color="white"/>
                                 </Button>
                             </RoleBasedComponent>
-                            {showInput(category.categoryName)}
                         </React.Fragment>
                     ))}
+                    <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
+                        <Button variant="btn btn-link" type="button" className="custom-button"
+                                onClick={() => {
+                                    setShowAdd(true)
+                                }}>
+                            <IoMdAddCircle color="white"/>
+                        </Button>
+                    </RoleBasedComponent>
                 </Dropdown.Menu>
             </Dropdown>
+            <AddCategoryModal parentCategoryName={parentCategory} setShow={setShowAdd} show={showAdd}/>
         </div>
     );
 };

@@ -4,10 +4,8 @@ import "../css/NavBar.css";
 import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
 import CategoriesDropdown from "./CategoriesDropdown";
 import CartModal from "../modals/CartModal";
-import {Form, FormControl, Nav, Navbar} from "react-bootstrap";
-import Button from "react-bootstrap/Button";
+import {Nav, Navbar} from "react-bootstrap";
 import {FaTasks} from "react-icons/fa";
-import {ImSearch} from "react-icons/im";
 import {BiSolidLogInCircle} from "react-icons/bi";
 import {RoleContext} from "../context/RoleProvider";
 import {FaCircleUser} from "react-icons/fa6";
@@ -23,16 +21,20 @@ const NavBar = () => {
     const [showAuth, setShowAuth] = useState(false);
 
     const isLogged = () => {
-        if (userRole === "guest"){
+        if (userRole === "guest") {
             return (
-                <Nav.Link onClick={() => setShowAuth(true)}>
-                    <BiSolidLogInCircle size={"30"} color={"white"}/></Nav.Link>
+                <Nav.Link onClick={() => setShowAuth(true)}
+                          className={"text-white"}>Login
+                    <BiSolidLogInCircle className={"icon"} size={"23"}/>
+                    </Nav.Link>
             );
         }
         if (userRole !== "guest") {
             return (
-                <Nav.Link onClick={() => setShowAuth(true)}>
-                    <FaCircleUser size={"29"} color={"white"}/></Nav.Link>
+                <Nav.Link onClick={() => setShowAuth(true)}
+                          className={"text-white"}
+                >Account
+                    <FaCircleUser className={"icon"} size={"21"}/></Nav.Link>
             );
         }
     }
@@ -43,7 +45,8 @@ const NavBar = () => {
         } else {
             return (
                 <RoleBasedComponent roles={['user', 'staff', 'manager']}>
-                    <Nav.Link as={Link} to="/todo"><FaTasks size={"25"} color={"white"}/></Nav.Link>
+                    <Nav.Link  to={"/todo"}>
+                        <FaTasks  className={"icon"}/></Nav.Link>
                 </RoleBasedComponent>);
         }
     }
@@ -59,13 +62,15 @@ const NavBar = () => {
             <Navbar expand="lg" bg="dark" variant="dark">
                 <div className="container">
                     <Navbar.Brand as={Link} to="/">
-                        Navbar
+                        TECHNOLOGY
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-auto">
-                            <Nav.Item>
-                                <Nav.Link as={Link} to="/home"><RiHome6Fill size={"30"} color={"white"}/></Nav.Link>
+                    <Navbar.Collapse id="basic-navbar-nav" className="d-flex justify-content-center">
+                        <Nav>
+                            <Nav.Item className={"nav-item"}>
+                                <Nav.Link as={Link} to="/home" className="text-white">Home
+                                    <RiHome6Fill className={"icon"} size={"21"}/>
+                                </Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
                                 <CategoriesDropdown/>
@@ -73,28 +78,20 @@ const NavBar = () => {
                             <RoleBasedComponent roles={['staff', 'manager', 'admin', 'user']}>
                                 <Nav.Item>{tasksDisplay()}</Nav.Item>
                             </RoleBasedComponent>
+                            <Nav.Item>
+                                {isLogged()}
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link onClick={() => setShowCart(true)}
+                                          className="text-white">Cart
+                                    <IoMdCart className={"icon"} size={"22"}/></Nav.Link>
+                            </Nav.Item>
                         </Nav>
-                        <Form className="d-flex">
-                            <FormControl type="search" placeholder="Search" className="me-2" aria-label="Search"/>
-                            <Button variant="outline-success dark" type="submit"><ImSearch size={"20"}
-                                                                                           color={"white"}/></Button>
-                        </Form>
-                        <div>
-                            <Nav className="ms-2 me-auto">
-                                <Nav.Item>
-                                    {isLogged()}
-                                </Nav.Item>
-                                <Nav.Item>
-                                    <Nav.Link onClick={() => setShowCart(true)}> <IoMdCart size={"30"}
-                                                                                           color={"white"}/></Nav.Link>
-                                </Nav.Item>
-                            </Nav>
-                        </div>
                     </Navbar.Collapse>
                 </div>
             </Navbar>
             <CartModal show={showCart} setShow={setShowCart}/>
-            <AuthenticationModal show={showAuth} setShow={setShowAuth}/>*
+            <AuthenticationModal show={showAuth} setShow={setShowAuth}/> *
         </div>
     );
 };

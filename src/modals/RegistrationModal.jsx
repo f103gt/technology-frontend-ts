@@ -10,19 +10,20 @@ const RegistrationModal = ({show, setShow}) => {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [showEmailConfirm, setEmailConfirm] = useState(false);
+    const [showEmailConfirm, setShowEmailConfirm] = useState(false);
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
     const [passwordsMatch, setPasswordsMatch] = useState(true);
 
     const handleClose = () => {
         setShow(false);
-        setEmailConfirm(true)
+        setShowEmailConfirm(true);
     };
 
     const handleEmailConfirm = () => {
         setShow(false);
-        setEmailConfirm(true);
+        setShowEmailConfirm(true);
+
     };
     const updateFirstName = (event) => {
         setFirstName(event.target.value);
@@ -44,7 +45,7 @@ const RegistrationModal = ({show, setShow}) => {
         setPasswordConfirm(event.target.value);
     }
 
-    const sendAuthRequest = (event) => {
+    const sendRegisterRequest = (event) => {
         if (password !== passwordConfirm) {
             setPasswordsMatch(false);
         }
@@ -85,24 +86,24 @@ const RegistrationModal = ({show, setShow}) => {
     return (
         <div><Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Login</Modal.Title>
+                <Modal.Title>Registration</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form onSubmit={sendAuthRequest} onHide={() => setShow(false)}>
+                <Form onSubmit={sendRegisterRequest} onHide={() => setShow(false)}>
                     <Form.Group controlId="firstName">
                         <Form.Label>First Name</Form.Label>
                         <Form.Control type="text" value={firstName}
-                                      onChange={updateFirstName} aria-describedby="emailHelp"/>
+                                      onChange={updateFirstName}/>
                     </Form.Group>
                     <Form.Group controlId="lastName">
                         <Form.Label>Last Name</Form.Label>
                         <Form.Control type="text" value={lastName}
-                                      onChange={updateLastName} aria-describedby="emailHelp"/>
+                                      onChange={updateLastName}/>
                     </Form.Group>
                     <Form.Group controlId="email">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control type="email" value={email}
-                                      onChange={updateEmail} aria-describedby="emailHelp"/>
+                                      onChange={updateEmail}/>
                         <Form.Text className="text-muted">
                             We'll never share your email with anyone else.
                         </Form.Text>
@@ -130,11 +131,13 @@ const RegistrationModal = ({show, setShow}) => {
                     <Form.Group className="mb-3" controlId="checkBox">
                         <Form.Check type="checkbox" label="Remember me"/>
                     </Form.Group>
-                    <Button variant="dark" type="submit">Login</Button>
+                    <Button variant="dark" type="submit" onClick={handleEmailConfirm}
+                    >Register</Button>
                 </Form>
             </Modal.Body>
         </Modal>
-            <EmailConfirmModal show={showEmailConfirm} setShow={setEmailConfirm}/>
+            <EmailConfirmModal email={email} setShow={setShowEmailConfirm}
+                               show={showEmailConfirm}/>
         </div>
     );
 };
