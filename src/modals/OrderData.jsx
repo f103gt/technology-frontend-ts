@@ -4,10 +4,9 @@ import Button from "react-bootstrap/Button";
 import {CartContext} from "../context/CartContext";
 import axios from "axios";
 import CustomerInformation from "../components/CustomerInformation";
+import DeliveryAddress from "../components/DeliveryAddress";
 
 const OrderData = () => {
-
-
     const initialState = {
         firstName: "",
         lastName: "",
@@ -98,6 +97,12 @@ const OrderData = () => {
                                              address={address} setAddress={setAddress}
                                              deliveryMethod={deliveryMethod} setDeliveryMethod={setDeliveryMethod}
                                              updateOrderFormData={updateOrderFormData}
+                        />
+                        <DeliveryAddress deliveryMethod={deliveryMethod}
+                                         setDeliveryMethod={setDeliveryMethod}
+                                         address={address}
+                                         setAddress={setAddress}
+                                         updateOrderFormData={updateOrderFormData}
                         />
                     </Row>
                     <Row className="mt-3 mx-4">

@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import {CartContext} from "../context/CartContext";
@@ -6,6 +6,9 @@ import CartItemCard from "../components/CartItemCard";
 import OrderData from "./OrderData";
 import {Col, Row} from "react-bootstrap";
 import "../css/CartModal.css";
+import axios from "axios";
+import {set} from "js-cookie";
+import {RoleContext} from "../context/RoleProvider";
 
 const CartModal = ({show, setShow}) => {
     const handleClose = () => setShow(false);
@@ -31,7 +34,7 @@ const CartModal = ({show, setShow}) => {
                             </Row>
                         </Col>
                         <Col md={6}>
-                            {showOrder && <OrderData/>}
+                            {showOrder && items.length > 0 && <OrderData/>}
                         </Col>
                     </Row>
                 </Modal.Body>

@@ -14,9 +14,13 @@ import NavBar from "./components/NavBar";
 import AddProductModal from "./modals/AddProductModal";
 import PlaceOrderModal from "./modals/PlaceOrderModal";
 import ToDoList from "./pages/ToDoList";
-import PushNotificationComponent from "./components/PushNotificationComponent";
-import TaskNotification from "./pages/TaskNotification";
+import TaskNotification from "./future/TaskNotification";
 import Activity from "./components/Activity";
+import AuthenticationModal from "./modals/AuthenticationModal";
+import Invoice from "./pages/Invoice";
+import PackedOrders from "./components/PackedOrders";
+import PendingOrders from "./components/PendingOrders";
+
 function App() {
     return (
         <BrowserRouter>
@@ -27,6 +31,7 @@ function App() {
                         <Routes>
                             <Route path={"/"} element={<Home/>}/>
                             <Route path={"/home"} element={<Home/>}/>
+                            <Route path={"/login"} element={<AuthenticationModal/>}/>
                             <Route element={
                                 <PrivateRoute component={AddProductModal} roles={["manager", "admin"]}>
                                     <AddProductModal/>
@@ -37,12 +42,13 @@ function App() {
                                 <PrivateRoute component={Tasks} roles={["staff", "manager", "admin"]}>
                                     <Tasks/>
                                 </PrivateRoute>}/>
+                           {/* <Route path={"/notification" } element={<TaskNotification/>}/>*/}
+                            <Route path={"/active" } element={<Activity/>}/>
                             <Route path="/:categoryName" element={<Products/>}/>
                             <Route path="/:categoryName/:productName" element={<SpecificProduct/>}/>
-                            <Route path={"/todo"} element={<ToDoList/>}/>
                             {/*<Route path={"/notification" } element={<PushNotificationComponent/>}/>*/}
-                            <Route path={"/notification" } element={<TaskNotification/>}/>
-                            <Route path={"/active" } element={<Activity/>}/>
+                            <Route path={"/todo"} element={<ToDoList/>}/>
+                            <Route path={"/todo/:uuid" } element={<Invoice/>}/>
                         </Routes>
                     </CartProvider>
                 </RoleProvider>

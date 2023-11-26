@@ -17,7 +17,7 @@ const LoadingProvider = ({children}: {children: ReactNode }) => {
     }, [isLoading,ref]);
     return (
         <LoadingContext.Provider value={{ isLoading, setLoading }}>
-            <LoadingBar color='#f11946' ref={ref} />
+            <LoadingBar color='white' ref={ref} />
             {children}
         </LoadingContext.Provider>
     );

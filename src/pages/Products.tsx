@@ -7,6 +7,7 @@ import {LoadingContext} from "../context/LoadingContext";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 import AddProductModal from "../modals/AddProductModal";
+import {IoMdAddCircle} from "react-icons/io";
 
 interface Product {
     productName: string;
@@ -47,7 +48,8 @@ const Products = () => {
     const setSingleButton = (roles: any) => {
         return (
             <RoleBasedComponent roles={roles}>
-                <button type="button" className="btn btn-info" onClick={()=>setShow(true)}>Add</button>
+                <button type="button" className="btn btn-as-link" onClick={()=>setShow(true)}>
+                    <IoMdAddCircle size={"45"} color={"grey"}/></button>
             </RoleBasedComponent>
         );
     };
@@ -63,7 +65,7 @@ const Products = () => {
                                     key={product.productName} product={product} categoryName={categoryName}/>
                             ))}
                         </div>
-                        {setSingleButton(["user", "admin", "manager"])}
+                        {setSingleButton(["staff", "manager"])}
                     </div>
                 </section>
             ):(

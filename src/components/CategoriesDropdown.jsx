@@ -10,15 +10,20 @@ import {MdAutoFixHigh} from "react-icons/md";
 import "../css/NavBar.css"
 import AddCategoryModal from "../modals/AddCategoryModal";
 import {IoMdAddCircle} from "react-icons/io";
+import {LuPlusCircle} from "react-icons/lu";
+import "../css/CategoriesDropdonw.css";
+import {RxTriangleDown} from "react-icons/rx";
 
 const CategoriesDropdown = () => {
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
-    /*const [activeCategory, setActiveCategory] = useState("");*/
     const [showAdd, setShowAdd] = useState(false);
-    const [parentCategory,setParentCategory] = useState("");
-
+    const [parentCategory, setParentCategory] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const handleCategoryClick = (categoryName) => {
+        setSelectedCategory(selectedCategory === categoryName ? null : categoryName);
+    };
     const fetchCategories = useCallback(() => {
         axios.get('/csrf/api/v1')
             .then(csrfResponse => {
@@ -49,26 +54,6 @@ const CategoriesDropdown = () => {
     }, [fetchCategories]);
 
 
-    /* const showInput = (categoryName) => {
-         if (!activeCategory) {
-             return (
-                 <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
-                     <Button variant="btn btn-link" type="button" className="custom-button"
-                             onClick={() => {setShowAdd(true)}}>
-                         < IoMdAddCircle color="white"/>
-                     </Button>
-                 </RoleBasedComponent>
-             );
-         } else if (activeCategory === categoryName) {
-             return (
-                 <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
-                     <CategoryInputField parentCategoryName={categoryName}
-                                         setActiveCategory={setActiveCategory}/>
-                 </RoleBasedComponent>
-             );
-         }
-     }*/
-
     if (isLoading) {
         return (
             <Dropdown.Toggle variant="dark" id="dropdown-basic"> Products
@@ -81,77 +66,115 @@ const CategoriesDropdown = () => {
         <div>
             <Dropdown id="mainDropdownMenu">
                 <Dropdown.Toggle variant="dark" id="dropdown-basic">Products
-                    <CgMenuRound  size={"23"} className={"icon"}/>
+                    <CgMenuRound size={"23"} className={"icon"}/>
                 </Dropdown.Toggle>
-                <Dropdown.Menu variant="dark">
+                <Dropdown.Menu variant="dark"
+                               style={{
+                                   backgroundColor: '#212529',
+                                   borderColor: '#212529',
+                                   top: '40px'
+                               }}>
                     {categories.map(category => (
                         <React.Fragment key={category.categoryName}>
-                            {category.childCategories.length > 0 ? (
-                                <Dropdown id="subDropdownMenu" variant="dark">
-                                    <Dropdown.Toggle variant="dark" style={{backgroundColor: '#212529'}}
-                                                     id={`dropdown-submenu-${category.categoryName}`}>
-                                        {category.categoryName}
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu variant="dark"
-                                                   style={{position: 'absolute', left: '100%', top: '0', width: '80%'}}>
-                                        {category.childCategories.map((childCategory) => (
-                                            <Dropdown.Item onClick={() => navigate(`/${childCategory.categoryName}`)}
-                                                           key={childCategory.categoryName}>
-                                                {childCategory.categoryName}
-                                                <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
-                                                    <Button variant="btn btn-link" type="button"
-                                                            className="custom-button">
-                                                        <RiDeleteBin5Fill color="white"/>
-                                                    </Button>
-                                                </RoleBasedComponent>
-                                                <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
-                                                    <Button variant="btn btn-link" type="button"
-                                                            className="custom-button">
-                                                        <MdAutoFixHigh color="white"/>
-                                                    </Button>
-                                                </RoleBasedComponent>
-                                            </Dropdown.Item>
-                                        ))}
-                                        <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
-                                            <Button variant="btn btn-link" type="button" className="custom-button"
-                                                    onClick={() => {setShowAdd(true);
-                                                    setParentCategory(category.categoryName)}}>
-                                                <IoMdAddCircle color="white"/>
+                                <Dropdown.Item
+                                    onClick={(event) => {
+                                        if (category.childCategories.length === 0) {
+                                            navigate(`/${category.categoryName}`);
+                                        } else {
+                                            event.stopPropagation();
+                                            handleCategoryClick(category.categoryName);
+                                        }
+                                    }}
+                                    key={category.categoryName}>
+                                    {category.childCategories.length > 0 ?
+                                        <>{category.categoryName} <RxTriangleDown color={"white"}/></>
+                                        : category.categoryName
+                                    }
+                                <RoleBasedComponent roles={["manager", "staff"]} style={{marginRight: '0px'}}>
+                                    <Button variant="btn btn-link" type="button"
+                                            className="custom-button"
+                                            onClick={(event) => {
+                                                setShowAdd(true);
+                                                event.stopPropagation();
+                                            }}>
+                                        <LuPlusCircle color="white"/>
+                                    </Button>
+                                </RoleBasedComponent>
+                                <RoleBasedComponent roles={["manager", "staff"]}>
+                                    <Button variant="btn btn-link" type="button" className="custom-button">
+                                        <RiDeleteBin5Fill color="white"/>
+                                    </Button>
+                                </RoleBasedComponent>
+                                <RoleBasedComponent roles={["manager", "staff"]}>
+                                    <Button variant="btn btn-link" type="button" className="custom-button">
+                                        <MdAutoFixHigh color="white"/>
+                                    </Button>
+                                </RoleBasedComponent>
+                            </Dropdown.Item>
+                            {selectedCategory &&
+                                category.childCategories.length > 0
+                                && category.childCategories.map((childCategory) => (
+                                    <Dropdown.Item onClick={() => navigate(`/${childCategory.categoryName}`)}
+                                                   key={childCategory.categoryName}>
+                                        {"\t" + childCategory.categoryName}
+                                        <RoleBasedComponent roles={["manager", "staff"]} >
+                                            <Button variant="btn btn-link" type="button"
+                                                    className="custom-button"
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                    }}>
+                                                <RiDeleteBin5Fill color="white"/>
                                             </Button>
                                         </RoleBasedComponent>
-                                    </Dropdown.Menu>
-                                </Dropdown>
-                            ) : (
-                                <Dropdown.Item onClick={() => navigate(`/${category.categoryName}`)}
-                                               key={category.categoryName}>
-                                    {category.categoryName}
-                                </Dropdown.Item>
-                            )}
-                            <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
-                                <Button variant="btn btn-link" type="button" className="custom-button">
-                                    <RiDeleteBin5Fill color="white"/>
-                                </Button>
-                            </RoleBasedComponent>
-                            <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
-                                <Button variant="btn btn-link" type="button" className="custom-button">
-                                    <MdAutoFixHigh color="white"/>
-                                </Button>
-                            </RoleBasedComponent>
+                                        <RoleBasedComponent roles={["manager", "staff"]}>
+                                            <Button variant="btn btn-link" type="button"
+                                                    className="custom-button"
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                    }}>
+                                                <MdAutoFixHigh color="white"/>
+                                            </Button>
+                                        </RoleBasedComponent>
+                                    </Dropdown.Item>
+                                ))}
                         </React.Fragment>
                     ))}
-                    <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
+                    <RoleBasedComponent roles={["manager", "staff"]}>
                         <Button variant="btn btn-link" type="button" className="custom-button"
-                                onClick={() => {
-                                    setShowAdd(true)
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    setShowAdd(true);
                                 }}>
-                            <IoMdAddCircle color="white"/>
+                            <IoMdAddCircle size="23" color="white"/>
                         </Button>
                     </RoleBasedComponent>
                 </Dropdown.Menu>
             </Dropdown>
             <AddCategoryModal parentCategoryName={parentCategory} setShow={setShowAdd} show={showAdd}/>
         </div>
-    );
+    )
+        ;
 };
 
 export default CategoriesDropdown;
+
+
+/* const showInput = (categoryName) => {
+        if (!activeCategory) {
+            return (
+                <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
+                    <Button variant="btn btn-link" type="button" className="custom-button"
+                            onClick={() => {setShowAdd(true)}}>
+                        < IoMdAddCircle color="white"/>
+                    </Button>
+                </RoleBasedComponent>
+            );
+        } else if (activeCategory === categoryName) {
+            return (
+                <RoleBasedComponent roles={["user", "admin", "manager", "staff"]}>
+                    <CategoryInputField parentCategoryName={categoryName}
+                                        setActiveCategory={setActiveCategory}/>
+                </RoleBasedComponent>
+            );
+        }
+    }*/

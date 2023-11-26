@@ -1,0 +1,14 @@
+.dropdown-toggle:active, .dropdown-toggle:focus, .dropdown-toggle.show{
+    background-color: #212529;
+    border-color: transparent;
+    outline: none;
+    box-shadow: none;
+}
+
+.dropdown-item:active, .dropdown-item:focus {
+    background-color: transparent;
+    outline: none;
+    box-shadow: none;
+}
+
+

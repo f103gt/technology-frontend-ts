@@ -19,7 +19,7 @@ const CartItemCard = (props) => {
                                 <Row className="justify-content-between align-items-center">
                                     <Col xs="auto" className="d-flex align-items-center">
                                         <Image
-                                            src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
+                                            src={props.cartItem.productImage}
                                             rounded
                                             fluid
                                             alt="Shopping item"
@@ -28,7 +28,8 @@ const CartItemCard = (props) => {
                                             <Col>
                                                 <h5 className="mb-0">
                                                     <Link
-                                                        to={`/${props.cartItem.categoryName}/${props.cartItem.productName}`}>{props.cartItem.productName}</Link>
+                                                        to={`/${props.cartItem.categoryName}/${props.cartItem.productName}`}>
+                                                        {props.cartItem.productName}</Link>
                                                 </h5>
                                             </Col>
                                         </Row>
@@ -37,7 +38,11 @@ const CartItemCard = (props) => {
                                         <Row>
                                             <Col style={{width: "15px"}}>
                                                 <Button variant={"btn-secondary"}
-                                                        onClick={() => addOneToCart(props.cartItem.productName)}>+</Button>
+                                                        onClick={() => {
+                                                            if (props.cartItem.cartItemQuantity < props.cartItem.productQuantity) {
+                                                                addOneToCart(props.cartItem.productName)
+                                                            }
+                                                        }}>+</Button>
                                             </Col>
                                             <Col>
                                                 <h5 className="fw-normal mb-0">{props.cartItem.cartItemQuantity}</h5>
@@ -89,8 +94,8 @@ const CartItemCard = (props) => {
                 </div>
             </Card.Body>
         </Card>*/
-)
-    ;
+    )
+        ;
 };
 
 export default CartItemCard;

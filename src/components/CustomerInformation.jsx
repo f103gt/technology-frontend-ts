@@ -45,13 +45,6 @@ const CustomerInformation = ({
 
     }
 
-    const updateAddress = (event) => {
-        setAddress(event.target.value);
-        updateOrderFormData({address: event.target.value})
-    }
-
-
-
     return (
         <div>
             <Col md={12}>
@@ -97,48 +90,6 @@ const CustomerInformation = ({
                     <Col md={12}>
                         <Form.Label className="order-form-label"
                                     htmlFor="date-picker-example">Date</Form.Label>
-                    </Col>
-                </Row>
-
-                <Row className="mt-3 mx-4">
-                    <Col md={12}>
-                        <Form.Label className="order-form-label">Delivery</Form.Label>
-                        {/*<Dropdown></Dropdown>*/}
-                    </Col>
-                    <Col md={12}>
-                        <Form.Group className="form-outline">
-                            {/*<Form.Control type="text" id="form5" className="order-form-input"/>*/}
-                            <AddressInput value={address} onChange={updateAddress}/>
-                            <Form.Label htmlFor="form5">Region</Form.Label>
-                        </Form.Group>
-                    </Col>
-                    <Col md={6}>
-                        <Form.Group className="form-outline">
-                            <Form.Control type="text" id="form5" className="order-form-input"/>
-                            <Form.Label htmlFor="form5">Street</Form.Label>
-                        </Form.Group>
-                    </Col>
-                    <Col sm={3} className="mt-2 mt-sm-0">
-                        <Form.Group className="form-outline">
-                            <Form.Control type="text" id="form8" className="order-form-input"/>
-                            <Form.Label htmlFor="form8">Premise</Form.Label>
-                        </Form.Group>
-                    </Col>
-                    <Col sm={3} className="mt-2 mt-sm-0">
-                        <Form.Group className="form-outline">
-                            <Form.Control type="text" id="form9" className="order-form-input"/>
-                            <Form.Label htmlFor="form9">Postal / Zip Code</Form.Label>
-                        </Form.Group>
-                    </Col>
-                </Row>
-
-                <Row className="mt-3 mx-4">
-                    <Col md={12}>
-                        {/*<Form.Check>
-                                            <Form.Check.Input type="checkbox" value="" id="flexCheckDefault"/>
-                                            <Form.Check.Label htmlFor="flexCheckDefault">I know what I need to
-                                                know</Form.Check.Label>
-                                        </Form.Check>*/}
                     </Col>
                 </Row>
             </Col>

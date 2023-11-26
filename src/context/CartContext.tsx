@@ -12,8 +12,8 @@ const ACTIONS = {
 export interface CartItem {
     categoryName: string;
     productName: string;
-    /*productImage: File;*/
-
+    productImage: string;
+    productQuantity: number;
     cartItemQuantity: number;
     cartItemPrice: number;
 }
@@ -62,6 +62,8 @@ function addNewOneToCart(state: CartItem[], product: any) {
     const newCartItem: CartItem = {
         productName: product.productName,
         categoryName: product.categoryName,
+        productImage: product.primaryImageUrl,
+        productQuantity: product.quantity,
         cartItemQuantity: 1,
         cartItemPrice: Number(product.price),
     };
@@ -71,7 +73,6 @@ function addNewOneToCart(state: CartItem[], product: any) {
 
 function addOneToCart(state: CartItem[], productName: string) {
     const quantity = getProductQuantity(state, productName);
-
     const updatedQuantity = quantity + 1;
     return (state.map((item) =>
             item.productName === productName

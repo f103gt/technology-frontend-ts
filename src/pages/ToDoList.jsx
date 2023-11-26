@@ -1,37 +1,11 @@
-import React, {useCallback, useState} from 'react';
-import ToDoCard from "../components/ToDoCard";
-import axios from "axios";
+import React, {useState} from 'react';
+import PendingOrders from "../components/PendingOrders";
+import {Tab, Tabs} from "react-bootstrap";
+import PackedOrders from "../components/PackedOrders";
 
 const ToDoList = () => {
-    const [pendingOrders,setPendingOrders] = useState([]);
-    const [packedOrders,setPackedOrders] = useState([]);
-    const [sentOrders,setSentOrders] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-
-    const fetchPendingOrders = useCallback(() => {
-        axios.get('/csrf/api/v1')
-            .then(csrfResponse => {
-                const csrfToken = csrfResponse.data.headers;
-                axios.get('/staff/get-all-pending-orders', {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    }
-                })
-                    .then(pendingOrders => {
-                        setPendingOrders(pendingOrders.data);
-                    })
-                    .catch(error => {
-                        console.error('Error fetching categories:', error);
-                    })
-                    .finally(() => {
-                        setIsLoading(false);
-                    });
-            })
-            .catch(error => {
-                console.error('Error fetching CSRF token:', error);
-            });
-    }, [setPendingOrders]);
+    const [activeTab, setActiveTab] = useState('pending');
 
     return (
         <div>
@@ -42,41 +16,20 @@ const ToDoList = () => {
 
                             <div className="card">
                                 <div className="card-body p-5">
-                                    <ul className="nav nav-tabs mb-4 pb-2" id="ex1" role="tablist">
-                                        <li className="nav-item" role="presentation">
-                                            <a className="nav-link active" id="ex1-tab-1" role="tab"
-                                               aria-controls="ex1-tabs-1" aria-selected="true">Pending</a>
-                                        </li>
-                                        <li className="nav-item" role="presentation">
-                                            <a className="nav-link" id="ex1-tab-2" role="tab"
-                                               aria-controls="ex1-tabs-2" aria-selected="false">Packed</a>
-                                        </li>
-                                        <li className="nav-item" role="presentation">
-                                            <a className="nav-link" id="ex1-tab-3" role="tab"
-                                               aria-controls="ex1-tabs-3" aria-selected="false">Sent</a>
-                                        </li>
-                                    </ul>
-
                                     <div className="tab-content" id="ex1-content" role={"tabpanel"}>
-
-                                        <div className="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel"
-                                             aria-labelledby="ex1-tab-1">
-                                            <ul className="list-group mb-0">
-                                                {pendingOrders.map(pendingOrder=>(
-                                                    <ToDoCard order={pendingOrder}/>
-                                                ))}
-
-                                            </ul>
-                                        </div>
-
-                                        <div className="tab-pane fade" id="ex1-tabs-2" role="tabpanel"
-                                             aria-labelledby="ex1-tab-2">
-
-                                        </div>
-                                        <div className="tab-pane fade" id="ex1-tabs-3" role="tabpanel"
-                                             aria-labelledby="ex1-tab-3">
-
-                                        </div>
+                                        <Tabs activeKey={activeTab}
+                                              onSelect={(k) => setActiveTab(k)}
+                                              id="controlled-tab-example">
+                                            <Tab eventKey="pending" title="Pending">
+                                                <PendingOrders/>
+                                            </Tab>
+                                            <Tab eventKey="packed" title="Packed">
+                                                <PackedOrders/>
+                                            </Tab>
+                                            <Tab eventKey="sent" title="Sent">
+                                                {/*<SentOrders/>*/}
+                                            </Tab>
+                                        </Tabs>
                                     </div>
                                 </div>
                             </div>

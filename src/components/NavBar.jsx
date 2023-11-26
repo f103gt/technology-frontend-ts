@@ -13,12 +13,14 @@ import {IoMdCart} from "react-icons/io";
 import {RiHome6Fill} from "react-icons/ri";
 import AuthenticationModal from "../modals/AuthenticationModal";
 import Tasks from "../pages/Tasks";
+import AccountModal from "../modals/AccountModal";
 
 
 const NavBar = () => {
     const {userRole} = useContext(RoleContext);
     const [showCart, setShowCart] = useState(false);
     const [showAuth, setShowAuth] = useState(false);
+    const [showAccount, setShowAccount] = useState(false);
 
     const isLogged = () => {
         if (userRole === "guest") {
@@ -31,7 +33,7 @@ const NavBar = () => {
         }
         if (userRole !== "guest") {
             return (
-                <Nav.Link onClick={() => setShowAuth(true)}
+                <Nav.Link onClick={() => setShowAccount(true)}
                           className={"text-white"}
                 >Account
                     <FaCircleUser className={"icon"} size={"21"}/></Nav.Link>
@@ -44,9 +46,9 @@ const NavBar = () => {
             return (<Tasks/>);
         } else {
             return (
-                <RoleBasedComponent roles={['user', 'staff', 'manager']}>
-                    <Nav.Link  to={"/todo"}>
-                        <FaTasks  className={"icon"}/></Nav.Link>
+                <RoleBasedComponent roles={['staff', 'manager']}>
+                    <Nav.Link as={Link} to={"/todo"} className="text-white">Tasks
+                        <FaTasks className={"icon"}/></Nav.Link>
                 </RoleBasedComponent>);
         }
     }
@@ -72,9 +74,7 @@ const NavBar = () => {
                                     <RiHome6Fill className={"icon"} size={"21"}/>
                                 </Nav.Link>
                             </Nav.Item>
-                            <Nav.Item>
                                 <CategoriesDropdown/>
-                            </Nav.Item>
                             <RoleBasedComponent roles={['staff', 'manager', 'admin', 'user']}>
                                 <Nav.Item>{tasksDisplay()}</Nav.Item>
                             </RoleBasedComponent>
@@ -91,7 +91,8 @@ const NavBar = () => {
                 </div>
             </Navbar>
             <CartModal show={showCart} setShow={setShowCart}/>
-            <AuthenticationModal show={showAuth} setShow={setShowAuth}/> *
+            <AuthenticationModal show={showAuth} setShow={setShowAuth}/>
+            <AccountModal show={showAccount} setShow={setShowAccount}/>
         </div>
     );
 };
