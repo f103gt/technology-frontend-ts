@@ -1,11 +1,13 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import {Form} from "react-bootstrap";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
+import {CartContext} from "../context/CartContext";
 
 const EmailConfirmModal = ({email,setShow,show}) => {
     const [otp,setOtp] = useState("");
+    const {items,deleteFromCart} = useContext(CartContext);
     const sendEmailConfirmationRequest = (event)=>{
         event.preventDefault();
         axios.get('/csrf/api/v1')
@@ -23,6 +25,11 @@ const EmailConfirmModal = ({email,setShow,show}) => {
                 })
                     .then(response => {
                         if (response.status === 200) {
+                            if (items.length > 0) {
+                                items.forEach((cartItem) => {
+                                    deleteFromCart(cartItem.productName);
+                                });
+                            }
                            setShow(false);
                         }
                     })

@@ -1,14 +1,16 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import {Form} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import RegistrationModal from "./RegistrationModal";
+import {CartContext} from "../context/CartContext";
 
 function AuthenticationModal({show,setShow}) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showRegistration, setShowRegistration] = useState(false);
+    const {items,deleteFromCart} = useContext(CartContext);
 
     const handleClose = () => setShow(false);
 
@@ -47,6 +49,11 @@ function AuthenticationModal({show,setShow}) {
                 })
                     .then(response => {
                         if (response.status === 200) {
+                            if (items.length > 0) {
+                                items.forEach((cartItem) => {
+                                    deleteFromCart(cartItem.productName);
+                                });
+                            }
                             localStorage.setItem('userRole', response.data.role);
                             if(!response.data.uuid.isEmpty){
                                 localStorage.setItem("id",response.data.uuid);

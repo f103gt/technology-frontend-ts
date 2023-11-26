@@ -17,7 +17,7 @@ const CartModal = ({show, setShow}) => {
 
     return (
         <div>
-            <Modal show={show} onHide={handleClose} dialogClassName={showOrder ? "modal-custom" : ""}
+            <Modal show={show} onHide={handleClose} dialogClassName={showOrder && items.length > 0 ? "modal-custom" : ""}
                    onExited={() => setShowOrder(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Shopping Cart</Modal.Title>
@@ -39,7 +39,7 @@ const CartModal = ({show, setShow}) => {
                     </Row>
                 </Modal.Body>
                 <Modal.Footer>
-                    {showOrder ?
+                    {showOrder && items.length > 0 ?
                         null
                         :
                         <Button variant="dark" onClick={() => setShowOrder(true)}>Order</Button>

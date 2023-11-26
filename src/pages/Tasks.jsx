@@ -15,7 +15,12 @@ const Tasks = () => {
                 <Dropdown.Toggle variant="dark" id={"tasksDropdown"} className={"text-white"}>Tasks
                     <FaTasks className={"icon"}/>
                 </Dropdown.Toggle>
-                <Dropdown.Menu variant="dark">
+                <Dropdown.Menu variant="dark"
+                               style={{
+                                   backgroundColor: '#212529',
+                                   borderColor: '#212529',
+                                   top: '40px'
+                               }}>
                     <Dropdown.Item onClick={() => setAddShiftsShow(true)}>Distribute Shifts</Dropdown.Item>
                     <Dropdown.Item onClick={() => setShow(true)}>New Employees</Dropdown.Item>
                 </Dropdown.Menu>

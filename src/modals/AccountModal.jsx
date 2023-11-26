@@ -87,11 +87,10 @@ const AccountModal = ({show, setShow}) => {
     }
 
     const logout = () => {
-        communicateWithServer("get", "api/v1/auth/logout", eraseData);
+        communicateWithServer("get", "/api/v1/auth/logout", eraseData);
+        setShow(false);
     }
 
-
-    console.log(userData);
     const handleClose = () => {
         setShow(false);
     };

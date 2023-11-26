@@ -2,19 +2,13 @@ import React, {useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import {Form} from "react-bootstrap";
-import Button from "react-bootstrap/Button";
+import ConfirmationComponent from "../components/ConfirmationComponent";
 
 const NewEmployeesModal = ({show, setShow}) => {
     const [newEmployeesData, setNewEmployeesData] = useState(null);
-    const [confirmation, setConfirmation] = useState("");
-    const [confirmationMatches, setConfirmationMatches] = useState(false);
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-
+    const handleSubmit = (newEmployeesData) => {
         const formData = new FormData();
         formData.append("newEmployeesData", newEmployeesData);
-
         axios.get("/csrf/api/v1")
             .then(response => {
                 const csrfToken = response.data.headers;
@@ -32,35 +26,27 @@ const NewEmployeesModal = ({show, setShow}) => {
                         alert(error)
                     });
             });
-
     }
 
-    const handleConfirmation = (event) => {
-        const enteredConfirmation = event.target.value;
-        setConfirmation(enteredConfirmation);
-        setConfirmationMatches(enteredConfirmation === 'addNewEmployees');
-    };
     return (
         <Modal show={show} onHide={() => setShow(false)}>
             <Modal.Header closeButton>
-                <Modal.Title>New Product</Modal.Title>
+                <Modal.Title>Add New Employees</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form onSubmit={handleSubmit}>
-                    <Form.Group controlId="productDescription">
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control type={"file"} label="Product Description" accept={".csv"}
+                <Form>
+                    <Form.Group controlId="data">
+                        <Form.Label>Employees Data</Form.Label>
+                        <Form.Control type={"file"} label="Employees Data" accept={".csv"}
                                       onChange={event => setNewEmployeesData(event.target.files[0])}/>
                     </Form.Group>
-                    <Form.Group controlId="productSku">
-                        <Form.Text>
-                            To confirm insertion of new category enter <em>addCategory</em>
-                        </Form.Text>
-                        <Form.Control type="text" value={confirmation} onChange={handleConfirmation}/>
-                    </Form.Group>
-                    <Button variant="dark" type="submit"
-                            disabled={!confirmationMatches}>Submit</Button>
                 </Form>
+                    <ConfirmationComponent setShow={setShow}
+                                           confirmationMatcher={'addNewEmployees'}
+                                           hint={"To confirm insertion of new category enter "}
+                                           onSubmitExecute={handleSubmit}
+                                           additionalParam={newEmployeesData}
+                    />
             </Modal.Body>
         </Modal>
     );

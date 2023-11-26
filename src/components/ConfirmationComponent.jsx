@@ -4,9 +4,11 @@ import {Form} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 
 const ConfirmationComponent = ({
-                                   hint, confirmationMatcher,
+                                   hint,
+                                   confirmationMatcher,
+                                   setShow,
                                    onSubmitExecute,
-                                   setShow
+                                   additionalParam
                                }) => {
     const [confirmation, setConfirmation] = useState("");
     const [confirmationMatches, setConfirmationMatches] = useState(false);
@@ -16,12 +18,20 @@ const ConfirmationComponent = ({
         setConfirmationMatches(enteredConfirmation === confirmationMatcher);
     };
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        if (typeof onSubmitExecute === 'function') {
+            if (additionalParam !== undefined) {
+                onSubmitExecute(additionalParam);
+            } else {
+                onSubmitExecute();
+            }
+        }
+        setShow(false);
+    }
+
     return (
-        <Form onSubmit={(e) => {
-            e.preventDefault();
-            onSubmitExecute();
-            setShow(false);
-        }}>
+        <Form onSubmit={handleSubmit}>
             <Modal.Body>
                 <Form.Group controlId="confirmationHint">
                     <Form.Text>

@@ -46,7 +46,7 @@ const NavBar = () => {
             return (<Tasks/>);
         } else {
             return (
-                <RoleBasedComponent roles={['staff', 'manager']}>
+                <RoleBasedComponent roles={['staff']}>
                     <Nav.Link as={Link} to={"/todo"} className="text-white">Tasks
                         <FaTasks className={"icon"}/></Nav.Link>
                 </RoleBasedComponent>);
