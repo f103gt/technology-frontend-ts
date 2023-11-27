@@ -1,12 +1,12 @@
 import React, {useContext, useState} from 'react';
 import {Card, Col, Form, Row} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import {CartContext} from "../context/CartContext";
+import {CartContext} from "../../context/CartContext";
+import CustomerInformation from "./CustomerInformation";
+import DeliveryAddress from "./DeliveryAddress";
 import axios from "axios";
-import CustomerInformation from "../components/CustomerInformation";
-import DeliveryAddress from "../components/DeliveryAddress";
 
-const OrderData = () => {
+const OrderData = ({setShow}) => {
     const initialState = {
         firstName: "",
         lastName: "",
@@ -16,26 +16,30 @@ const OrderData = () => {
         paymentMethod: "",
         deliveryMethod: "",
     };
-    const [orderFormData, setOrderFormData] = useState(initialState);
 
-    // Function to update order form data
-    const updateOrderFormData = (data) => {
-        setOrderFormData({...orderFormData, ...data});
+    const addressData = {
+        region: "",
+        street: "",
+        premise: "",
+        postalCode: "",
+        postalOffice: ""
     };
 
     const {getTotalCost} = useContext(CartContext);
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [address, setAddress] = useState("");
-    const [paymentMethod, setPaymentMethod] = useState("");
-    const [deliveryMethod, setDeliveryMethod] = useState({
-        name: 'Courier',
-        selected: true,
-        price: 20.00,
-    });
-    const [paymentMethods, setPaymentMethods] = useState({
+
+    const [address, setAddress] = useState(addressData);
+    const [paymentMethod, setPaymentMethod] = useState("none");
+    const [deliveryMethod, setDeliveryMethod] = useState('none');
+    const [orderFormData, setOrderFormData] = useState(initialState);
+    const [deliveryMethodPrice, setDeliveryMethodPrice] = useState(0);
+    const updateOrderFormData = (data) => {
+        setOrderFormData(prevState => ({...prevState, ...data}));
+    };
+
+    const updateDeliveryAddress = (data) => {
+        setAddress(prevState => ({...prevState, ...data}));
+    };
+    const paymentMethods = {
         cash: {
             name: 'Cash',
             selected: false,
@@ -48,7 +52,30 @@ const OrderData = () => {
             name: 'PayPal',
             selected: false,
         },
-    });
+    };
+
+
+    const deliveryMethods = {
+        courier: {
+            name: 'Courier',
+            selected: false,
+            price: 20.00,
+        },
+        meest: {
+            name: 'Meest',
+            selected: false,
+            price: 15.00,
+        },
+    };
+
+    const updateDeliveryMethod = (method) => {
+        setDeliveryMethod(method);
+        const price = deliveryMethods[method]?.price || 0;
+        setDeliveryMethodPrice(price);
+        updateOrderFormData({deliveryMethod: method});
+    };
+
+    const totalPrice = getTotalCost() + deliveryMethodPrice;
 
     const updatePaymentMethod = (event) => {
         setPaymentMethod(event.target.value);
@@ -56,11 +83,8 @@ const OrderData = () => {
 
     }
 
-    //TODO ON THE SERVER SIDE RECALCULATE TOTAL COST
-
     const sendOrder = (event) => {
         event.preventDefault();
-        console.log(orderFormData);
         axios.get('/csrf/api/v1')
             .then(response => {
                 const csrfToken = response.data.headers;
@@ -76,33 +100,27 @@ const OrderData = () => {
                 })
                     .then(response => {
                         if (response.status === 200) {
-                            //TODO successful order placement pop up
+                            setShow(false);
                         }
                     })
                     .catch(error => {
                         alert(error);
                     });
             });
-    }
+    };
 
     return (
         <Card bg="dark" text="white" className="rounded-3">
             <Card.Body>
                 <Form className="pt-4" onSubmit={sendOrder}>
                     <Row>
-                        <CustomerInformation firstName={firstName} setFirstName={setFirstName}
-                                             lastName={lastName} setLastName={setLastName} email={email}
-                                             setEmail={setEmail}
-                                             phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber}
-                                             address={address} setAddress={setAddress}
-                                             deliveryMethod={deliveryMethod} setDeliveryMethod={setDeliveryMethod}
-                                             updateOrderFormData={updateOrderFormData}
+                        <CustomerInformation updateOrderFormData={updateOrderFormData}
                         />
-                        <DeliveryAddress deliveryMethod={deliveryMethod}
-                                         setDeliveryMethod={setDeliveryMethod}
-                                         address={address}
-                                         setAddress={setAddress}
-                                         updateOrderFormData={updateOrderFormData}
+                        <DeliveryAddress
+                            deliveryMethods={deliveryMethods}
+                            updateAddressData={updateDeliveryAddress}
+                            updateOrderFormData={updateOrderFormData}
+                            updateDeliveryMethod={updateDeliveryMethod}
                         />
                     </Row>
                     <Row className="mt-3 mx-4">
@@ -110,6 +128,7 @@ const OrderData = () => {
                             <Form.Label className="order-form-label">Payment Method</Form.Label>
                             <Form.Select
                                 className="order-form-input" onChange={updatePaymentMethod}>
+                                <option value="none">Select Delivery Method</option>
                                 {Object.keys(paymentMethods).map((method, index) => (
                                     <option key={index} value={method}>
                                         {paymentMethods[method].name}
@@ -126,17 +145,17 @@ const OrderData = () => {
                     </Row>
                     <Row className="justify-content-between">
                         <Col><p className="mb-2">Shipping</p></Col>
-                        <Col className="text-end"><p className="mb-2">${deliveryMethod.price}</p></Col>
+                        <Col className="text-end"><p className="mb-2">${deliveryMethodPrice}</p></Col>
                     </Row>
                     <Row className="justify-content-between mb-4">
                         <Col><p className="mb-2">Total</p></Col>
-                        <Col className="text-end"><p className="mb-2">${getTotalCost() + deliveryMethod.price}</p>
+                        <Col className="text-end"><p className="mb-2">${totalPrice}</p>
                         </Col>
                     </Row>
                     <Button type="submit"
                             className="btn btn-outline-light btn-dark btn-block btn-lg">
                         <Row className="justify-content-between">
-                            <Col><span>${getTotalCost() + deliveryMethod.price}</span></Col>
+                            <Col><span>${totalPrice}</span></Col>
                             <Col className="text-end">
                                 <span>Checkout <i className="fas fa-long-arrow-alt-right ms-2"></i></span>
                             </Col>
@@ -149,7 +168,6 @@ const OrderData = () => {
 };
 
 export default OrderData;
-
 
 /*const [deliveryMethod,setDeliveryMethod] = useState("");
 /*const updateDeliveryMethod = (event) => {

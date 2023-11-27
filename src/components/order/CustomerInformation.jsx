@@ -1,27 +1,14 @@
 import React, {useState} from 'react';
 import {Col, Form, Row} from "react-bootstrap";
-import AddressInput from "./AddressInput";
 
 const CustomerInformation = ({
-                                 firstName, setFirstName,
-                                 lastName, setLastName,
-                                 email, setEmail,
-                                 phoneNumber, setPhoneNumber,
-                                 address, setAddress,
-                                 deliveryMethod, setDeliveryMethod,
                                  updateOrderFormData
-
                              }) => {
-    const [subAddress, setSubAddress] = useState("");
 
-    const [deliveryMethods, setDeliveryMethods] = useState({
-        courier: {
-            name: 'Courier',
-            selected: true,
-            price: 20.00,
-        }
-    });
-
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
     const updateFirstName = (event) => {
         setFirstName(event.target.value);
         updateOrderFormData({firstName: event.target.value})

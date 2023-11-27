@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import CartModal from "../modals/CartModal";
-import OrderData from "../modals/OrderData";
+import CartModal from "../../modals/CartModal";
+import OrderData from "./OrderData";
 
 const CartOrderFormParent = () => {
     const [showCartModal, setShowCartModal] = useState(false);

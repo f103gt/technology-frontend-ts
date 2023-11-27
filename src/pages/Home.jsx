@@ -2,8 +2,8 @@ import React, {useEffect, useRef} from 'react';
 import {Image} from 'react-bootstrap';
 import background from '../3147814222581.jpg';
 import '../css/Home.css';
-import UserGuide from "../components/UserGuide";
-import ManagerGuide from "../components/ManagerGuide";
+import UserGuide from "../components/instructions/UserGuide";
+import ManagerGuide from "../components/instructions/ManagerGuide";
 
 const Home = () => {
     const imageRef = useRef(null);

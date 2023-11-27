@@ -2,12 +2,14 @@ import React, {useState} from 'react';
 import PlacesAutocomplete, {geocodeByAddress} from "react-places-autocomplete";
 import {Form} from "react-bootstrap";
 
-const AddressInput = () => {
+const AddressInput = ({updateRegion}) => {
     const [address, setAddress] = useState("");
     const handleSelect = async (value) => {
         const results =await geocodeByAddress(value);
         setAddress(value);
-    }
+        updateRegion(value);
+    };
+
     return (
         <div>
             <PlacesAutocomplete value={address} onChange={setAddress} onSelect={handleSelect}>

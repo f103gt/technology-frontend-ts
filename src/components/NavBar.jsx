@@ -53,12 +53,6 @@ const NavBar = () => {
         }
     }
 
-
-    //TODO implement formatting for /categoryName url
-    // if the url is represented with only one word- make all the letter lower case
-    // if the url has multiple parts make them look like represented below
-    // smartphone and mobile-phone
-
     return (
         <div>
             <Navbar expand="lg" bg="dark" variant="dark">
@@ -76,7 +70,7 @@ const NavBar = () => {
                             </Nav.Item>
                                 <CategoriesDropdown/>
                             <RoleBasedComponent roles={['staff', 'manager', 'admin', 'user']}>
-                                <Nav.Item>{tasksDisplay()}</Nav.Item>
+                                {tasksDisplay()}
                             </RoleBasedComponent>
                             <Nav.Item>
                                 {isLogged()}

@@ -1,14 +1,11 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import {CartContext} from "../context/CartContext";
 import CartItemCard from "../components/CartItemCard";
-import OrderData from "./OrderData";
+import OrderData from "../components/order/OrderData";
 import {Col, Row} from "react-bootstrap";
 import "../css/CartModal.css";
-import axios from "axios";
-import {set} from "js-cookie";
-import {RoleContext} from "../context/RoleProvider";
 
 const CartModal = ({show, setShow}) => {
     const handleClose = () => setShow(false);
@@ -17,7 +14,8 @@ const CartModal = ({show, setShow}) => {
 
     return (
         <div>
-            <Modal show={show} onHide={handleClose} dialogClassName={showOrder && items.length > 0 ? "modal-custom" : ""}
+            <Modal show={show} onHide={handleClose}
+                   dialogClassName={showOrder && items.length > 0 ? "modal-custom" : ""}
                    onExited={() => setShowOrder(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Shopping Cart</Modal.Title>
@@ -34,7 +32,8 @@ const CartModal = ({show, setShow}) => {
                             </Row>
                         </Col>
                         <Col md={6}>
-                            {showOrder && items.length > 0 && <OrderData/>}
+                            {showOrder && items.length > 0 && <OrderData
+                                setShow={setShow}/>}
                         </Col>
                     </Row>
                 </Modal.Body>
