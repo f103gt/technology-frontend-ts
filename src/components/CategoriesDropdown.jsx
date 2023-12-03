@@ -100,12 +100,12 @@ const CategoriesDropdown = () => {
                                         <LuPlusCircle color="white"/>
                                     </Button>
                                 </RoleBasedComponent>
-                                <RoleBasedComponent roles={["manager", "staff"]}>
+                                <RoleBasedComponent roles={["manager", "staff","admin"]}>
                                     <Button variant="btn btn-link" type="button" className="custom-button">
                                         <RiDeleteBin5Fill color="white"/>
                                     </Button>
                                 </RoleBasedComponent>
-                                <RoleBasedComponent roles={["manager", "staff"]}>
+                                <RoleBasedComponent roles={["manager", "staff","admin"]}>
                                     <Button variant="btn btn-link" type="button" className="custom-button">
                                         <MdAutoFixHigh color="white"/>
                                     </Button>
@@ -117,7 +117,7 @@ const CategoriesDropdown = () => {
                                     <Dropdown.Item onClick={() => navigate(`/${childCategory.categoryName}`)}
                                                    key={childCategory.categoryName}>
                                         {"\t" + childCategory.categoryName}
-                                        <RoleBasedComponent roles={["manager", "staff"]} >
+                                        <RoleBasedComponent roles={["manager", "staff","admin"]} >
                                             <Button variant="btn btn-link" type="button"
                                                     className="custom-button"
                                                     onClick={(event) => {
@@ -126,7 +126,7 @@ const CategoriesDropdown = () => {
                                                 <RiDeleteBin5Fill color="white"/>
                                             </Button>
                                         </RoleBasedComponent>
-                                        <RoleBasedComponent roles={["manager", "staff"]}>
+                                        <RoleBasedComponent roles={["manager", "staff","admin"]}>
                                             <Button variant="btn btn-link" type="button"
                                                     className="custom-button"
                                                     onClick={(event) => {
@@ -139,7 +139,7 @@ const CategoriesDropdown = () => {
                                 ))}
                         </React.Fragment>
                     ))}
-                    <RoleBasedComponent roles={["manager", "staff"]}>
+                    <RoleBasedComponent roles={["manager", "staff","admin"]}>
                         <Button variant="btn btn-link" type="button" className="custom-button"
                                 onClick={(event) => {
                                     event.stopPropagation();

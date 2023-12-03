@@ -14,12 +14,9 @@ import NavBar from "./components/NavBar";
 import AddProductModal from "./modals/AddProductModal";
 import PlaceOrderModal from "./modals/PlaceOrderModal";
 import ToDoList from "./pages/ToDoList";
-import TaskNotification from "./future/TaskNotification";
 import Activity from "./components/Activity";
 import AuthenticationModal from "./modals/AuthenticationModal";
 import Invoice from "./pages/Invoice";
-import PackedOrders from "./components/PackedOrders";
-import PendingOrders from "./components/PendingOrders";
 
 function App() {
     return (
@@ -39,16 +36,16 @@ function App() {
                             }/>
                             <Route path={"/order"} element={<PlaceOrderModal/>}/>
                             <Route path={"/tasks"} element={
-                                <PrivateRoute component={Tasks} roles={["staff", "manager", "admin"]}>
+                                <PrivateRoute component={Tasks} roles={["staff", "admin"]}>
                                     <Tasks/>
                                 </PrivateRoute>}/>
-                           {/* <Route path={"/notification" } element={<TaskNotification/>}/>*/}
-                            <Route path={"/active" } element={<Activity/>}/>
+                            {/* <Route path={"/notification" } element={<TaskNotification/>}/>*/}
+                            <Route path={"/active"} element={<Activity/>}/>
                             <Route path="/:categoryName" element={<Products/>}/>
                             <Route path="/:categoryName/:productName" element={<SpecificProduct/>}/>
                             {/*<Route path={"/notification" } element={<PushNotificationComponent/>}/>*/}
                             <Route path={"/todo"} element={<ToDoList/>}/>
-                            <Route path={"/todo/:uuid" } element={<Invoice/>}/>
+                            <Route path={"/todo/:uuid"} element={<Invoice/>}/>
                         </Routes>
                     </CartProvider>
                 </RoleProvider>

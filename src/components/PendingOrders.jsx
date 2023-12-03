@@ -2,11 +2,11 @@ import React, {useCallback, useEffect, useState} from 'react';
 import axios from "axios";
 import ToDoCard from "./ToDoCard";
 
-const PendingOrders = () => {
+const PendingOrders = ({setLoading}) => {
     const [pendingOrders, setPendingOrders] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
 
     const fetchPendingOrders = useCallback(() => {
+        setLoading(true);
         axios.get('/csrf/api/v1')
             .then(csrfResponse => {
                 const csrfToken = csrfResponse.data.headers;
@@ -22,18 +22,17 @@ const PendingOrders = () => {
                     .catch(error => {
                         console.error('Error fetching categories:', error);
                     })
-                    .finally(() => {
-                        setIsLoading(false);
-                    });
             })
             .catch(error => {
                 console.error('Error fetching CSRF token:', error);
             });
-    }, [setPendingOrders]);
+    }, [setPendingOrders, setLoading]);
+
 
     useEffect(() => {
         fetchPendingOrders();
     }, [fetchPendingOrders]);
+
 
     return (
         <div className="tab-pane fade show active"
@@ -43,7 +42,7 @@ const PendingOrders = () => {
             <ul className="list-group mb-0">
                 {pendingOrders.map(uuid => (
                     <ToDoCard key={uuid} uuid={uuid}
-                    url={`/staff/change-order-status-packed?orderUI=${uuid}`}/>
+                              url={`/staff/change-order-status-packed?orderUI=${uuid}`}/>
                 ))}
 
             </ul>

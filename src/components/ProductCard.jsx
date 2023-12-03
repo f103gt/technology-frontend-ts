@@ -40,7 +40,7 @@ const ProductCard = ({product, categoryName}) => {
                     </div>
                     <div className="d-flex justify-content-between mb-2">
                         <p className="text-muted mb-0">Available: <span className="fw-bold">{product.quantity}</span></p>
-                        {setButtons(["staff", "manager"])}
+                        {setButtons(["staff", "manager","admin"])}
                     </div>
                 </Card.Body>
             </Card>

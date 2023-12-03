@@ -6,7 +6,8 @@ const ACTIONS = {
     ADD_NEW: "add_new",
     ADD_ANOTHER: "add_another",
     REMOVE_ONE: "remove_one",
-    DELETE_ALL: "delete_all"
+    DELETE_ALL: "delete_all",
+    RESET_ALL: "reset_all"
 }
 
 export interface CartItem {
@@ -31,6 +32,8 @@ function reducer(state: CartItem[], action: {
             return removeOneFromCart(state, action.payload);
         case ACTIONS.DELETE_ALL:
             return deleteFromCart(state, action.payload);
+        case ACTIONS.RESET_ALL:
+            return action.payload.items;
         default:
             return state;
     }
@@ -50,6 +53,10 @@ export const CartContext = createContext({
     },
     getTotalCost: () => Number(0),
 });
+
+function resetAll(dispatch: React.Dispatch<any>, newItems: CartItem[]) {
+    dispatch({type: ACTIONS.RESET_ALL, payload: {items: newItems}});
+}
 
 function getProductQuantity(state: CartItem[], productName: string) {
     const quantity = state
@@ -125,11 +132,16 @@ export const CartProvider = ({children}: { children: ReactNode }) => {
     const {userRole} = useContext(RoleContext);
     const [prevCartItems, setPrevCartItems] = useState(cartItems);
 
-
     function getInitialCartItems() {
         const storedCartItems = localStorage.getItem("cartItems");
         return storedCartItems ? JSON.parse(storedCartItems) : [];
     }
+
+    const resetItems = (newItems: CartItem[]) => {
+        localStorage.setItem("cartItems", JSON.stringify(newItems));
+        setPrevCartItems(newItems);
+        resetAll(dispatch, newItems);
+    };
 
     useEffect(() => {
         localStorage.setItem("cartItems", JSON.stringify(cartItems));
@@ -173,6 +185,7 @@ export const CartProvider = ({children}: { children: ReactNode }) => {
                 deleteCartItemServer(deletedItem.productName);
             }
         }
+
     }, [prevCartItems, cartItems, userRole]);
 
 
@@ -190,7 +203,8 @@ export const CartProvider = ({children}: { children: ReactNode }) => {
         addOneToCart: (productName: string) => dispatch({type: ACTIONS.ADD_ANOTHER, payload: productName}),
         removeOneFromCart: (productName: string) => dispatch({type: ACTIONS.REMOVE_ONE, payload: productName}),
         deleteFromCart: (productName: string) => dispatch({type: ACTIONS.DELETE_ALL, payload: productName}),
-        getTotalCost: () => getTotalCost(cartItems)
+        getTotalCost: () => getTotalCost(cartItems),
+        resetAll: resetItems,
     };
 
     return (

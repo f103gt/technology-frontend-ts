@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Col, Form, Row} from 'react-bootstrap';
 import AddressInput from './AddressInput';
 
+//TODO CHECK DELIVERY ADDRESS SET UP FOR COURIER
 const DeliveryAddress = ({
                              deliveryMethods,
                              updateAddressData,

@@ -84,7 +84,8 @@ const RegistrationModal = ({show, setShow}) => {
     }
 
     return (
-        <div><Modal show={show} onHide={handleClose}>
+        <div><Modal show={show} onHide={handleClose}
+                    backdrop="static" keyboard={false}>
             <Modal.Header closeButton>
                 <Modal.Title>Registration</Modal.Title>
             </Modal.Header>

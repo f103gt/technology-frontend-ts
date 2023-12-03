@@ -1,11 +1,14 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import PendingOrders from "../components/PendingOrders";
 import {Tab, Tabs} from "react-bootstrap";
 import PackedOrders from "../components/PackedOrders";
+import {LoadingContext} from "../context/LoadingContext";
 
 const ToDoList = () => {
-    const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('pending');
+
+    const {isLoading,setLoading} = useContext(LoadingContext);
+
 
     return (
         <div>
@@ -21,7 +24,8 @@ const ToDoList = () => {
                                               onSelect={(k) => setActiveTab(k)}
                                               id="controlled-tab-example">
                                             <Tab eventKey="pending" title="Pending">
-                                                <PendingOrders/>
+                                                <PendingOrders
+                                                    setLoading={setLoading}/>
                                             </Tab>
                                             <Tab eventKey="packed" title="Packed">
                                                 <PackedOrders/>

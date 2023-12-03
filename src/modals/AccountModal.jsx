@@ -6,13 +6,15 @@ import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
 import {IoMdLogOut} from "react-icons/io";
 import {TiDeleteOutline} from "react-icons/ti";
 import axios from "axios";
+import {communicateWithServer} from "../utilities/ServerCommunication";
 
 const AccountModal = ({show, setShow}) => {
     const [isActive, setIsActive] = useState(true);
     const [userData, setUserData] = useState();
+    const [errorMessage, setErrorMessage] = useState("");
 
     //TODO IF COMMUNICATE WITH SERVER WILL BE WORKING WELL USE THIS FUNCTION TO RETURN ORDERS DATA
-    const communicateWithServer = (method, url, setStatus) => {
+    const communicateWithServerLocal = (method, url, setStatus) => {
         axios.get('/csrf/api/v1')
             .then(response => {
                 const csrfToken = response.data.headers;
@@ -75,20 +77,31 @@ const AccountModal = ({show, setShow}) => {
         }
     }
     const activateEmployee = () => {
-        communicateWithServer('post', "/staff/set-is-active", updateActivity);
+        communicateWithServerLocal('get', "/staff/set-is-active", updateActivity);
     }
 
     const inactivateEmployee = () => {
-        communicateWithServer('post', "/staff/set-not-active", updateActivity);
+        communicateWithServerLocal('get', "/staff/set-not-active", updateActivity);
     }
 
     const eraseData = () => {
         localStorage.clear();
+        setShow(false);
     }
 
+    const handleLogoutError = (error) => {
+        setErrorMessage(error.message || error);
+    }
     const logout = () => {
-        communicateWithServer("get", "/api/v1/auth/logout", eraseData);
-        setShow(false);
+        communicateWithServer({
+            method: "get",
+            url: "/api/v1/auth/logout",
+            executeFunction: eraseData,
+            executeFunctionArgs:[setShow],
+            handleError: handleLogoutError,
+            reload:true
+        });
+
     }
 
     const handleClose = () => {
@@ -102,6 +115,7 @@ const AccountModal = ({show, setShow}) => {
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Body style={{backgroundColor: '#eee', borderRadius: '15px'}}>
+                {errorMessage && <p color={"red"} className="error">{errorMessage}</p>}
                 <div className="card" style={{borderRadius: '15px'}}>
                     <div className="card-body text-center">
                         <div className="mt-3 mb-4">

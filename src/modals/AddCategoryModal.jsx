@@ -8,15 +8,15 @@ const AddCategoryModal = ({show, setShow, parentCategoryName}) => {
     const [categoryName, setCategoryName] = useState("");
     const handleSubmit = () => {
         const requestBody = {
-            parentCategory: parentCategoryName,
-            category: categoryName
+            parentCategoryName: parentCategoryName,
+            categoryName: categoryName
         }
         axios.get("/csrf/api/v1")
             .then(response => {
                 const csrfToken = response.data.headers;
                 axios({
                     method: 'post',
-                    url: "/api/v1/add-category",
+                    url: "/manager/add-category",
                     data: requestBody,
                     headers: {
                         'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ const AddCategoryModal = ({show, setShow, parentCategoryName}) => {
                     </Form.Group>
                 </Form>
                 <ConfirmationComponent confirmationMatcher={"addCategory"}
-                                       hint={"To confirm insertion of a new category enter"}
+                                       hint={"To confirm insertion of a new category enter "}
                                        setShow={setShow}
                                        onSubmitExecute={handleSubmit}/>
             </Modal.Body>

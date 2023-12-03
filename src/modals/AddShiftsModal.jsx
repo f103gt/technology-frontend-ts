@@ -7,6 +7,7 @@ import ConfirmationComponent from "../components/ConfirmationComponent";
 const AddShiftsModal = ({show, setShow}) => {
     const [shifts, setShifts] = useState(null);
 
+
     const handleSubmit = (shifts) => {
         const formData = new FormData();
         formData.append("shifts", shifts);
@@ -46,7 +47,7 @@ const AddShiftsModal = ({show, setShow}) => {
                             onChange={event => setShifts(event.target.files[0])}/>
                     </Form.Group>
                 </Form>
-                <ConfirmationComponent hint={"To confirm insertion of new shifts enter"}
+                <ConfirmationComponent hint={"To confirm insertion of new shifts enter "}
                                        confirmationMatcher={"distributeShifts"}
                                        onSubmitExecute={handleSubmit}
                                        additionalParam={shifts}

@@ -69,16 +69,18 @@ const NavBar = () => {
                                 </Nav.Link>
                             </Nav.Item>
                                 <CategoriesDropdown/>
-                            <RoleBasedComponent roles={['staff', 'manager', 'admin', 'user']}>
+                            <RoleBasedComponent roles={['staff', 'manager', 'admin']}>
                                 {tasksDisplay()}
                             </RoleBasedComponent>
                             <Nav.Item>
                                 {isLogged()}
                             </Nav.Item>
                             <Nav.Item>
-                                <Nav.Link onClick={() => setShowCart(true)}
-                                          className="text-white">Cart
-                                    <IoMdCart className={"icon"} size={"22"}/></Nav.Link>
+                                <RoleBasedComponent roles={["user","guest"]}>
+                                    <Nav.Link onClick={() => setShowCart(true)}
+                                             className="text-white">Cart
+                                    <IoMdCart className={"icon"} size={"22"}/>
+                                    </Nav.Link></RoleBasedComponent>
                             </Nav.Item>
                         </Nav>
                     </Navbar.Collapse>

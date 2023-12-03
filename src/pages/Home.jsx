@@ -2,8 +2,10 @@ import React, {useEffect, useRef} from 'react';
 import {Image} from 'react-bootstrap';
 import background from '../3147814222581.jpg';
 import '../css/Home.css';
-import UserGuide from "../components/instructions/UserGuide";
 import ManagerGuide from "../components/instructions/ManagerGuide";
+import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
+import AdminGuide from "../components/instructions/AdminGuide";
+import UserGuide from "../components/instructions/UserGuide";
 
 const Home = () => {
     const imageRef = useRef(null);
@@ -42,13 +44,23 @@ const Home = () => {
                             TECHNOLOGY
                         </h1>
                         <p className="primary-text">
-                            Healthy switcher chefs do all the prep work, like peeding, chopping
-                            & marinating, so you can cook a fresh food.
+                            Digital store
                         </p>
                     </div>
                 </div>
             </div>
-            <ManagerGuide/>
+            <RoleBasedComponent roles={["manager"]}>
+                <ManagerGuide/>
+            </RoleBasedComponent>
+            <RoleBasedComponent roles={["admin"]}>
+                <AdminGuide/>
+            </RoleBasedComponent>
+            {/*<RoleBasedComponent roles={["user"]}>
+                <UserGuide/>
+            </RoleBasedComponent>*/}
+            {/*<RoleBasedComponent roles={["staff"]}>
+                <UserGuide/>
+            </RoleBasedComponent>*/}
         </div>
     );
 };

@@ -4,6 +4,7 @@ import {Form} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 
 const ConfirmationComponent = ({
+                                   setSuccessResponse,
                                    hint,
                                    confirmationMatcher,
                                    setShow,
@@ -27,7 +28,9 @@ const ConfirmationComponent = ({
                 onSubmitExecute();
             }
         }
-        setShow(false);
+        if(typeof setShow === 'function'){
+            setShow(false);
+        }
     }
 
     return (

@@ -2,17 +2,17 @@ import React from 'react';
 import UserGuide from "./UserGuide";
 import {FaTasks} from "react-icons/fa";
 
-const AdminGuide = () => {
+const StaffGuide = () => {
+
     const stepContent = [
         {
-            action: 'Add Shifts Distribution',
+            action: 'Order Management',
             content: [
                 {
                     subAction: null,
                     instructions: [
                         <span>Proceed to <strong>Navigation Bar {">"} Tasks <FaTasks/> </strong></span>,
-                        <span>In the dropdown menu find the option <strong>"Distribute Shifts"</strong></span>,
-                        'Upload a csv file with the shifts distribution and proceed with actions confirmation',
+                        'In the check list find the necessary order status and update it if necessary',
                         'ATTENTION! The csv file must contain columns with employee email and dates with working hours'
                     ]
                 },
@@ -35,11 +35,14 @@ const AdminGuide = () => {
         }
 
     ];
+
     return (
-        <UserGuide
-            stepContent={stepContent}
-            instructionsHeader={"Administrator Instructions"}/>
+        <div>
+            <UserGuide
+                stepContent={stepContent}
+                instructionsHeader={"Staff Instructions"}/>
+        </div>
     );
 };
 
-export default AdminGuide;
+export default StaffGuide;

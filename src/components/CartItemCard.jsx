@@ -9,6 +9,7 @@ const CartItemCard = (props) => {
     //TODO handle referential link to the product page
     //TODO add fetch of the product price from the server side
     const {addOneToCart, removeOneFromCart, deleteFromCart} = useContext(CartContext);
+
     return (
         <Card>
             <Card.Body className="p-12">
