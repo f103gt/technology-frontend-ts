@@ -11,7 +11,7 @@ const CartModal = ({show, setShow}) => {
     const handleClose = () => setShow(false);
     const {items} = useContext(CartContext);
     const [showOrder, setShowOrder] = useState(false);
-    
+
     return (
         <div>
             <Modal show={show} onHide={handleClose}

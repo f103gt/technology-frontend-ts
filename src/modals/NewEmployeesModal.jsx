@@ -25,7 +25,7 @@ const NewEmployeesModal = ({show, setShow}) => {
             data: formData,
             headers: {'Content-Type': 'multipart/form-data'},
             handleError: handleError,
-            executeFunction: () => setSuccessResponse(true)
+            executeFunction: () => setSuccessResponse(true),
         })
     }
     const handleClose = () => {

@@ -1,8 +1,8 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import {CartContext} from "../context/CartContext";
-import {Carousel, Col, Image, Row} from "react-bootstrap";
+import {Card, Carousel, Col, Container, Image, Row} from "react-bootstrap";
 import {LoadingContext} from "../context/LoadingContext";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -18,7 +18,7 @@ const SpecificProduct = () => {
     const {setLoading} = useContext(LoadingContext);
     const [productDescription, setProductDescription] = useState('')
 
-    const fetchProductData = useCallback(() => {
+    useEffect(() => {
         setLoading(true);
         axios.get("/csrf/api/v1")
             .then(response => {
@@ -31,7 +31,8 @@ const SpecificProduct = () => {
                 })
                     .then(result => {
                         setProduct(result.data);
-                        fetchProductDescription();
+                        fetchProductDescription(result.data);
+                        console.log(productDescription);
                     })
                     .catch((errorMessage) => {
                         throw new Error(errorMessage)
@@ -42,20 +43,19 @@ const SpecificProduct = () => {
             })
     }, [productName, setLoading]);
 
-    const fetchProductDescription = () => {
-        fetch('https://technologyproject.s3.eu-north-1.amazonaws.com/1699110762491_specs.txt')
-            .then((response) => response.text())
-            .then((data) => {
-                setProductDescription(data);
-            })
-            .catch((error) => {
-                console.error('Error fetching product description:', error);
-            });
+    const fetchProductDescription = (productData) => {
+        if (productData !== undefined) {
+            fetch(productData.descriptionUrl)
+                .then((response) => response.text())
+                .then((data) => {
+                    setProductDescription(data);
+                })
+                .catch((error) => {
+                    console.error('Error fetching product description:', error);
+                });
+        }
     }
 
-    useEffect(() => {
-        fetchProductData();
-    }, [fetchProductData]);
 
     const addToCart = () => {
         if (!product) {
@@ -71,45 +71,63 @@ const SpecificProduct = () => {
         setShowToast(true);
     };
 
-    if (!product) {
+    if (product && productDescription !== undefined) {
+        const descriptionParts = productDescription.split('\n');
+        const firstHalf = descriptionParts.slice(0, descriptionParts.length / 2).join('\n');
+        const secondHalf = descriptionParts.slice(descriptionParts.length / 2).join('\n');
+        return (
+            <Container style={{marginTop: '40px'}}>
+                <Card>
+                    <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
+                        <Toast.Header>
+                            <strong className="mr-auto">Cart Update</strong>
+                        </Toast.Header>
+                        <Toast.Body>Product added to cart!</Toast.Body>
+                    </Toast>
+                    <Row>
+                        <Col md={6}>
+                            <Carousel>
+                                <Carousel.Item>
+                                    <Image src={product.primaryImageUrl} alt={`Product Primary Image`}
+                                           className="d-block w-100"
+                                           style={{height: '500px', objectFit: 'cover'}}/>
+                                </Carousel.Item>
+                                {product.imageUrls.map((image, index) => (
+                                    <Carousel.Item key={index}>
+                                        <Image src={image} alt={`Product Image ${index}`}
+                                               className="d-block w-100"
+                                               style={{height: '500px', objectFit: 'cover'}}/>
+                                    </Carousel.Item>
+                                ))}
+                            </Carousel>
+                            <h3 style={{color: '#28a745', fontWeight: 'bold'}}>{product.price}$$</h3>
+                            <Button variant="success" onClick={() => addToCart()}>
+                                Add to cart
+                            </Button>
+                        </Col>
+                        <Col md={6}>
+                            <h4 style={{color: '#17a2b8', fontWeight: 'bold'}}>Product Description</h4>
+                            <Row>
+                                <Col md={6} style={{margin: '10px'}}>
+                                    <div style={{maxWidth: '100%', overflow: 'auto', whiteSpace: 'pre-wrap'}}>
+                                        <p style={{color: '#6c757d', fontSize: '14px'}}>{firstHalf}</p>
+                                    </div>
+                                </Col>
+                                <Col md={5} style={{margin: '10px'}}>
+                                    <div style={{maxWidth: '100%', overflow: 'auto', whiteSpace: 'pre-wrap'}}>
+                                        <p style={{color: '#6c757d', fontSize: '14px'}}>{secondHalf}</p>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row></Card>
+            </Container>
+
+        );
+    } else {
         return <Skeleton count={5}/>;
     }
 
-    return (
-        <Row style={{ marginTop: '20px' }}>
-            <Col md={6}>
-                <Carousel>
-                    <Carousel.Item>
-                        <Image src={product.primaryImageUrl} alt={`Product Primary Image`}
-                               className="d-block w-100"/>
-                    </Carousel.Item>
-                    {product.imageUrls.map((image, index) => (
-                        <Carousel.Item key={index}>
-                            <Image src={image} alt={`Product Image ${index}`}
-                                   className="d-block w-100"/>
-                        </Carousel.Item>
-                    ))}
-                </Carousel>
-            </Col>
-            <Col md={6}>
-                    <h2>{product.productName}</h2>
-                    <p>{product.price}</p>
-                    <Button variant="dark" onClick={() => addToCart()}>
-                        Add to cart
-                    </Button>
-                    <h3>Product Description</h3>
-                    <div><p>{productDescription}</p></div>
-                    <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
-                        <Toast.Header>
-                            <strong className="mr-auto">Notification</strong>
-                        </Toast.Header>
-                        <Toast.Body>
-                            The product has been added to the cart!
-                        </Toast.Body>
-                    </Toast>
-            </Col>
-        </Row>
-    );
 };
 
 export default SpecificProduct;

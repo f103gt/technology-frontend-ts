@@ -1,6 +1,6 @@
 import React, {createContext, ReactNode, useContext, useEffect, useReducer, useState} from 'react';
 import {RoleContext} from "./RoleProvider";
-import {addNewItemServer, deleteCartItemServer} from "./CartServerActions";
+import {addNewItemServer, deleteCartItemServer, removeCartItemServer} from "./CartServerActions";
 
 const ACTIONS = {
     ADD_NEW: "add_new",
@@ -87,7 +87,7 @@ function addOneToCart(state: CartItem[], productName: string) {
                     ...item,
                     cartItemQuantity: updatedQuantity,
                     cartItemPrice:
-                        (item.cartItemPrice / quantity) * updatedQuantity,
+                        (Number(item.cartItemPrice.toFixed(2))/ quantity) * updatedQuantity,
                 }
                 : item
         )
@@ -159,7 +159,13 @@ export const CartProvider = ({children}: { children: ReactNode }) => {
 
         function findRemovedItem(prevItem: CartItem) {
             const item = cartItems.find((item) => item.productName === prevItem.productName);
-            return !item || (item && prevItem.cartItemQuantity > item.cartItemQuantity);
+            return item && prevItem.cartItemQuantity > item.cartItemQuantity;
+        }
+
+
+        function findDeletedItem(prevItem: CartItem) {
+            const item = cartItems.find((item) => item.productName === prevItem.productName);
+            return !item;
         }
 
         const newItemAdded = cartItems.some((item) => {
@@ -168,6 +174,10 @@ export const CartProvider = ({children}: { children: ReactNode }) => {
 
         const itemRemoved = prevCartItems.some((item) => {
             return findRemovedItem(item);
+        });
+
+        const itemDeleted = prevCartItems.some((item) => {
+            return findDeletedItem(item);
         });
 
         if (newItemAdded && userRole !== "guest") {
@@ -183,6 +193,13 @@ export const CartProvider = ({children}: { children: ReactNode }) => {
             });
             if (deletedItem) {
                 deleteCartItemServer(deletedItem.productName);
+            }
+        }else if(itemDeleted && userRole !== "guest"){
+            const removedItem = prevCartItems.find((item) => {
+                return findDeletedItem(item);
+            });
+            if (removedItem) {
+                removeCartItemServer(removedItem.productName);
             }
         }
 
