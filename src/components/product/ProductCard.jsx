@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
+import {RoleBasedComponent} from "../../utilities/RoleBasedComponent";
 import {Card, Col} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import {RiDeleteBin5Fill} from "react-icons/ri";

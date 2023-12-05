@@ -2,7 +2,7 @@ import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../components/product/ProductCard";
 import {LoadingContext} from "../context/LoadingContext";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';

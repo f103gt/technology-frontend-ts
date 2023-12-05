@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Form, ListGroup} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import ConfirmationModal from "../modals/ConfirmationModal";
+import ConfirmationModal from "../../modals/ConfirmationModal";
 import axios from "axios";
 
 const ToDoCard = ({uuid,url}) => {

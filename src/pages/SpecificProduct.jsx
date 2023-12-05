@@ -8,7 +8,7 @@ import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 import Button from "react-bootstrap/Button";
 import Toast from 'react-bootstrap/Toast';
-import {useMediaQuery} from "react-responsive";
+import "../css/SpecificProduct.css";
 
 const SpecificProduct = () => {
     const [product, setProduct] = useState();
@@ -32,7 +32,7 @@ const SpecificProduct = () => {
                     .then(result => {
                         setProduct(result.data);
                         fetchProductDescription(result.data);
-                        console.log(productDescription);
+                        result.data.imageUrls.unshift(result.data.primaryImageUrl);
                     })
                     .catch((errorMessage) => {
                         throw new Error(errorMessage)
@@ -70,55 +70,80 @@ const SpecificProduct = () => {
         }
         setShowToast(true);
     };
-    const isXLargeScreen = useMediaQuery({query: '(min-width: 1400px)'});
-    const cardWidth = isXLargeScreen ? '95vw' : '100vw';
+
+
     if (product && productDescription !== undefined) {
         const descriptionParts = productDescription.split('\n');
         const firstHalf = descriptionParts.slice(0, descriptionParts.length / 2).join('\n');
         const secondHalf = descriptionParts.slice(descriptionParts.length / 2).join('\n');
         return (
-            <Container style={{marginTop: '30px', display: 'flex'}}>
+            <Container style={{
+                marginTop: '30px',
+                display: 'flex',
+                maxWidth: '97vw',
+                maxHeight: '85vh'
+            }}>
                 <Card style={{
-                    width: cardWidth,
-                    maxWidth: cardWidth,
                     boxSizing: 'border-box',
-                }}><Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
-                    <Toast.Header>
-                        <strong className="mr-auto">Cart Update</strong>
-                    </Toast.Header>
-                    <Toast.Body>Product added to cart!</Toast.Body>
-                </Toast>
-                    <Row>
-                        <Col md={6} style={{ padding: '0 40px' }}>
-                            <Carousel>
-                                <Carousel.Item>
-                                    <Image src={product.primaryImageUrl} alt={`Product Primary Image`}
-                                           className="d-block w-100"
-                                           style={{height: '500px', objectFit: 'cover'}}/>
-                                </Carousel.Item>
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}>
+                    <Toast onClose={() => setShowToast(false)}
+                           show={showToast} delay={3000} autohide>
+                        <Toast.Header>
+                            <strong className="mr-auto">Cart Update</strong>
+                        </Toast.Header>
+                        <Toast.Body>Product added to cart!</Toast.Body>
+                    </Toast>
+                    <Row style={{flex: '1'}}>
+                        <Col md={7} style={{
+                            padding: '20px 40px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            height: '85vh'
+                        }}>
+                            <Carousel style={{width: '100%', height: '80%'}}>
                                 {product.imageUrls.map((image, index) => (
-                                    <Carousel.Item key={index}>
+                                    <Carousel.Item key={index} className="carousel-item">
                                         <Image src={image} alt={`Product Image ${index}`}
-                                               className="d-block w-100"
-                                               style={{height: '500px', objectFit: 'cover'}}/>
+                                               className="carousel-image"/>
                                     </Carousel.Item>
                                 ))}
                             </Carousel>
-                            <h3 style={{color: '#6c757d', fontWeight: 'bold'}}>{product.price}$$</h3>
-                            <Button style={{backgroundColor:'#212529'}} variant="success" onClick={() => addToCart()}>
-                                Add to cart
-                            </Button>
+
+                            <div style={{marginTop: "30px"}}>
+                                <h3 style={{color: '#6c757d', fontWeight: 'bold'}}>
+                                    {product.price}$$</h3>
+                                <Button style={{backgroundColor: '#212529'}} variant="success"
+                                        onClick={() => addToCart()}>
+                                    Add to cart
+                                </Button>
+                            </div>
                         </Col>
-                        <Col md={6}>
-                            <h4 style={{color:'#212529', fontWeight: 'bold'}}>Product Description</h4>
+
+                        <Col md={5}>
+                            <h4 style={{
+                                color: '#212529',
+                                fontWeight: 'bold',
+                                marginTop: '10px'
+                            }}>Product Description</h4>
                             <Row>
-                                <Col md={5} style={{margin: '10px'}}>
-                                    <div style={{maxWidth: '100%', overflow: 'auto', whiteSpace: 'pre-wrap'}}>
+                                <Col md={5} style={{marginTop: '10px'}}>
+                                    <div style={{
+                                        maxWidth: '100%',
+                                        overflow: 'auto',
+                                        whiteSpace: 'pre-wrap'
+                                    }}>
                                         <p style={{color: '#6c757d', fontSize: '14px'}}>{firstHalf}</p>
                                     </div>
                                 </Col>
-                                <Col md={5} style={{margin: '10px'}}>
-                                    <div style={{maxWidth: '100%', overflow: 'auto', whiteSpace: 'pre-wrap'}}>
+                                <Col md={5} style={{marginTop: '10px'}}>
+                                    <div style={{
+                                        maxWidth: '100%',
+                                        overflow: 'auto',
+                                        whiteSpace: 'pre-wrap'
+                                    }}>
                                         <p style={{color: '#6c757d', fontSize: '14px'}}>{secondHalf}</p>
                                     </div>
                                 </Col>
@@ -126,9 +151,7 @@ const SpecificProduct = () => {
                         </Col>
                     </Row>
                 </Card>
-            </Container>
-
-        );
+            </Container>);
     } else {
         return <Skeleton count={5}/>;
     }

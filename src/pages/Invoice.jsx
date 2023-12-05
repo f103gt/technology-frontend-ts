@@ -46,7 +46,7 @@ const Invoice = () => {
     return (
         <div>
             <div className="d-flex justify-content-center align-items-center">
-                <div className="card" style={{width: '1200px'}}>
+                <div className="card" style={{width: '95vw',height:'97vh'}}>
                     <div className="card-body">
                         <div className="container mb-5 mt-3">
                             <div className="row d-flex align-items-baseline">

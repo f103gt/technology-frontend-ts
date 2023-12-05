@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
-import PendingOrders from "../components/PendingOrders";
+import PendingOrders from "../components/tasks/PendingOrders";
 import {Tab, Tabs} from "react-bootstrap";
-import PackedOrders from "../components/PackedOrders";
+import PackedOrders from "../components/tasks/PackedOrders";
 import {LoadingContext} from "../context/LoadingContext";
 
 const ToDoList = () => {
