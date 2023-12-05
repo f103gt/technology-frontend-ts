@@ -28,10 +28,8 @@ const ConfirmationComponent = ({
                 onSubmitExecute();
             }
         }
-        if(typeof setShow === 'function'){
-            setShow(false);
-        }
     }
+
 
     return (
         <Form onSubmit={handleSubmit}>

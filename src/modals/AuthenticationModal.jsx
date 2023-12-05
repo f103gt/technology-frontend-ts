@@ -1,11 +1,10 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import {Form} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import RegistrationModal from "./RegistrationModal";
 import {communicateWithServer} from "../utilities/ServerCommunication";
 import {useModalCloseOnSuccess} from "../utilities/useModalCloseOnSuccess";
-import {CartContext} from "../context/CartContext";
 import {useCartServerSynchronization} from "../utilities/useCartServerSynchronization";
 
 /*TODO IF THE USER ALREADY EXISTS AND IS NOT ACTIVATED,
@@ -41,47 +40,11 @@ function AuthenticationModal({show, setShow}) {
         }
     }
 
-    /*const synchronizeCartWithServer = useCallback(async () => {
-        try {
-            if (items.length > 0) {
-                const productQuantityMap = {};
-                items.forEach((cartItem) => {
-                    let {productName, cartItemQuantity} = cartItem;
-                    productQuantityMap[productName] = (productQuantityMap[productName] || 0) + cartItemQuantity;
-                });
-                const response = await communicateWithServer({
-                    method: 'post',
-                    url: "/cart/api/v1/add-all-cart-items",
-                    data: productQuantityMap,
-                    handleError: console.log,
-                });
-                resetCartItems(response);
-            } else {
-                const response = await communicateWithServer({
-                    method: 'get',
-                    url: "/cart/api/v1/get-user-cart",
-                    executeFunction: resetCartItems,
-                    handleError: console.log
-                });
-                resetCartItems(response);
-            }
-        } catch (error) {
-            console.error("Synchronization error:", error);
-        }
-    }, [items]);
-
-    const resetCartItems = (response) => {
-        localStorage.removeItem('cartItems');
-        console.log(response.data);
-        localStorage.setItem("cartItems", JSON.stringify(response.data));
-    }
-*/
     const handleAuthenticationError = (error) => {
         setErrorMessage(error.message || error);
     }
 
 
-    //TODO CHECK IF THE CART IS SYNCHRONIZED
     const sendAuthRequest = (event) => {
         event.preventDefault();
         const requestBody = {
@@ -147,12 +110,3 @@ function AuthenticationModal({show, setShow}) {
 }
 
 export default AuthenticationModal;
-
-
-/*useEffect(() => {
-    const isAuthenticated = localStorage.getItem('authenticated') === 'true';
-    if (isAuthenticated) {
-        console.log("in useEffect isAuthenticated")
-        synchronizeCartWithServer();
-    }
-}, [synchronizeCartWithServer]);*/

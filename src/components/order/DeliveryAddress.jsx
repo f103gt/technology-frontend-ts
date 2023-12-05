@@ -41,7 +41,6 @@ const DeliveryAddress = ({
     const updatePostalOffice = (event) => {
         setPostalOffice(event.target.value);
         updateAddressData({postalOffice: event.target.value})
-
     }
     const handleDeliveryMethodChange = (event) => {
         const selectedMethod = event.target.value;

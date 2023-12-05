@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Card, Col, Form, Row} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import {CartContext} from "../../context/CartContext";
@@ -32,10 +32,10 @@ const OrderData = ({setShow}) => {
     const [deliveryMethod, setDeliveryMethod] = useState('none');
     const [orderFormData, setOrderFormData] = useState(initialState);
     const [deliveryMethodPrice, setDeliveryMethodPrice] = useState(0);
+    const [submitted, setSubmitted] = useState(false);
     const updateOrderFormData = (data) => {
         setOrderFormData(prevState => ({...prevState, ...data}));
     };
-
     const updateDeliveryAddress = (data) => {
         setAddress(prevState => ({...prevState, ...data}));
     };
@@ -80,14 +80,14 @@ const OrderData = ({setShow}) => {
     const updatePaymentMethod = (event) => {
         setPaymentMethod(event.target.value);
         updateOrderFormData({paymentMethod: event.target.value})
-
     }
 
-    const sendOrder = (event) => {
-        event.preventDefault();
-        axios.get('/csrf/api/v1')
+    useEffect(() => {
+        if (orderFormData.deliveryAddress !== undefined && submitted) {
+            /*axios.get('/csrf/api/v1')
             .then(response => {
                 const csrfToken = response.data.headers;
+
                 axios({
                     method: 'post',
                     url: '/place-order',
@@ -106,7 +106,17 @@ const OrderData = ({setShow}) => {
                     .catch(error => {
                         alert(error);
                     });
-            });
+            });*/
+        }
+    }, [orderFormData, submitted]);
+
+
+    const sendOrder = (event) => {
+        event.preventDefault();
+        const nonEmptyFields = Object.values(address).filter(value => value !== "");
+        const combinedString = nonEmptyFields.join(" ");
+        updateOrderFormData({deliveryAddress: combinedString});
+        setSubmitted(true);
     };
 
     return (
@@ -128,7 +138,7 @@ const OrderData = ({setShow}) => {
                             <Form.Label className="order-form-label">Payment Method</Form.Label>
                             <Form.Select
                                 className="order-form-input" onChange={updatePaymentMethod}>
-                                <option value="none">Select Delivery Method</option>
+                                <option value="none">Select Payment Method</option>
                                 {Object.keys(paymentMethods).map((method, index) => (
                                     <option key={index} value={method}>
                                         {paymentMethods[method].name}

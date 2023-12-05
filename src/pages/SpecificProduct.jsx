@@ -8,7 +8,7 @@ import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 import Button from "react-bootstrap/Button";
 import Toast from 'react-bootstrap/Toast';
-
+import {useMediaQuery} from "react-responsive";
 
 const SpecificProduct = () => {
     const [product, setProduct] = useState();
@@ -41,7 +41,7 @@ const SpecificProduct = () => {
                         setLoading(false);
                     });
             })
-    }, [productName, setLoading]);
+    }, [productDescription, productName, setLoading]);
 
     const fetchProductDescription = (productData) => {
         if (productData !== undefined) {
@@ -70,22 +70,26 @@ const SpecificProduct = () => {
         }
         setShowToast(true);
     };
-
+    const isXLargeScreen = useMediaQuery({query: '(min-width: 1400px)'});
+    const cardWidth = isXLargeScreen ? '95vw' : '100vw';
     if (product && productDescription !== undefined) {
         const descriptionParts = productDescription.split('\n');
         const firstHalf = descriptionParts.slice(0, descriptionParts.length / 2).join('\n');
         const secondHalf = descriptionParts.slice(descriptionParts.length / 2).join('\n');
         return (
-            <Container style={{marginTop: '40px'}}>
-                <Card>
-                    <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
-                        <Toast.Header>
-                            <strong className="mr-auto">Cart Update</strong>
-                        </Toast.Header>
-                        <Toast.Body>Product added to cart!</Toast.Body>
-                    </Toast>
+            <Container style={{marginTop: '30px', display: 'flex'}}>
+                <Card style={{
+                    width: cardWidth,
+                    maxWidth: cardWidth,
+                    boxSizing: 'border-box',
+                }}><Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
+                    <Toast.Header>
+                        <strong className="mr-auto">Cart Update</strong>
+                    </Toast.Header>
+                    <Toast.Body>Product added to cart!</Toast.Body>
+                </Toast>
                     <Row>
-                        <Col md={6}>
+                        <Col md={6} style={{ padding: '0 40px' }}>
                             <Carousel>
                                 <Carousel.Item>
                                     <Image src={product.primaryImageUrl} alt={`Product Primary Image`}
@@ -100,15 +104,15 @@ const SpecificProduct = () => {
                                     </Carousel.Item>
                                 ))}
                             </Carousel>
-                            <h3 style={{color: '#28a745', fontWeight: 'bold'}}>{product.price}$$</h3>
-                            <Button variant="success" onClick={() => addToCart()}>
+                            <h3 style={{color: '#6c757d', fontWeight: 'bold'}}>{product.price}$$</h3>
+                            <Button style={{backgroundColor:'#212529'}} variant="success" onClick={() => addToCart()}>
                                 Add to cart
                             </Button>
                         </Col>
                         <Col md={6}>
-                            <h4 style={{color: '#17a2b8', fontWeight: 'bold'}}>Product Description</h4>
+                            <h4 style={{color:'#212529', fontWeight: 'bold'}}>Product Description</h4>
                             <Row>
-                                <Col md={6} style={{margin: '10px'}}>
+                                <Col md={5} style={{margin: '10px'}}>
                                     <div style={{maxWidth: '100%', overflow: 'auto', whiteSpace: 'pre-wrap'}}>
                                         <p style={{color: '#6c757d', fontSize: '14px'}}>{firstHalf}</p>
                                     </div>
@@ -120,7 +124,8 @@ const SpecificProduct = () => {
                                 </Col>
                             </Row>
                         </Col>
-                    </Row></Card>
+                    </Row>
+                </Card>
             </Container>
 
         );

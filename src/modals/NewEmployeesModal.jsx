@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
 import Modal from "react-bootstrap/Modal";
-import axios from "axios";
 import {Form} from "react-bootstrap";
 import ConfirmationComponent from "../components/ConfirmationComponent";
 import {communicateWithServer} from "../utilities/ServerCommunication";
-import {useExceptionHandling} from "../utilities/useExceptionHandling";
 import {useModalCloseOnSuccess} from "../utilities/useModalCloseOnSuccess";
 
 const NewEmployeesModal = ({show, setShow}) => {
