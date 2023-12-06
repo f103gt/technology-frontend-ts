@@ -78,16 +78,19 @@ const SpecificProduct = () => {
         const secondHalf = descriptionParts.slice(descriptionParts.length / 2).join('\n');
         return (
             <Container style={{
+                flexDirection: 'column',
                 marginTop: '30px',
                 display: 'flex',
-                maxWidth: '97vw',
-                maxHeight: '85vh'
+                width: '97vw', maxWidth: '97vw',
+                maxHeight: '85vh',
+                overflowX: "hidden",
             }}>
                 <Card style={{
                     boxSizing: 'border-box',
                     height: '100%',
                     display: 'flex',
-                    flexDirection: 'column'
+                    flexDirection: 'column',
+                    width: '100%'
                 }}>
                     <Toast onClose={() => setShowToast(false)}
                            show={showToast} delay={3000} autohide>
@@ -98,12 +101,12 @@ const SpecificProduct = () => {
                     </Toast>
                     <Row style={{flex: '1'}}>
                         <Col md={7} style={{
-                            padding: '20px 40px',
+                            padding: '20px',
                             display: 'flex',
                             flexDirection: 'column',
                             height: '85vh'
                         }}>
-                            <Carousel style={{width: '100%', height: '80%'}}>
+                            <Carousel style={{width: '100%', height: '90%'}}>
                                 {product.imageUrls.map((image, index) => (
                                     <Carousel.Item key={index} className="carousel-item">
                                         <Image src={image} alt={`Product Image ${index}`}
@@ -112,8 +115,10 @@ const SpecificProduct = () => {
                                 ))}
                             </Carousel>
 
-                            <div style={{marginTop: "30px"}}>
-                                <h3 style={{color: '#6c757d', fontWeight: 'bold'}}>
+                            <div style={{marginTop: '10px',padding: '30px'}}>
+                                <h3 style={{color: '#6c757d',
+                                    borderColor: "#6c757d",
+                                    fontWeight: 'bold'}}>
                                     {product.price}$$</h3>
                                 <Button style={{backgroundColor: '#212529'}} variant="success"
                                         onClick={() => addToCart()}>
@@ -122,7 +127,11 @@ const SpecificProduct = () => {
                             </div>
                         </Col>
 
-                        <Col md={5}>
+                        <Col md={5} style={{
+                            maxHeight: '80hv',
+                            overflowY: 'auto',
+                            padding: '20px'
+                            }}>
                             <h4 style={{
                                 color: '#212529',
                                 fontWeight: 'bold',
@@ -132,7 +141,6 @@ const SpecificProduct = () => {
                                 <Col md={5} style={{marginTop: '10px'}}>
                                     <div style={{
                                         maxWidth: '100%',
-                                        overflow: 'auto',
                                         whiteSpace: 'pre-wrap'
                                     }}>
                                         <p style={{color: '#6c757d', fontSize: '14px'}}>{firstHalf}</p>
@@ -141,7 +149,6 @@ const SpecificProduct = () => {
                                 <Col md={5} style={{marginTop: '10px'}}>
                                     <div style={{
                                         maxWidth: '100%',
-                                        overflow: 'auto',
                                         whiteSpace: 'pre-wrap'
                                     }}>
                                         <p style={{color: '#6c757d', fontSize: '14px'}}>{secondHalf}</p>

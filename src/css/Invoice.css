@@ -1,0 +1,22 @@
+/* Define the style for the scroll list container */
+.scroll-list {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 200px; /* Adjust the height as needed */
+    width: calc(3 * 65px + 6 * 1rem); /* Set the width to be the width of 3 items */
+}
+
+/* Define the style for each item in the scroll list */
+.scroll-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Define the style for the image in each item */
+.scroll-item img {
+    width: 65px;
+    margin-right: 0.5rem;
+}

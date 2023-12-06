@@ -7,9 +7,10 @@ import {IoMdLogOut} from "react-icons/io";
 import {TiDeleteOutline} from "react-icons/ti";
 import axios from "axios";
 import {communicateWithServer} from "../utilities/ServerCommunication";
+import {Card} from "react-bootstrap";
 
 const AccountModal = ({show, setShow}) => {
-    const [isActive, setIsActive] = useState(true);
+    const [isActive, setIsActive] = useState(false);
     const [userData, setUserData] = useState();
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -85,6 +86,9 @@ const AccountModal = ({show, setShow}) => {
     }
 
     const eraseData = () => {
+        if(isActive){
+            inactivateEmployee();
+        }
         localStorage.clear();
         setShow(false);
     }
@@ -97,9 +101,9 @@ const AccountModal = ({show, setShow}) => {
             method: "get",
             url: "/api/v1/auth/logout",
             executeFunction: eraseData,
-            executeFunctionArgs:[setShow],
+            executeFunctionArgs: [setShow],
             handleError: handleLogoutError,
-            reload:true
+            reload: true
         });
 
     }
@@ -108,7 +112,7 @@ const AccountModal = ({show, setShow}) => {
         setShow(false);
     };
 
-    if(!userData){
+    if (!userData) {
         return null;
     }
 
@@ -116,29 +120,32 @@ const AccountModal = ({show, setShow}) => {
         <Modal show={show} onHide={handleClose}>
             <Modal.Body style={{backgroundColor: '#eee', borderRadius: '15px'}}>
                 {errorMessage && <p color={"red"} className="error">{errorMessage}</p>}
-                <div className="card" style={{borderRadius: '15px'}}>
+                <Card style={{
+                    borderRadius: '15px',
+                    height: "275px"
+                }}>
                     <div className="card-body text-center">
                         <div className="mt-3 mb-4">
                             <FaUserCircle size={"50"}/>
                         </div>
                         <h4 className="mb-2">{userData.firstName} {userData.lastName}</h4>
                         <p className="text-muted mb-4">{userData.email}</p>
-                        <RoleBasedComponent roles={["admin", "manager", "staff"]}>
-                            <Button variant={"btn btn-as-link"}>
+                        <RoleBasedComponent roles={["staff"]}>
+                            <Button variant={"btn btn-as-link"}
+                                    style={{ width: "50px", height: "50px", padding: "0" }}>
                                 {isActive ? (
                                     <FaRegCheckCircle size={"35"} color={"green"}
                                                       onClick={activateEmployee}/>
                                 ) : (
-                                    <TiDeleteOutline size={"35"} color={"red"}
+                                    <TiDeleteOutline size={"45"} color={"red"}
                                                      onClick={inactivateEmployee}/>
                                 )}
                             </Button>
                         </RoleBasedComponent>
                         <Button type="button" variant={"dark"} onClick={logout}>
                             Logout <IoMdLogOut size={"25"}/>
-                        </Button>
-                    </div>
-                </div>
+                        </Button></div>
+                </Card>
             </Modal.Body>
         </Modal>
     );

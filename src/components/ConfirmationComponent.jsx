@@ -4,10 +4,8 @@ import {Form} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 
 const ConfirmationComponent = ({
-                                   setSuccessResponse,
                                    hint,
                                    confirmationMatcher,
-                                   setShow,
                                    onSubmitExecute,
                                    additionalParam
                                }) => {

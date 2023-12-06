@@ -1,4 +1,5 @@
 import axios from "axios";
+import {useState} from "react";
 
 function reloadPage() {
     window.location.reload(false);
@@ -26,7 +27,7 @@ export const sendRequest = (options) => {
             .then(response => {
                 if (response.status >= 200 && response.status < 300 && executeFunction) {
                     if (Array.isArray(options.executeFunctionArgs)) {
-                        executeFunction(response, ...options.executeFunctionArgs);
+                        options.executeFunction(response, ...options.executeFunctionArgs);
                     }
                     if (reload) {
                         reloadPage();
@@ -43,7 +44,7 @@ export const sendRequest = (options) => {
 
 export const communicateWithServer = (options) => {
     return new Promise((resolve, reject) => {
-        const { data, handleError, reload = false } = options;
+        const { data, handleError, reload = false, close=false } = options;
 
         axios.get('/csrf/api/v1')
             .then(response => {
@@ -52,11 +53,11 @@ export const communicateWithServer = (options) => {
                     'X-CSRF-TOKEN': csrfToken
                 };
                 if (data) {
-                    sendRequest({ ...options, headers, data, reload })
+                    sendRequest({ ...options, headers, data, reload,close })
                         .then(resolve)
                         .catch(reject);
                 } else {
-                    sendRequest({ ...options, headers, reload })
+                    sendRequest({ ...options, headers, reload,close })
                         .then(resolve)
                         .catch(reject);
                 }

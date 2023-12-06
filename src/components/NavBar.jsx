@@ -68,7 +68,7 @@ const NavBar = () => {
                                     <RiHome6Fill className={"icon"} size={"21"}/>
                                 </Nav.Link>
                             </Nav.Item>
-                                <CategoriesDropdown/>
+                            <CategoriesDropdown/>
                             <RoleBasedComponent roles={['staff', 'manager', 'admin']}>
                                 {tasksDisplay()}
                             </RoleBasedComponent>

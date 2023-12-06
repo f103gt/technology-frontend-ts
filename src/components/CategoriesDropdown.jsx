@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
 import axios from "axios";
-import {Dropdown} from 'react-bootstrap';
+import {Dropdown, Nav} from 'react-bootstrap';
 import {CgMenuRound} from "react-icons/cg";
 import {RiDeleteBin5Fill} from "react-icons/ri";
 import Button from "react-bootstrap/Button";
@@ -76,20 +76,20 @@ const CategoriesDropdown = () => {
                                }}>
                     {categories.map(category => (
                         <React.Fragment key={category.categoryName}>
-                                <Dropdown.Item
-                                    onClick={(event) => {
-                                        if (category.childCategories.length === 0) {
-                                            navigate(`/${category.categoryName}`);
-                                        } else {
-                                            event.stopPropagation();
-                                            handleCategoryClick(category.categoryName);
-                                        }
-                                    }}
-                                    key={category.categoryName}>
-                                    {category.childCategories.length > 0 ?
-                                        <>{category.categoryName} <RxTriangleDown color={"white"}/></>
-                                        : category.categoryName
+                            <Dropdown.Item
+                                onClick={(event) => {
+                                    if (category.childCategories.length === 0) {
+                                        navigate(`/${category.categoryName}`);
+                                    } else {
+                                        event.stopPropagation();
+                                        handleCategoryClick(category.categoryName);
                                     }
+                                }}
+                                key={category.categoryName}>
+                                {category.childCategories.length > 0 ?
+                                    <>{category.categoryName} <RxTriangleDown color={"white"}/></>
+                                    : category.categoryName
+                                }
                                 <RoleBasedComponent roles={["manager", "staff"]} style={{marginRight: '0px'}}>
                                     <Button variant="btn btn-link" type="button"
                                             className="custom-button"
@@ -100,12 +100,12 @@ const CategoriesDropdown = () => {
                                         <LuPlusCircle color="white"/>
                                     </Button>
                                 </RoleBasedComponent>
-                                <RoleBasedComponent roles={["manager", "staff","admin"]}>
+                                <RoleBasedComponent roles={["manager", "staff", "admin"]}>
                                     <Button variant="btn btn-link" type="button" className="custom-button">
                                         <RiDeleteBin5Fill color="white"/>
                                     </Button>
                                 </RoleBasedComponent>
-                                <RoleBasedComponent roles={["manager", "staff","admin"]}>
+                                <RoleBasedComponent roles={["manager", "staff", "admin"]}>
                                     <Button variant="btn btn-link" type="button" className="custom-button">
                                         <MdAutoFixHigh color="white"/>
                                     </Button>
@@ -117,7 +117,7 @@ const CategoriesDropdown = () => {
                                     <Dropdown.Item onClick={() => navigate(`/${childCategory.categoryName}`)}
                                                    key={childCategory.categoryName}>
                                         {"\t" + childCategory.categoryName}
-                                        <RoleBasedComponent roles={["manager", "staff","admin"]} >
+                                        <RoleBasedComponent roles={["manager", "staff", "admin"]}>
                                             <Button variant="btn btn-link" type="button"
                                                     className="custom-button"
                                                     onClick={(event) => {
@@ -126,7 +126,7 @@ const CategoriesDropdown = () => {
                                                 <RiDeleteBin5Fill color="white"/>
                                             </Button>
                                         </RoleBasedComponent>
-                                        <RoleBasedComponent roles={["manager", "staff","admin"]}>
+                                        <RoleBasedComponent roles={["manager", "staff", "admin"]}>
                                             <Button variant="btn btn-link" type="button"
                                                     className="custom-button"
                                                     onClick={(event) => {
@@ -139,7 +139,7 @@ const CategoriesDropdown = () => {
                                 ))}
                         </React.Fragment>
                     ))}
-                    <RoleBasedComponent roles={["manager", "staff","admin"]}>
+                    <RoleBasedComponent roles={["manager", "staff", "admin"]}>
                         <Button variant="btn btn-link" type="button" className="custom-button"
                                 onClick={(event) => {
                                     event.stopPropagation();

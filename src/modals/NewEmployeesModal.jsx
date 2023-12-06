@@ -14,6 +14,9 @@ const NewEmployeesModal = ({show, setShow}) => {
     const handleError = (error) => {
         setErrorMessage(error.message || error);
     }
+    const handleSuccessResponse = () => {
+        setSuccessResponse(true);
+    }
     const handleSubmit = (newEmployeesData) => {
         const formData = new FormData();
         formData.append("newEmployeesData", newEmployeesData);
@@ -23,7 +26,8 @@ const NewEmployeesModal = ({show, setShow}) => {
             data: formData,
             headers: {'Content-Type': 'multipart/form-data'},
             handleError: handleError,
-            executeFunction: () => setSuccessResponse(true),
+            executeFunction: handleSuccessResponse,
+            executeFunctionArgs: [setSuccessResponse]
         })
     }
     const handleClose = () => {
@@ -47,7 +51,6 @@ const NewEmployeesModal = ({show, setShow}) => {
                     </Form.Group>
                 </Form>
                 <ConfirmationComponent
-                    setSuccessResponse={() => setSuccessResponse(true)}
                     confirmationMatcher={'addNewEmployees'}
                     hint={"To confirm insertion of new category enter "}
                     onSubmitExecute={handleSubmit}

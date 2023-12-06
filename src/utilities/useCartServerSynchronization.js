@@ -1,12 +1,14 @@
 import {useCallback, useContext, useEffect} from "react";
 import {communicateWithServer} from "./ServerCommunication";
 import {CartContext} from "../context/CartContext";
+import {RoleContext} from "../context/RoleProvider";
 
 export const useCartServerSynchronization = () => {
-    const {items,resetAll} = useContext(CartContext);
+    const {items, resetAll} = useContext(CartContext);
+    const {userRole} = useContext(RoleContext);
     const synchronizeCartWithServer = useCallback(async () => {
         try {
-            if (items.length > 0) {
+            if (items.length > 0 && userRole === "user") {
                 const productQuantityMap = {};
                 items.forEach((cartItem) => {
                     let {productName, cartItemQuantity} = cartItem;
@@ -20,7 +22,7 @@ export const useCartServerSynchronization = () => {
                     handleError: console.log,
                 });
                 resetCartItems(response);
-            } else {
+            } else if (items.length === 0 && userRole === "user") {
                 const response = await communicateWithServer({
                     method: 'get',
                     url: "/cart/api/v1/get-user-cart",

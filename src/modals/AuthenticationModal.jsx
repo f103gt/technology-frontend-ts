@@ -32,8 +32,8 @@ function AuthenticationModal({show, setShow}) {
     }
 
     const handleAuthenticationResponse = (response) => {
-        synchronizeCartWithServer();
         localStorage.setItem('userRole', response.data.role);
+        synchronizeCartWithServer();
         setSuccessResponse(true);
         if (!response.data.uuid.isEmpty) {
             localStorage.setItem("id", response.data.uuid);
@@ -77,7 +77,7 @@ function AuthenticationModal({show, setShow}) {
                 </Modal.Header>
                 <Modal.Body>
                     {errorMessage && <p color={"red"} className="error">{errorMessage}</p>}
-                    <Form onSubmit={sendAuthRequest} onHide={() => setShow(false)}>
+                    <Form onSubmit={sendAuthRequest}>
                         <Form.Group controlId="emaiil">
                             <Form.Label>Email address</Form.Label>
                             <Form.Control type="email" value={username} onChange={updateUsername}
@@ -104,7 +104,8 @@ function AuthenticationModal({show, setShow}) {
                     </p>
                 </Modal.Footer>
             </Modal>
-            <RegistrationModal show={showRegistration} setShow={setShowRegistration}/>
+            <RegistrationModal show={showRegistration}
+                               setShow={setShowRegistration}/>
         </div>
     );
 }
