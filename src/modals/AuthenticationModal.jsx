@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import {Form} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
@@ -10,6 +10,7 @@ import {useCartServerSynchronization} from "../utilities/useCartServerSynchroniz
 /*TODO IF THE USER ALREADY EXISTS AND IS NOT ACTIVATED,
     SEND THE OTP AND REDIRECT RIGHT AWAY TO THE EMAIL VERIFICATION */
 function AuthenticationModal({show, setShow}) {
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showRegistration, setShowRegistration] = useState(false);
@@ -18,6 +19,13 @@ function AuthenticationModal({show, setShow}) {
     const {isReadyToClose} = useModalCloseOnSuccess(show, setShow, successResponse);
     const {synchronizeCartWithServer} = useCartServerSynchronization();
 
+    useEffect(() => {
+        const isRedirected = localStorage.getItem("redirected");
+        if(isRedirected){
+            setShow(true);
+            localStorage.removeItem("redirected");
+        }
+    }, [setShow]);
     const updateUsername = (event) => {
         setUsername(event.target.value);
     }

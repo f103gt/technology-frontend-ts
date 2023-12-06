@@ -69,7 +69,7 @@ const NavBar = () => {
                                 </Nav.Link>
                             </Nav.Item>
                             <CategoriesDropdown/>
-                            <RoleBasedComponent roles={['staff', 'manager', 'admin']}>
+                            <RoleBasedComponent roles={['staff', 'admin']}>
                                 {tasksDisplay()}
                             </RoleBasedComponent>
                             <Nav.Item>

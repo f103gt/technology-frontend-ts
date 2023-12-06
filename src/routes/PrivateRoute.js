@@ -6,12 +6,20 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => {
     const {userRole} = useContext(RoleContext);
     const location = useLocation();
 
-    if (!userRole) {
-        return <Navigate to={"/login"} state={{ from: location }} replace />;
+    if (!userRole || userRole === "guest") {
+        console.log("guest");
+       localStorage.setItem("redirected","true");
+        return (
+            <>
+                <Navigate to={'/home'} state={{ from: location }} replace />
+            </>
+        );
     }
+
     if (!roles.includes(userRole)) {
-        return <Navigate to={"/home"} state={{ from: location }} replace />;
+        return <Navigate to={'/home'} state={{ from: location }} replace />;
     }
+
     return <Component {...rest} />;
 };
 

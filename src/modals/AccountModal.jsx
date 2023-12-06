@@ -8,11 +8,13 @@ import {TiDeleteOutline} from "react-icons/ti";
 import axios from "axios";
 import {communicateWithServer} from "../utilities/ServerCommunication";
 import {Card} from "react-bootstrap";
+import {useNavigate} from "react-router-dom";
 
 const AccountModal = ({show, setShow}) => {
     const [isActive, setIsActive] = useState(false);
     const [userData, setUserData] = useState();
     const [errorMessage, setErrorMessage] = useState("");
+    const navigate = useNavigate();
 
     //TODO IF COMMUNICATE WITH SERVER WILL BE WORKING WELL USE THIS FUNCTION TO RETURN ORDERS DATA
     const communicateWithServerLocal = (method, url, setStatus) => {
@@ -105,7 +107,7 @@ const AccountModal = ({show, setShow}) => {
             handleError: handleLogoutError,
             reload: true
         });
-
+        navigate("/home");
     }
 
     const handleClose = () => {
