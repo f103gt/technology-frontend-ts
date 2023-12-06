@@ -39,20 +39,75 @@ const Invoice = () => {
         fetchOrderData();
     }, [fetchOrderData]);
     if (!orderDetails) {
-        return <Skeleton count={5}/>;
+        return (
+            <Container
+                style={{
+                    maxWidth: '97vw', display: 'flex',
+                    maxHeight: '85vh', marginTop: '30px',
+                }}>
+                <Card className="mx-auto" style={{
+                    boxSizing: 'border-box',
+                    width: '100%', height: '85vh',
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}>
+                    <Card.Body>
+                            <div className="container">
+                                <div className="row">
+                                    <div className="col-xl-8">
+                                        <div className="d-flex justify-content-between">
+                                            <Skeleton width={150} height={40} color="#e0e0e0"/>
+                                            <Skeleton width={150} height={40} color="#e0e0e0"/>
+                                        </div>
+                                        <div>
+                                            <Skeleton count={4} height={40} color="#e0e0e0"/>
+                                        </div>
+                                    </div>
+                                    <div className="col-xl-4">
+                                        <div>
+                                            <Skeleton count={3} height={40} color="#e0e0e0"/>
+                                        </div>
+                                    </div>
+                                    <div style={{height: "175px"}}>
+                                        <table className="table table-striped table-borderless">
+                                            <Skeleton count={3} height={40} color="#e0e0e0"/>
+                                        </table>
+                                    </div>
+                                    <div style={{pading:'20px'}}>
+                                        <div className="col-xl-8">
+                                            <div className="d-flex justify-content-between">
+                                                <Skeleton width={150} height={30} color="#e0e0e0"/>
+                                                <Skeleton width={150} height={30} color="#e0e0e0"/>
+                                            </div>
+                                            <div>
+                                                <Skeleton count={2} height={30} color="#e0e0e0"/>
+                                            </div>
+                                        </div>
+                                        <div className="col-xl-4">
+                                            <div>
+                                                <Skeleton count={2} height={30} color="#e0e0e0"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </Card.Body>
+                </Card>
+            </Container>);
     }
 
     return (
         <Container
-                   style={{
-                       maxWidth: '97vw', display: 'flex',
-                       maxHeight: '85vh', marginTop: '30px',
-                   }}>
+            style={{
+                maxWidth: '97vw', display: 'flex',
+                maxHeight: '85vh', marginTop: '30px',
+            }}>
             <Card className="mx-auto" style={{
                 boxSizing: 'border-box',
                 width: '100%', height: '100%',
                 display: 'flex',
-                flexDirection: 'column'}}>
+                flexDirection: 'column'
+            }}>
                 <Card.Body>
                     <div className="row d-flex align-items-baseline">
                         <div className="col-xl-9">
@@ -104,7 +159,7 @@ const Invoice = () => {
                             </Col>
                         </div>
 
-                        <div style={{ height: "175px"}}>
+                        <div style={{height: "175px"}}>
                             <table className="table table-striped table-borderless">
                                 <thead style={{backgroundColor: "#84B0CA"}} className="text-white">
                                 <tr>

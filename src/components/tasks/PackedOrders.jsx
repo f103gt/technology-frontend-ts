@@ -49,7 +49,6 @@ const PackedOrders = () => {
                     <ToDoCard key={uuid} uuid={uuid}
                     url={`/staff/change-order-status-sent?orderUI=${uuid}`}/>
                 ))}
-
             </ul>
         </div>
     );

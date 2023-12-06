@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {Form, ListGroup} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import ConfirmationModal from "../../modals/ConfirmationModal";
 import axios from "axios";
 
 const ToDoCard = ({uuid,url}) => {
     const [completed, setCompleted] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const navigate = useNavigate();
     const changeOrderStatus=()=>{
         axios.get('/csrf/api/v1')
             .then(csrfResponse => {
@@ -23,11 +24,11 @@ const ToDoCard = ({uuid,url}) => {
                         console.log(response);
                     })
                     .catch(error => {
-                        console.error('Error fetching categories:', error);
+                        navigate("/error");
                     })
             })
             .catch(error => {
-                console.error('Error fetching CSRF token:', error);
+                navigate("/error");
             });
     }
 
