@@ -19,33 +19,73 @@ const ProductCard = ({product, categoryName}) => {
     };
 
     return (
-        <Col md={12} lg={4} className="mb-4" key={product.productName}>
-            <Card>
+        <Col md={12} lg={3} style={{
+            maxWidth: '300px',
+            maxHeight: '500px'}}
+             className="mb-4" key={product.productName}>
+            <Card style={{
+                width: '350px',
+                height: '450px'}}>
                 <Card.Body className="d-flex justify-content-between p-3">
                 </Card.Body>
-                <Card.Img variant="top" src={product.primaryImage} alt="Laptop" loading={"lazy"}/>
-                <Card.Body>
-                    <div className="d-flex justify-content-between">
-                        <small><Link to={""} className="text-muted">{categoryName}</Link></small>
-                    </div>
+                <div
+                    style={{
+                        border: 'none',
+                        width: '250px',
+                        height: '250px',
+                        objectFit: 'cover',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        display: 'block', // Ensures proper block-level display
+                        margin: 'auto',
 
-                    <div className="d-flex justify-content-between mb-3">
-                        <p><span className="text-muted"></span></p>
-                        <h5 className="mb-0">
-                            <Link to={`/${categoryName}/${product.productName}`}
-                            style={{color:"#212529", textDecoration:'none'}}>
-                                {product.productName}</Link>
-                        </h5>
-                        <h5 className="text-dark mb-0">{product.price.toFixed(2)}$</h5>
+                    }}>
+                    <div style={{ textAlign: 'center', width: '100%', height: '100%' }}>
+                        <Card.Img
+                            variant="top"
+                            style={{
+                                display: 'flex',
+                                border: 'none',
+                                maxWidth: '100%',
+                                maxHeight: '100%',
+                                width: 'auto',
+                                height: 'auto',
+                                objectFit: 'contain',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                            src={product.primaryImage}
+                            alt="Laptop"
+                            loading="lazy"
+                        />
                     </div>
-                    <div className="d-flex justify-content-between mb-2">
-                        <p className="text-muted mb-0">Available: <span className="fw-bold">{product.quantity}</span></p>
-                        {setButtons(["staff", "manager","admin"])}
-                    </div>
-                </Card.Body>
-            </Card>
-        </Col>
-    );
+                </div>
+
+
+
+                <Card.Body>
+                <div className="d-flex justify-content-between">
+                    <small><Link to={""} className="text-muted">{categoryName}</Link></small>
+                </div>
+
+                <div className="d-flex justify-content-between mb-3">
+                    <p><span className="text-muted"></span></p>
+                    <h5 className="mb-0">
+                        <Link to={`/${categoryName}/${product.productName}`}
+                              style={{color: "#212529", textDecoration: 'none'}}>
+                            {product.productName}</Link>
+                    </h5>
+                    <h5 className="text-dark mb-0">{product.price.toFixed(2)}$</h5>
+                </div>
+                <div className="d-flex justify-content-between mb-2">
+                    <p className="text-muted mb-0">Available: <span className="fw-bold">{product.quantity}</span></p>
+                    {setButtons(["staff", "manager", "admin"])}
+                </div>
+            </Card.Body>
+        </Card>
+</Col>
+)
+    ;
 };
 
 export default ProductCard;

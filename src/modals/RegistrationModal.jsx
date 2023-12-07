@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import axios from "axios";
+import React, {useEffect, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import {Form} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
@@ -20,15 +19,19 @@ const RegistrationModal = ({show, setShow}) => {
     const [successResponse, setSuccessResponse] = useState(false);
     const {isReadyToClose} = useModalCloseOnSuccess(show, setShow, successResponse);
     const handleClose = () => {
-        setShow(false);
-        setShowEmailConfirm(true);
+        if (successResponse) {
+            setShow(false);
+            setShowEmailConfirm(true);
+        }else{
+            setShow(false);
+        }
     };
 
-    const handleEmailConfirm = () => {
+    /*const handleEmailConfirm = () => {
         setShow(false);
         setShowEmailConfirm(true);
 
-    };
+    };*/
     const updateFirstName = (event) => {
         setFirstName(event.target.value);
     }
@@ -49,9 +52,29 @@ const RegistrationModal = ({show, setShow}) => {
         setPasswordConfirm(event.target.value);
     }
 
-    const handleRegistrationResponse = (response)=>{
-
+    const handleRegistrationResponse = (response) => {
+        setSuccessResponse(true);
+        setShowEmailConfirm(true);
     }
+    //TODO IF RESPONSE FROM THE SERVER IS 200 MOVE ON TO THE EMAIL VALIDATION
+
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const [fullErrorMessage,setFullErrorMessage] = useState("");
+
+    const handleRegistrationError = (error) => {
+        setFullErrorMessage(error.message || error);
+    }
+
+    useEffect(() => {
+        if(fullErrorMessage && fullErrorMessage.includes("409")){
+            setSuccessResponse(true);
+            setShowEmailConfirm(true);
+        }
+        let trimmedErrorMessage =
+            errorMessage.replace(/[A-Z]+|\d+/g, '').trim();
+        setErrorMessage(trimmedErrorMessage);
+    }, [setSuccessResponse, setShowEmailConfirm, fullErrorMessage, errorMessage]);
 
     const sendRegisterRequest = (event) => {
         if (password !== passwordConfirm) {
@@ -65,41 +88,17 @@ const RegistrationModal = ({show, setShow}) => {
             password: password,
         };
 
-       /* communicateWithServer({
+        communicateWithServer({
             method: 'post',
-            url: '/api/v1/auth/authenticate',
+            url: '/api/v1/auth/register',
             data: requestBody,
-            executeFunction: handleAuthenticationResponse,
-            executeFunctionArgs: [setSuccessResponse],
-            handleError: handleAuthenticationError,
-            reload: true
+            executeFunction: handleRegistrationResponse,
+            executeFunctionArgs: [setSuccessResponse, setShowEmailConfirm],
+            handleError: handleRegistrationError
         });
-*/
-        axios.get('/csrf/api/v1')
-            .then(response => {
-                const csrfToken = response.data.headers;
-                axios({
-                    method: 'post',
-                    url: '/api/v1/auth/register',
-                    data: requestBody,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    withCredentials: true
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            handleClose();
-                            handleEmailConfirm();
-                        }
-                    })
-                    .catch(error => {
-                        alert(error);
-                    });
-                //TODO DISPLAY SERVER ERROR
-            });
+
     }
+
 
     return (
         <div><Modal show={show} onHide={handleClose}
@@ -108,7 +107,9 @@ const RegistrationModal = ({show, setShow}) => {
                 <Modal.Title>Registration</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form onSubmit={sendRegisterRequest} onHide={() => setShow(false)}>
+                {errorMessage && <p style={{color: "#8b0000"}}
+                                    className="error">{errorMessage}</p>}
+                <Form onSubmit={sendRegisterRequest}>
                     <Form.Group controlId="firstName">
                         <Form.Label>First Name</Form.Label>
                         <Form.Control type="text" value={firstName}
@@ -150,8 +151,7 @@ const RegistrationModal = ({show, setShow}) => {
                     <Form.Group className="mb-3" controlId="checkBox">
                         <Form.Check type="checkbox" label="Remember me"/>
                     </Form.Group>
-                    <Button variant="dark" type="submit" onClick={handleEmailConfirm}
-                    >Register</Button>
+                    <Button variant="dark" type="submit">Register</Button>
                 </Form>
             </Modal.Body>
         </Modal>
@@ -162,3 +162,29 @@ const RegistrationModal = ({show, setShow}) => {
 };
 
 export default RegistrationModal;
+
+
+/* axios.get('/csrf/api/v1')
+            .then(response => {
+                const csrfToken = response.data.headers;
+                axios({
+                    method: 'post',
+                    url: '/api/v1/auth/register',
+                    data: requestBody,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    withCredentials: true
+                })
+                    .then(response => {
+                        if (response.status === 200) {
+                            handleClose();
+                            handleEmailConfirm();
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                    });
+                //TODO DISPLAY SERVER ERROR
+            });*/

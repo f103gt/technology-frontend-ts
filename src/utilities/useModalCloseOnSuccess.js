@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export const useModalCloseOnSuccess = (show, hideModal, successResponse) => {
+export const useModalCloseOnSuccess = (show, setShow, successResponse) => {
     const [isReadyToClose, setIsReadyToClose] = useState(false);
 
     useEffect(() => {
@@ -11,9 +11,9 @@ export const useModalCloseOnSuccess = (show, hideModal, successResponse) => {
 
     useEffect(() => {
         if (isReadyToClose) {
-            hideModal();
+            setShow(false);
         }
-    }, [isReadyToClose, hideModal]);
+    }, [isReadyToClose, setShow]);
 
     return { isReadyToClose };
 };

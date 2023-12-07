@@ -14,7 +14,6 @@ export const useCartServerSynchronization = () => {
                     let {productName, cartItemQuantity} = cartItem;
                     productQuantityMap[productName] = (productQuantityMap[productName] || 0) + cartItemQuantity;
                 });
-                console.log("synchronizeCartWithServer");
                 const response = await communicateWithServer({
                     method: 'post',
                     url: "/cart/api/v1/add-all-cart-items",

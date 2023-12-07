@@ -36,7 +36,7 @@ const AccountModal = ({show, setShow}) => {
                         }
                     })
                     .catch(error => {
-                        alert(error);
+                        navigate("/error");
                     });
             });
     }
@@ -61,7 +61,7 @@ const AccountModal = ({show, setShow}) => {
                         }
                     })
                     .catch(error => {
-                        alert(error);
+                       navigate("/error");
                     });
             });
     };

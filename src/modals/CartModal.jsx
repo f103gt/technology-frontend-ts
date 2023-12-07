@@ -6,8 +6,6 @@ import CartItemCard from "../components/CartItemCard";
 import OrderData from "../components/order/OrderData";
 import {Col, Row} from "react-bootstrap";
 import "../css/CartModal.css";
-import ToDoList from "../pages/ToDoList";
-import PrivateRoute from "../routes/PrivateRoute";
 import {RoleContext} from "../context/RoleProvider";
 import EventEmitter from "../events/EventEmitter";
 
@@ -30,6 +28,7 @@ const CartModal = ({show, setShow}) => {
     return (
         <div>
             <Modal show={show} onHide={handleClose}
+                   backdrop="static" keyboard={false}
                    dialogClassName={showOrder && items.length > 0 ? "modal-custom" : ""}
                    onExited={() => setShowOrder(false)}>
                 <Modal.Header closeButton>
@@ -47,10 +46,8 @@ const CartModal = ({show, setShow}) => {
                             </Row>
                         </Col>
                         <Col md={6}>
-                            <PrivateRoute component={ToDoList} roles={["user"]}>
-                                {showOrder && items.length > 0 &&
-                                    <OrderData setShow={setShow}/>}
-                            </PrivateRoute>
+                            {showOrder && items.length > 0 &&
+                                <OrderData show={show} setShow={setShow}/>}
                         </Col>
                     </Row>
                 </Modal.Body>

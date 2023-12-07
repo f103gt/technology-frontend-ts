@@ -21,6 +21,7 @@ const CategoriesDropdown = () => {
     const [showAdd, setShowAdd] = useState(false);
     const [parentCategory, setParentCategory] = useState("");
     const [selectedCategory, setSelectedCategory] = useState(null);
+    
     const handleCategoryClick = (categoryName) => {
         setSelectedCategory(selectedCategory === categoryName ? null : categoryName);
     };
@@ -45,9 +46,9 @@ const CategoriesDropdown = () => {
                     });
             })
             .catch(error => {
-                console.error('Error fetching CSRF token:', error);
+                navigate("/error");
             });
-    }, [setCategories]);
+    }, [navigate]);
 
     useEffect(() => {
         fetchCategories();
@@ -90,7 +91,7 @@ const CategoriesDropdown = () => {
                                     <>{category.categoryName} <RxTriangleDown color={"white"}/></>
                                     : category.categoryName
                                 }
-                                <RoleBasedComponent roles={["manager", "staff"]} style={{marginRight: '0px'}}>
+                                <RoleBasedComponent roles={["manager"]} style={{marginRight: '0px'}}>
                                     <Button variant="btn btn-link" type="button"
                                             className="custom-button"
                                             onClick={(event) => {
@@ -100,12 +101,12 @@ const CategoriesDropdown = () => {
                                         <LuPlusCircle color="white"/>
                                     </Button>
                                 </RoleBasedComponent>
-                                <RoleBasedComponent roles={["manager", "staff", "admin"]}>
+                                <RoleBasedComponent roles={["manager"]}>
                                     <Button variant="btn btn-link" type="button" className="custom-button">
                                         <RiDeleteBin5Fill color="white"/>
                                     </Button>
                                 </RoleBasedComponent>
-                                <RoleBasedComponent roles={["manager", "staff", "admin"]}>
+                                <RoleBasedComponent roles={["manager"]}>
                                     <Button variant="btn btn-link" type="button" className="custom-button">
                                         <MdAutoFixHigh color="white"/>
                                     </Button>
@@ -117,7 +118,7 @@ const CategoriesDropdown = () => {
                                     <Dropdown.Item onClick={() => navigate(`/${childCategory.categoryName}`)}
                                                    key={childCategory.categoryName}>
                                         {"\t" + childCategory.categoryName}
-                                        <RoleBasedComponent roles={["manager", "staff", "admin"]}>
+                                        <RoleBasedComponent roles={["manager"]}>
                                             <Button variant="btn btn-link" type="button"
                                                     className="custom-button"
                                                     onClick={(event) => {
@@ -126,7 +127,7 @@ const CategoriesDropdown = () => {
                                                 <RiDeleteBin5Fill color="white"/>
                                             </Button>
                                         </RoleBasedComponent>
-                                        <RoleBasedComponent roles={["manager", "staff", "admin"]}>
+                                        <RoleBasedComponent roles={["manager"]}>
                                             <Button variant="btn btn-link" type="button"
                                                     className="custom-button"
                                                     onClick={(event) => {
@@ -139,7 +140,7 @@ const CategoriesDropdown = () => {
                                 ))}
                         </React.Fragment>
                     ))}
-                    <RoleBasedComponent roles={["manager", "staff", "admin"]}>
+                    <RoleBasedComponent roles={["manager"]}>
                         <Button variant="btn btn-link" type="button" className="custom-button"
                                 onClick={(event) => {
                                     event.stopPropagation();
