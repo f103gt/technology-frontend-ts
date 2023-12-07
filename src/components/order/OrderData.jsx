@@ -4,7 +4,6 @@ import Button from "react-bootstrap/Button";
 import {CartContext} from "../../context/CartContext";
 import CustomerInformation from "./CustomerInformation";
 import DeliveryAddress from "./DeliveryAddress";
-import axios from "axios";
 
 const OrderData = ({setShow}) => {
     const initialState = {

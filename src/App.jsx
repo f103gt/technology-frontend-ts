@@ -36,7 +36,7 @@ function App() {
                                     <AddProductModal/>
                                 </PrivateRoute>
                             }/>
-                            <Route path={"/order"} element={<PlaceOrderModal/>}/>
+                           {/* <Route path={"/order"} element={<PlaceOrderModal/>}/>*/}
                             <Route path={"/tasks"} element={
                                 <PrivateRoute component={Tasks} roles={["staff", "admin"]}>
                                     <Tasks/>

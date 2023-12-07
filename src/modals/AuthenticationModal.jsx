@@ -6,6 +6,8 @@ import RegistrationModal from "./RegistrationModal";
 import {communicateWithServer} from "../utilities/ServerCommunication";
 import {useModalCloseOnSuccess} from "../utilities/useModalCloseOnSuccess";
 import {useCartServerSynchronization} from "../utilities/useCartServerSynchronization";
+import EmailConfirmModal from "./EmailConfirmModal";
+import EventEmitter from "../events/EventEmitter";
 
 /*TODO IF THE USER ALREADY EXISTS AND IS NOT ACTIVATED,
     SEND THE OTP AND REDIRECT RIGHT AWAY TO THE EMAIL VERIFICATION */
@@ -18,14 +20,32 @@ function AuthenticationModal({show, setShow}) {
     const [successResponse, setSuccessResponse] = useState(false);
     const {isReadyToClose} = useModalCloseOnSuccess(show, setShow, successResponse);
     const {synchronizeCartWithServer} = useCartServerSynchronization();
-
+    const [emailConfirmation, setEmailConfirmation] = useState(false);
+//TODO WHEN THE OTP IS CONFIRMED SYNCHRONIZE THE CART
     useEffect(() => {
-        const isRedirected = localStorage.getItem("redirected");
-        if(isRedirected){
+        let isRedirected = localStorage.getItem("redirected");
+        if (isRedirected) {
             setShow(true);
             localStorage.removeItem("redirected");
         }
     }, [setShow]);
+
+    useEffect(() => {
+        const onRedirectToAuthenticationModal = (flag) => {
+            if (flag) {
+                setShow(true);
+            }
+        };
+
+        EventEmitter.on('redirectToAuthenticationModal',
+            onRedirectToAuthenticationModal);
+
+        return () => {
+            EventEmitter.off('redirectToAuthenticationModal',
+                onRedirectToAuthenticationModal);
+        };
+    }, [setShow]);
+
     const updateUsername = (event) => {
         setUsername(event.target.value);
     }
@@ -49,6 +69,10 @@ function AuthenticationModal({show, setShow}) {
     }
 
     const handleAuthenticationError = (error) => {
+        if (error.status === 403) {
+            setShow(false);
+            setEmailConfirmation(true);
+        }
         setErrorMessage(error.message || error);
     }
 
@@ -114,8 +138,13 @@ function AuthenticationModal({show, setShow}) {
             </Modal>
             <RegistrationModal show={showRegistration}
                                setShow={setShowRegistration}/>
+            <EmailConfirmModal show={emailConfirmation}
+                               setShow={setEmailConfirmation}/>
         </div>
     );
 }
 
 export default AuthenticationModal;
+
+/*TODO WHEN AND WHY DO I NEED TO USE REDUX?
+*  TO MINIMIZE UNNECESSARY SERVER COMMUNICATIONS?*/

@@ -6,11 +6,26 @@ import CartItemCard from "../components/CartItemCard";
 import OrderData from "../components/order/OrderData";
 import {Col, Row} from "react-bootstrap";
 import "../css/CartModal.css";
+import ToDoList from "../pages/ToDoList";
+import PrivateRoute from "../routes/PrivateRoute";
+import {RoleContext} from "../context/RoleProvider";
+import EventEmitter from "../events/EventEmitter";
 
 const CartModal = ({show, setShow}) => {
     const handleClose = () => setShow(false);
     const {items} = useContext(CartContext);
     const [showOrder, setShowOrder] = useState(false);
+    const {userRole} = useContext(RoleContext);
+
+    const handleSetShowOrder = () => {
+        if (userRole === 'user') {
+            setShowOrder(true);
+        } else if (userRole === 'guest' || !userRole) {
+            setShow(false);
+            EventEmitter.emit('redirectToAuthenticationModal',
+                true);
+        }
+    }
 
     return (
         <div>
@@ -32,8 +47,10 @@ const CartModal = ({show, setShow}) => {
                             </Row>
                         </Col>
                         <Col md={6}>
-                            {showOrder && items.length > 0 && <OrderData
-                                setShow={setShow}/>}
+                            <PrivateRoute component={ToDoList} roles={["user"]}>
+                                {showOrder && items.length > 0 &&
+                                    <OrderData setShow={setShow}/>}
+                            </PrivateRoute>
                         </Col>
                     </Row>
                 </Modal.Body>
@@ -41,7 +58,7 @@ const CartModal = ({show, setShow}) => {
                     {showOrder && items.length > 0 ?
                         null
                         :
-                        <Button variant="dark" onClick={() => setShowOrder(true)}>Order</Button>
+                        <Button variant="dark" onClick={handleSetShowOrder}>Order</Button>
                     }
                 </Modal.Footer>
             </Modal>

@@ -4,6 +4,8 @@ import Modal from "react-bootstrap/Modal";
 import {Form} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import EmailConfirmModal from "./EmailConfirmModal";
+import {useModalCloseOnSuccess} from "../utilities/useModalCloseOnSuccess";
+import {communicateWithServer} from "../utilities/ServerCommunication";
 
 const RegistrationModal = ({show, setShow}) => {
     const [firstName, setFirstName] = useState('');
@@ -15,6 +17,8 @@ const RegistrationModal = ({show, setShow}) => {
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
     const [passwordsMatch, setPasswordsMatch] = useState(true);
 
+    const [successResponse, setSuccessResponse] = useState(false);
+    const {isReadyToClose} = useModalCloseOnSuccess(show, setShow, successResponse);
     const handleClose = () => {
         setShow(false);
         setShowEmailConfirm(true);
@@ -45,6 +49,10 @@ const RegistrationModal = ({show, setShow}) => {
         setPasswordConfirm(event.target.value);
     }
 
+    const handleRegistrationResponse = (response)=>{
+
+    }
+
     const sendRegisterRequest = (event) => {
         if (password !== passwordConfirm) {
             setPasswordsMatch(false);
@@ -57,6 +65,16 @@ const RegistrationModal = ({show, setShow}) => {
             password: password,
         };
 
+       /* communicateWithServer({
+            method: 'post',
+            url: '/api/v1/auth/authenticate',
+            data: requestBody,
+            executeFunction: handleAuthenticationResponse,
+            executeFunctionArgs: [setSuccessResponse],
+            handleError: handleAuthenticationError,
+            reload: true
+        });
+*/
         axios.get('/csrf/api/v1')
             .then(response => {
                 const csrfToken = response.data.headers;

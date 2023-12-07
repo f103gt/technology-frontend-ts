@@ -7,7 +7,6 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => {
     const location = useLocation();
 
     if (!userRole || userRole === "guest") {
-        console.log("guest");
        localStorage.setItem("redirected","true");
         return (
             <>

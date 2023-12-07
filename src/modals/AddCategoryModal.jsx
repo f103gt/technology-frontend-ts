@@ -3,15 +3,38 @@ import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import {Form} from "react-bootstrap";
 import ConfirmationComponent from "../components/ConfirmationComponent";
+import {communicateWithServer} from "../utilities/ServerCommunication";
+import {useModalCloseOnSuccess} from "../utilities/useModalCloseOnSuccess";
 
 const AddCategoryModal = ({show, setShow, parentCategoryName}) => {
     const [categoryName, setCategoryName] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successResponse, setSuccessResponse] = useState(false);
+    const {isReadyToClose} = useModalCloseOnSuccess(show, setShow, successResponse);
+
+    const handleError = (error) => {
+        setErrorMessage(error.message || error);
+    }
+    const handleSuccessResponse = () => {
+        setSuccessResponse(true);
+    }
     const handleSubmit = () => {
         const requestBody = {
             parentCategoryName: parentCategoryName,
             categoryName: categoryName
         }
-        axios.get("/csrf/api/v1")
+
+        communicateWithServer({
+            url: "/manager/add-category",
+            method: "post",
+            data: requestBody,
+            headers: {'Content-Type': 'application/json'},
+            handleError: handleError,
+            executeFunction: handleSuccessResponse,
+            executeFunctionArgs: [setSuccessResponse],
+            reload:true
+        })
+        /*axios.get("/csrf/api/v1")
             .then(response => {
                 const csrfToken = response.data.headers;
                 axios({
@@ -32,11 +55,15 @@ const AddCategoryModal = ({show, setShow, parentCategoryName}) => {
                     .catch(error => {
                         alert(error)
                     });
-            });
+            });*/
     }
 
+    const handleClose = () => {
+        setShow(false);
+        setErrorMessage("");
+    }
     return (
-        <Modal show={show} onHide={() => setShow(false)}
+        <Modal show={show} onHide={handleClose}
                onExit={() => {
                    setCategoryName("");
                }}>
@@ -44,6 +71,7 @@ const AddCategoryModal = ({show, setShow, parentCategoryName}) => {
                 <Modal.Title>New Product</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                {errorMessage && <p style={{color: "#8b0000"}}>{errorMessage}</p>}
                 <Form onSubmit={handleSubmit}>
                     <Form.Group controlId="productName">
                         <Form.Label>Category Name</Form.Label>
