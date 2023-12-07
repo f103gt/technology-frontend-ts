@@ -3,6 +3,8 @@ import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import {Form} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+import {communicateWithServer} from "../utilities/ServerCommunication";
+import {useNavigate} from "react-router-dom";
 
 const AddProductModal = ({categoryName, show, setShow}) => {
     const [productName, setProductName] = useState("");
@@ -13,6 +15,7 @@ const AddProductModal = ({categoryName, show, setShow}) => {
     const [primaryImage, setPrimaryImage] = useState(null);
     const [productImages, setProductImages] = useState([]);
 
+    const  navigate = useNavigate();
     const handleSubmit = (event) => {
         event.preventDefault();
         const product = {
@@ -31,6 +34,7 @@ const AddProductModal = ({categoryName, show, setShow}) => {
             formData.append(`images`, image);  // Append the images as an array
         });
 
+
         axios.get("/csrf/api/v1")
             .then(response => {
                 const csrfToken = response.data.headers;
@@ -43,9 +47,13 @@ const AddProductModal = ({categoryName, show, setShow}) => {
                         'X-CSRF-TOKEN': csrfToken
                     },
                     withCredentials: true
+                }) .then(response=>{
+                    if(response.status===200){
+                        window.location.reload(true);
+                    }
                 })
                     .catch(error => {
-                        alert(error)
+                       navigate("/error");
                     });
             });
 

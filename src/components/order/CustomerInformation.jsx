@@ -24,12 +24,12 @@ const CustomerInformation = ({
         return startsWithUppercase && containsNoNumbers;
     };
     const updateFirstName = (event) => {
-        if(validateName){
-            setFirstName(event.target.value);
-            updateOrderFormData({firstName: event.target.value});
+        if(!validateName){
+            setInitialsError("Initials must start with an uppercase letter and contain no numbers.");
             return;
         }
-        setInitialsError("Initials must start with an uppercase letter and contain no numbers.");
+        setFirstName(event.target.value);
+        updateOrderFormData({firstName: event.target.value});
     }
 
     const updateLastName = (event) => {
@@ -54,22 +54,25 @@ const CustomerInformation = ({
             <Col md={12}>
                 <Row className="mx-4">
                     <Col sm={6}>
-                        <Form.Group className={`form-outline ${initialsError ? 'has-danger' : ''}`}>
+                        <Form.Group>
                             <Form.Label htmlFor="form1">First Name</Form.Label>
                             <Form.Control
                                 type="text"
                                 id="form1"
                                 value={firstName}
                                 onChange={updateFirstName}
-                                className={`order-form-input ${initialsError ? 'is-invalid' : ''}`}
+                                pattern="^[A-Z][a-z]{1,49}$"
+                                title="Initials must start with an uppercase letter and contain no numbers."
                             />
-                            {initialsError && <div style={{ color: "#8b0000" }}>{initialsError}</div>}
+                            {/*{initialsError && <div style={{ color: "#8b0000" }}>{initialsError}</div>}*/}
                         </Form.Group>
                     </Col>
                     <Col sm={6} className="mt-2 mt-sm-0">
                         <Form.Group className="form-outline">
                             <Form.Label htmlFor="form2">Last Name</Form.Label>
                             <Form.Control type="text" id="form2" value={lastName}
+                                          pattern="^[A-Z][a-z]{1,49}$"
+                                          title="Initials must start with an uppercase letter and contain no numbers."
                                           onChange={updateLastName}
                                           className="order-form-input"/>
                         </Form.Group>

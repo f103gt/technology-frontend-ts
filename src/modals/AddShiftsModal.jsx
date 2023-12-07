@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import {Form} from "react-bootstrap";
-import axios from "axios";
 import ConfirmationComponent from "../components/ConfirmationComponent";
 import {communicateWithServer} from "../utilities/ServerCommunication";
 import {useModalCloseOnSuccess} from "../utilities/useModalCloseOnSuccess";

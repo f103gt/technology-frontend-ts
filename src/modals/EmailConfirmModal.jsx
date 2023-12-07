@@ -4,6 +4,9 @@ import {Alert, Form} from "react-bootstrap";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import {CartContext} from "../context/CartContext";
+import {communicateWithServer} from "../utilities/ServerCommunication";
+import {useModalCloseOnSuccess} from "../utilities/useModalCloseOnSuccess";
+import {useCartServerSynchronization} from "../utilities/useCartServerSynchronization";
 
 const EmailConfirmModal = ({email, setShow, show}) => {
     const [otp, setOtp] = useState("");
@@ -49,45 +52,71 @@ const EmailConfirmModal = ({email, setShow, show}) => {
         setIsReadyToClose(false);
         setShow(false);
     }
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successResponse, setSuccessResponse] = useState(false);
+    const {synchronizeCartWithServer} = useCartServerSynchronization();
 
+
+    const handleConfirmationResponse = (response)=>{
+        localStorage.setItem('userRole', response.data.role);
+        synchronizeCartWithServer();
+        setSuccessResponse(true);
+        if (!response.data.uuid.isEmpty) {
+            localStorage.setItem("id", response.data.uuid);
+        }
+    }
+
+    const handleConfirmationError = (error) => {
+        setErrorMessage(error.message || error);
+    }
     const sendEmailConfirmationRequest = (event) => {
         event.preventDefault();
-        axios.get('/csrf/api/v1')
-            .then(response => {
-                const csrfToken = response.data.headers;
-                axios({
-                    method: 'post',
-                    url: '/api/v1/auth/otp-verification',
-                    data: otp,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    withCredentials: true
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            /*if (items.length > 0) {
-                                items.forEach((cartItem) => {
-                                    deleteFromCart(cartItem.productName);
-                                });
-                            }*/
-                            /*TODO REPLACE WITH ANOTHER SERVER CALL THAT WILL
-                                ACTUALLY STORE ALL THE CART ITEMS ON THE SERVER SIDE*/
-                            localStorage.setItem('userRole', response.data.role);
-                            handleAlert(setShowRegisterAlert, 3000);
-
-                            setIsReadyToClose(false);
-                            setShow(false);
-                        }
-                    })
-                    .catch(error => {
-                        alert(error);
-                    });
-                //TODO DISPLAY SERVER ERROR
-            });
+        console.log(otp);
+        communicateWithServer({
+            method: 'post',
+            url: `/api/v1/auth/otp-verification?otp=${otp}`,
+            executeFunction: handleConfirmationResponse,
+            executeFunctionArgs: [setSuccessResponse],
+            handleError: handleConfirmationError,
+            reload: true
+        });
 
     }
+
+    /*axios.get('/csrf/api/v1')
+           .then(response => {
+               const csrfToken = response.data.headers;
+               axios({
+                   method: 'post',
+                   url: '/api/v1/auth/otp-verification',
+                   data: otp,
+                   headers: {
+                       'Content-Type': 'application/json',
+                       'X-CSRF-TOKEN': csrfToken
+                   },
+                   withCredentials: true
+               })
+                   .then(response => {
+                       if (response.status === 200) {
+                           /!*if (items.length > 0) {
+                               items.forEach((cartItem) => {
+                                   deleteFromCart(cartItem.productName);
+                               });
+                           }*!/
+                           /!*TODO REPLACE WITH ANOTHER SERVER CALL THAT WILL
+                               ACTUALLY STORE ALL THE CART ITEMS ON THE SERVER SIDE*!/
+                           localStorage.setItem('userRole', response.data.role);
+                           handleAlert(setShowRegisterAlert, 3000);
+
+                           setIsReadyToClose(false);
+                           setShow(false);
+                       }
+                   })
+                   .catch(error => {
+                       alert(error);
+                   });
+               //TODO DISPLAY SERVER ERROR
+           });*/
 
     /*TODO HOW TO PREVENT USER FROM CLOSING THE MODAL IF OTP IS
     *   NOT ENTERED OR PROVIDED INCORRECTLY?
@@ -113,7 +142,7 @@ const EmailConfirmModal = ({email, setShow, show}) => {
                         }
                     })
                     .catch(error => {
-                        alert(error);
+                       handleConfirmationError(error);
                     });
                 //TODO DISPLAY SERVER ERROR
             });
@@ -127,6 +156,9 @@ const EmailConfirmModal = ({email, setShow, show}) => {
                 </Modal.Header>
                 <Form onSubmit={sendEmailConfirmationRequest}>
                     <Modal.Body>
+                        {errorMessage && <p
+                            style={{ color: "#8b0000" }}
+                            className="error">{errorMessage}</p>}
                         <Form.Text className="text-muted">
                             <div>We have sent a confirmation email to your registered email address. Please check your
                                 inbox (and spam folder, just in case) for our email and enter the provided code
@@ -137,6 +169,7 @@ const EmailConfirmModal = ({email, setShow, show}) => {
 
                                 Thank you for registering with us!
                             </div>
+                            <br/><br/>
                         </Form.Text>
                         <Form.Group controlId="otp">
                             <Form.Control type="text" value={otp}

@@ -4,18 +4,20 @@ import Button from "react-bootstrap/Button";
 import {CartContext} from "../../context/CartContext";
 import CustomerInformation from "./CustomerInformation";
 import DeliveryAddress from "./DeliveryAddress";
+import {communicateWithServer} from "../../utilities/ServerCommunication";
+import {useNavigate} from "react-router-dom";
+import {useModalCloseOnSuccess} from "../../utilities/useModalCloseOnSuccess";
 
-const OrderData = ({setShow}) => {
+const OrderData = ({show, setShow}) => {
     const initialState = {
         firstName: "",
         lastName: "",
         phoneNumber: "",
         email: "",
-        deliveryAddress: "",
         paymentMethod: "",
         deliveryMethod: "",
-    };
-
+        deliveryAddress: "",
+    }
     const addressData = {
         region: "",
         street: "",
@@ -32,6 +34,7 @@ const OrderData = ({setShow}) => {
     const [orderFormData, setOrderFormData] = useState(initialState);
     const [deliveryMethodPrice, setDeliveryMethodPrice] = useState(0);
     const [submitted, setSubmitted] = useState(false);
+
     const updateOrderFormData = (data) => {
         setOrderFormData(prevState => ({...prevState, ...data}));
     };
@@ -81,33 +84,34 @@ const OrderData = ({setShow}) => {
         updateOrderFormData({paymentMethod: event.target.value})
     }
 
-    useEffect(() => {
-        if (orderFormData.deliveryAddress !== undefined && submitted) {
-            /*axios.get('/csrf/api/v1')
-            .then(response => {
-                const csrfToken = response.data.headers;
+    const navigate = useNavigate();
+    const handleError = () => {
+        navigate("/error");
+    }
 
-                axios({
-                    method: 'post',
-                    url: '/place-order',
-                    data: orderFormData,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    withCredentials: true
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            setShow(false);
-                        }
-                    })
-                    .catch(error => {
-                        alert(error);
-                    });
-            });*/
+    const [successResponse, setSuccessResponse] = useState(false);
+    const {isClose} = useModalCloseOnSuccess(show, setShow, successResponse);
+    const { resetAll} = useContext(CartContext);
+
+    const handleSuccessResponse = (response) => {
+        setSuccessResponse(true);
+        localStorage.removeItem("cartItems");
+        resetAll([]);
+    }
+    const {items} = useContext(CartContext);
+    useEffect(() => {
+        if (orderFormData.deliveryAddress !== undefined && submitted && items.length > 0) {
+            console.log(orderFormData);
+            communicateWithServer({
+                url: '/place-order',
+                method: "post",
+                data: orderFormData,
+                handleError: handleError,
+                executeFunction: handleSuccessResponse,
+                executeFunctionArgs: [setSuccessResponse]
+            });
         }
-    }, [orderFormData, submitted]);
+    }, [handleError, orderFormData, submitted]);
 
 
     const sendOrder = (event) => {
@@ -186,3 +190,27 @@ export default OrderData;
 const updatePaymentMethod = (event) => {
     setPaymentMethod(event.target.value);
 }*/
+
+/*axios.get('/csrf/api/v1')
+            .then(response => {
+                const csrfToken = response.data.headers;
+
+                axios({
+                    method: 'post',
+                    url: '/place-order',
+                    data: orderFormData,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    withCredentials: true
+                })
+                    .then(response => {
+                        if (response.status === 200) {
+                            setShow(false);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                    });
+            });*/

@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import {Form} from "react-bootstrap";
 import ConfirmationComponent from "../components/ConfirmationComponent";

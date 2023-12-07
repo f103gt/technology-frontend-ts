@@ -22,6 +22,8 @@ function AuthenticationModal({show, setShow}) {
     const {synchronizeCartWithServer} = useCartServerSynchronization();
     const [emailConfirmation, setEmailConfirmation] = useState(false);
 //TODO WHEN THE OTP IS CONFIRMED SYNCHRONIZE THE CART
+
+    //TODO REPLACE WITH EVEN LISTENER
     useEffect(() => {
         let isRedirected = localStorage.getItem("redirected");
         if (isRedirected) {
@@ -54,6 +56,21 @@ function AuthenticationModal({show, setShow}) {
         setPassword(event.target.value);
     }
 
+    const [fullErrorMessage, setFullErrorMessage] = useState("");
+    const [showEmailConfirm, setShowEmailConfirm] = useState(false);
+
+
+    useEffect(() => {
+        console.log(fullErrorMessage);
+        if (fullErrorMessage && fullErrorMessage.includes("403")) {
+            setShow(false);
+            setShowEmailConfirm(true);
+        }
+        let trimmedErrorMessage =
+            errorMessage.replace(/[A-Z]+|\d+/g, '').trim();
+        setErrorMessage(trimmedErrorMessage);
+    }, [setSuccessResponse, setShowEmailConfirm, fullErrorMessage, errorMessage]);
+
     const handleRegisterRedirection = () => {
         setShow(false);
         setShowRegistration(true);
@@ -69,11 +86,7 @@ function AuthenticationModal({show, setShow}) {
     }
 
     const handleAuthenticationError = (error) => {
-        if (error.status === 403) {
-            setShow(false);
-            setEmailConfirmation(true);
-        }
-        setErrorMessage(error.message || error);
+        setFullErrorMessage(error.message || error);
     }
 
 
@@ -108,7 +121,9 @@ function AuthenticationModal({show, setShow}) {
                     <Modal.Title>Login</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {errorMessage && <p color={"red"} className="error">{errorMessage}</p>}
+                    {errorMessage && <p
+                        style={{color: "#8b0000"}}
+                        className="error">{errorMessage}</p>}
                     <Form onSubmit={sendAuthRequest}>
                         <Form.Group controlId="emaiil">
                             <Form.Label>Email address</Form.Label>
@@ -138,8 +153,8 @@ function AuthenticationModal({show, setShow}) {
             </Modal>
             <RegistrationModal show={showRegistration}
                                setShow={setShowRegistration}/>
-            <EmailConfirmModal show={emailConfirmation}
-                               setShow={setEmailConfirmation}/>
+            <EmailConfirmModal show={showEmailConfirm}
+                               setShow={setShowEmailConfirm}/>
         </div>
     );
 }

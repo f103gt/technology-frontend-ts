@@ -1,9 +1,25 @@
-.carousel-item {
-    width: 100%;
+.carousel {
     height: 450px;
+    margin-left: 20px;
+    padding-top: 10px;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.carousel-item {
+    display: none;
+    justify-content: center;
+    aspect-ratio: 1/1;
+    max-height: 25vw;
+}
+
+.carousel-item.active {
+    display: flex;
 }
 
 .carousel-image {
-    height: 100%;
     object-fit: cover;
+    height: 100%;
+    width: 100%;
 }
