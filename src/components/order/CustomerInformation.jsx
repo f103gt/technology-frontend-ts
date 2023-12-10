@@ -24,10 +24,6 @@ const CustomerInformation = ({
         return startsWithUppercase && containsNoNumbers;
     };
     const updateFirstName = (event) => {
-        if(!validateName){
-            setInitialsError("Initials must start with an uppercase letter and contain no numbers.");
-            return;
-        }
         setFirstName(event.target.value);
         updateOrderFormData({firstName: event.target.value});
     }

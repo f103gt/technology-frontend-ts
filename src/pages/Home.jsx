@@ -5,7 +5,6 @@ import '../css/Home.css';
 import ManagerGuide from "../components/instructions/ManagerGuide";
 import {RoleBasedComponent} from "../utilities/RoleBasedComponent";
 import AdminGuide from "../components/instructions/AdminGuide";
-import UserGuide from "../components/instructions/UserGuide";
 
 const Home = () => {
     const imageRef = useRef(null);
@@ -35,12 +34,12 @@ const Home = () => {
     return (
         <div className="home-container">
             <div className="home-banner-container">
-                <div className="home-bannerImage-container">
+                <div className="home-bannerImage-container" >
                     <Image src={background} ref={imageRef} alt="" fluid/>
                 </div>
-                <div className="home-text-overlay">
-                    <div className="home-text-section">
-                        <h1 className="primary-heading">
+                <div className="home-text-overlay" >
+                    <div className="home-text-section" style={{position: "relative"}}>
+                        <h1 className="primary-heading" >
                             TECHNOLOGY
                         </h1>
                         <p className="primary-text">

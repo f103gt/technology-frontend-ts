@@ -8,6 +8,7 @@ import {useModalCloseOnSuccess} from "../utilities/useModalCloseOnSuccess";
 import {useCartServerSynchronization} from "../utilities/useCartServerSynchronization";
 import EmailConfirmModal from "./EmailConfirmModal";
 import EventEmitter from "../events/EventEmitter";
+import {validateEmail} from "../utilities/validationUtil";
 
 /*TODO IF THE USER ALREADY EXISTS AND IS NOT ACTIVATED,
     SEND THE OTP AND REDIRECT RIGHT AWAY TO THE EMAIL VERIFICATION */
@@ -61,19 +62,30 @@ function AuthenticationModal({show, setShow}) {
 
 
     useEffect(() => {
-        console.log(fullErrorMessage);
-        if (fullErrorMessage && fullErrorMessage.includes("403")) {
-            setShow(false);
+        if (fullErrorMessage.includes("451")) {
+            handleClose();
             setShowEmailConfirm(true);
+            return;
         }
-        let trimmedErrorMessage =
-            errorMessage.replace(/[A-Z]+|\d+/g, '').trim();
-        setErrorMessage(trimmedErrorMessage);
-    }, [setSuccessResponse, setShowEmailConfirm, fullErrorMessage, errorMessage]);
+        setErrorMessage(removeNumbersAndCaps(fullErrorMessage).slice(1, -1));
+    }, [setSuccessResponse, setShowEmailConfirm, fullErrorMessage, errorMessage, setShow]);
 
     const handleRegisterRedirection = () => {
-        setShow(false);
+        handleClose();
         setShowRegistration(true);
+    }
+
+    function removeNumbersAndCaps(str) {
+        let filteredWords = [];
+        let words = str.split(/\s+/);
+        for (let word of words) {
+            let hasNumbers = /\d/.test(word);
+            let isCapsLock = word === word.toUpperCase();
+            if (!hasNumbers && !isCapsLock) {
+                filteredWords.push(word);
+            }
+        }
+        return filteredWords.join(" ");
     }
 
     const handleAuthenticationResponse = (response) => {
@@ -89,9 +101,19 @@ function AuthenticationModal({show, setShow}) {
         setFullErrorMessage(error.message || error);
     }
 
+    const [emailError, setEmailError] = useState("");
 
     const sendAuthRequest = (event) => {
         event.preventDefault();
+        let allInputsValid = true;
+        let emailInvalid = validateEmail(username);
+        if (emailInvalid) {
+            setEmailError(emailInvalid);
+            allInputsValid = false;
+        } else {
+            setEmailError("");
+        }
+
         const requestBody = {
             email: username,
             password: password,
@@ -129,9 +151,6 @@ function AuthenticationModal({show, setShow}) {
                             <Form.Label>Email address</Form.Label>
                             <Form.Control type="email" value={username} onChange={updateUsername}
                                           aria-describedby="emailHelp"/>
-                            <Form.Text className="text-muted">
-                                We'll never share your email with anyone else.
-                            </Form.Text>
                         </Form.Group>
                         <Form.Group controlId="password">
                             <Form.Label>Password</Form.Label>

@@ -5,7 +5,6 @@ import axios from "axios";
 import Button from "react-bootstrap/Button";
 import {CartContext} from "../context/CartContext";
 import {communicateWithServer} from "../utilities/ServerCommunication";
-import {useModalCloseOnSuccess} from "../utilities/useModalCloseOnSuccess";
 import {useCartServerSynchronization} from "../utilities/useCartServerSynchronization";
 
 const EmailConfirmModal = ({email, setShow, show}) => {
@@ -42,16 +41,6 @@ const EmailConfirmModal = ({email, setShow, show}) => {
         }
     }
 
-    const handleUserCartNotEmpty = () => {
-        if (items.length > 0) {
-            items.forEach((cartItem) => {
-                deleteFromCart(cartItem.productName);
-            });
-        }
-        handleAlert(setShowRegisterAlert, 3000);
-        setIsReadyToClose(false);
-        setShow(false);
-    }
     const [errorMessage, setErrorMessage] = useState("");
     const [successResponse, setSuccessResponse] = useState(false);
     const {synchronizeCartWithServer} = useCartServerSynchronization();

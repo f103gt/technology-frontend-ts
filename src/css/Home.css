@@ -10,3 +10,38 @@
     text-align: center;
     color: white;
 }
+.home-banner-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.home-bannerImage-container {
+    flex: 1 1 auto;
+}
+
+.home-text-overlay {
+    flex: 1 1 auto;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+.primary-heading {
+    font-size: 4rem;
+}
+
+.primary-text {
+    font-size: 2rem;
+}
+
+@media screen and (max-width: 600px) {
+    .primary-heading {
+        font-size: 3rem;
+    }
+
+    .primary-text {
+        font-size: 1.5rem;
+    }
+}

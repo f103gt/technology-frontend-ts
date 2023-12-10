@@ -18,6 +18,7 @@ const PackedOrders = () => {
                     }
                 })
                     .then(packedOrders => {
+                        console.log(packedOrders.data);
                         setPackedOrders(packedOrders.data);
                     })
                     .catch(error => {

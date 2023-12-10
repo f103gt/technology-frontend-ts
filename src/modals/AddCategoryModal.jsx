@@ -33,28 +33,6 @@ const AddCategoryModal = ({show, setShow, parentCategoryName}) => {
             executeFunctionArgs: [setSuccessResponse],
             reload:true
         })
-        /*axios.get("/csrf/api/v1")
-            .then(response => {
-                const csrfToken = response.data.headers;
-                axios({
-                    method: 'post',
-                    url: "/manager/add-category",
-                    data: requestBody,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    withCredentials: true
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            setShow(false);
-                        }
-                    })
-                    .catch(error => {
-                        alert(error)
-                    });
-            });*/
     }
 
     const handleClose = () => {
@@ -87,3 +65,26 @@ const AddCategoryModal = ({show, setShow, parentCategoryName}) => {
 };
 
 export default AddCategoryModal;
+
+/*axios.get("/csrf/api/v1")
+            .then(response => {
+                const csrfToken = response.data.headers;
+                axios({
+                    method: 'post',
+                    url: "/manager/add-category",
+                    data: requestBody,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    withCredentials: true
+                })
+                    .then(response => {
+                        if (response.status === 200) {
+                            setShow(false);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error)
+                    });
+            });*/

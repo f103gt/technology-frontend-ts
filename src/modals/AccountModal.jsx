@@ -137,10 +137,10 @@ const AccountModal = ({show, setShow}) => {
                                     style={{ width: "50px", height: "50px", padding: "0" }}>
                                 {isActive ? (
                                     <FaRegCheckCircle size={"35"} color={"green"}
-                                                      onClick={activateEmployee}/>
+                                                      onClick={inactivateEmployee}/>
                                 ) : (
                                     <TiDeleteOutline size={"45"} color={"red"}
-                                                     onClick={inactivateEmployee}/>
+                                                     onClick={activateEmployee}/>
                                 )}
                             </Button>
                         </RoleBasedComponent>

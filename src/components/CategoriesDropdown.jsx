@@ -95,6 +95,7 @@ const CategoriesDropdown = () => {
                                     <Button variant="btn btn-link" type="button"
                                             className="custom-button"
                                             onClick={(event) => {
+                                                setParentCategory(category.categoryName);
                                                 setShowAdd(true);
                                                 event.stopPropagation();
                                             }}>
