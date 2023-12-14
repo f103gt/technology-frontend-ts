@@ -20,6 +20,10 @@ const Products = () => {
     const {isLoading,setLoading} =  useContext(LoadingContext);
     const [show,setShow] = useState(false);
 
+    // Add a state variable to store the current sorting option and the current sorting order
+    const [sortOption, setSortOption] = useState("name"); // default option is name
+    const [sortOrder, setSortOrder] = useState("asc"); // default order is ascending
+
     const fetchProductData = useCallback(() => {
         setLoading(true);
         axios.get("/csrf/api/v1")
@@ -42,9 +46,6 @@ const Products = () => {
         fetchProductData();
     }, [fetchProductData]);
 
-
-    //TODO rewrite setButtons and setSinge button to be united under one reusable function
-
     const setSingleButton = (roles: any) => {
         return (
             <RoleBasedComponent roles={roles}>
@@ -54,13 +55,43 @@ const Products = () => {
         );
     };
 
+    const compareProducts = (a: Product, b: Product) => {
+        let result = 0;
+        switch (sortOption) {
+            case "name":
+                result = a.productName.localeCompare(b.productName);
+                break;
+            case "price":
+                result = a.productPrice - b.productPrice;
+                break;
+            case "model":
+                break;
+            default:
+                break;
+        }
+        if (sortOrder === "desc") {
+            result = -result;
+        }
+        return result;
+    };
+
+    const toggleSortOrder = () => {
+        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    };
+
     return (
         <div>
             {!isLoading ?(
                 <section>
                     <div className="container py-5">
                         <div className="row">
-                            {products.map(product => (
+                            <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+                                <option value="name">Name</option>
+                                <option value="price">Price</option>
+                                <option value="model">Model</option>
+                            </select>
+                            <button onClick={toggleSortOrder}>{sortOrder === "asc" ? "Ascending" : "Descending"}</button>
+                            {products.sort(compareProducts).map(product => (
                                 <ProductCard
                                     key={product.productName} product={product} categoryName={categoryName}/>
                             ))}
