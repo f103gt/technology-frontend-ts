@@ -29,11 +29,6 @@ const RegistrationModal = ({show, setShow}) => {
         }
     };
 
-    /*const handleEmailConfirm = () => {
-        setShow(false);
-        setShowEmailConfirm(true);
-
-    };*/
     const updateFirstName = (event) => {
         setFirstName(event.target.value);
     }
@@ -58,7 +53,6 @@ const RegistrationModal = ({show, setShow}) => {
         setSuccessResponse(true);
         setShowEmailConfirm(true);
     }
-    //TODO IF RESPONSE FROM THE SERVER IS 200 MOVE ON TO THE EMAIL VALIDATION
 
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -217,29 +211,3 @@ const RegistrationModal = ({show, setShow}) => {
 };
 
 export default RegistrationModal;
-
-
-/* axios.get('/csrf/api/v1')
-            .then(response => {
-                const csrfToken = response.data.headers;
-                axios({
-                    method: 'post',
-                    url: '/api/v1/auth/register',
-                    data: requestBody,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    withCredentials: true
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            handleClose();
-                            handleEmailConfirm();
-                        }
-                    })
-                    .catch(error => {
-                        alert(error);
-                    });
-                //TODO DISPLAY SERVER ERROR
-            });*/
