@@ -20,9 +20,8 @@ const Products = () => {
     const {isLoading,setLoading} =  useContext(LoadingContext);
     const [show,setShow] = useState(false);
 
-    // Add a state variable to store the current sorting option and the current sorting order
-    const [sortOption, setSortOption] = useState("name"); // default option is name
-    const [sortOrder, setSortOrder] = useState("asc"); // default order is ascending
+    const [sortOption, setSortOption] = useState("name");
+    const [sortOrder, setSortOrder] = useState("asc");
 
     const fetchProductData = useCallback(() => {
         setLoading(true);
